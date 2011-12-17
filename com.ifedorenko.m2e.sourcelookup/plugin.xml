@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabs">
+      <tab
+            class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupLaunchConfigurationTab"
+            group="org.eclipse.m2e.LaunchConfigurationTabGroup"
+            id="com.ifedorenko.m2e.sourcelookup.tab1"
+            name="com.ifedorenko.m2e.sourcelookup.tab1">
+         <placement
+               after="org.eclipse.debug.ui.sourceLookupTab">
+         </placement>
+      </tab>
+   </extension>
+   <extension
+         point="org.eclipse.m2e.launching.sourceLookupParticipants">
+      <sourceLookupParticipant
+            class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant">
+      </sourceLookupParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.m2e.launching.mavenLaunchParticipants">
+      <mavenLaunchParticipant
+            class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupMavenLaunchParticipant">
+      </mavenLaunchParticipant>
+   </extension>
+
+</plugin>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.ifedorenko.m2e.sourcelookup.feature"
+      label="m2e dynamic source code lookup"
+      version="1.0.0.qualifier"
+      provider-name="IFEDORENKO">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.jdt" version="3.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.m2e.feature" version="1.1.0" match="greaterOrEqual"/>
+      <import feature="org.sonatype.m2e.mavenarchiver.feature" version="0.15.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="com.ifedorenko.m2e.sourcelookup"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

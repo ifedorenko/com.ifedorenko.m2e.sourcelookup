@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="com.ifedorenko.m2e.sourcelookup.feature_0.0.0.qualifier.jar" id="com.ifedorenko.m2e.sourcelookup.feature" version="0.0.0">
+      <category name="m2e-dynamic-source-code-lookup"/>
+   </feature>
+   <category-def name="m2e-dynamic-source-code-lookup" label="Maven Dynamic Source Code Lookup"/>
+</site>

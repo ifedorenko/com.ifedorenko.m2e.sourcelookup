@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Target platform for Tycho's bundles" sequenceNumber="0">
+<locations>
+
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+
+      <unit id="org.eclipse.sdk.ide"  version="0.0.0"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.xsd.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.wst.common.fproj.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
+
+<repository location="http://download.eclipse.org/releases/indigo"/>
+</location>
+
+</locations>
+</target>

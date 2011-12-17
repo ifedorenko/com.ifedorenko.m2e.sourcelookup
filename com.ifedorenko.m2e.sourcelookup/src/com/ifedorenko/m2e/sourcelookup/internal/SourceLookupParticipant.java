@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import org.eclipse.jdt.debug.core.IJavaStackFrame;
 import org.eclipse.jdt.debug.core.IJavaType;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
@@ -44,9 +47,12 @@ public class SourceLookupParticipant
 
     private Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
 
+    private BackgroundDownloadJob downloadJob;
+
     public void init( ISourceLookupDirector director )
     {
         this.director = director;
+        downloadJob = new BackgroundDownloadJob();
     }
 
     public Object[] findSourceElements( Object fElement )
@@ -126,18 +132,27 @@ public class SourceLookupParticipant
                             else
                             {
                                 IMaven maven = MavenPlugin.getMaven();
-                                List<ArtifactRepository> repositories = maven.getArtifactRepositories();
                                 try
                                 {
+                                    // check in local repository first
                                     Artifact artifact =
-                                        maven.resolve( groupId, artifactId, versionId, "jar", "sources", repositories,
+                                        maven.resolve( groupId, artifactId, versionId, "jar", "sources",
+                                                       Collections.<ArtifactRepository> emptyList(),
                                                        new NullProgressMonitor() );
                                     container =
                                         new ExternalArchiveSourceContainer( artifact.getFile().getAbsolutePath(), true );
                                 }
                                 catch ( CoreException e )
                                 {
-                                    // fall through
+                                    List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
+                                    repositories.addAll( maven.getArtifactRepositories() );
+                                    repositories.addAll( maven.getPluginArtifactRepositories() );
+                                    if ( !maven.isUnavailable( groupId, artifactId, versionId, "jar", "sources",
+                                                               repositories ) )
+                                    {
+                                        downloadJob.schedule( new ArtifactKey( groupId, artifactId, versionId,
+                                                                               "sources" ) );
+                                    }
                                 }
                             }
                         }
@@ -320,6 +335,9 @@ public class SourceLookupParticipant
             container.dispose();
         }
         containers.clear();
+
+        downloadJob.cancel();
+        downloadJob = null;
     }
 
     public void sourceContainersChanged( ISourceLookupDirector director )

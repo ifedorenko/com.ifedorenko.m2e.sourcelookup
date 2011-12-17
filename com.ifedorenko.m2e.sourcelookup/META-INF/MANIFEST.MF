@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Sourcelookup
+Bundle-Name: m2e dynamic source code lookup
 Bundle-SymbolicName: com.ifedorenko.m2e.sourcelookup;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.ifedorenko.m2e.sourcelookup.internal.SourceLookupActivator
-Bundle-Vendor: IFEDORENKO
+Bundle-Vendor: Igor Fedorenko
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.debug.ui;bundle-version="3.7.0",

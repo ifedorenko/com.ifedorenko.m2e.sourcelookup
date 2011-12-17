@@ -20,7 +20,7 @@
    <requires>
       <import feature="org.eclipse.jdt" version="3.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.m2e.feature" version="1.1.0" match="greaterOrEqual"/>
-      <import feature="org.sonatype.m2e.mavenarchiver.feature" version="0.15.0" match="greaterOrEqual"/>
+      <import feature="org.sonatype.m2e.mavenarchiver.feature" version="0.14.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

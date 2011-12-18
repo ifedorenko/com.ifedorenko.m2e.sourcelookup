@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -16,13 +15,11 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
@@ -47,12 +44,9 @@ public class SourceLookupParticipant
 
     private Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
 
-    private BackgroundDownloadJob downloadJob;
-
     public void init( ISourceLookupDirector director )
     {
         this.director = director;
-        downloadJob = new BackgroundDownloadJob();
     }
 
     public Object[] findSourceElements( Object fElement )
@@ -63,7 +57,6 @@ public class SourceLookupParticipant
 
         try
         {
-
             IJavaReferenceType declaringType = null;
             String sourcePath = null;
             if ( fElement instanceof IJavaStackFrame )
@@ -96,77 +89,17 @@ public class SourceLookupParticipant
 
                 String location = locations[0];
 
-                ISourceContainer container = null;
+                ISourceContainer container;
 
-                if ( containers.containsKey( location ) )
+                if ( this.containers.containsKey( location ) )
                 {
-                    container = containers.get( location );
+                    container = this.containers.get( location );
                 }
                 else
                 {
-                    Properties pomProperties = loadPomProperties( location );
-                    if ( pomProperties != null )
-                    {
-                        String projectName = pomProperties.getProperty( "m2e.projectName" );
-                        File projectLocation = getFile( pomProperties, "m2e.projectLocation" );
-                        IProject project =
-                            projectName != null ? ResourcesPlugin.getWorkspace().getRoot().getProject( projectName )
-                                            : null;
-                        if ( project != null && project.getLocation().toFile().equals( projectLocation ) )
-                        {
-                            container = new JavaProjectSourceContainer( JavaCore.create( project ) );
-                        }
-                        else
-                        {
-                            String groupId = pomProperties.getProperty( "groupId" );
-                            String artifactId = pomProperties.getProperty( "artifactId" );
-                            String versionId = pomProperties.getProperty( "version" );
-                            IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();
-                            IMavenProjectFacade mavenProject =
-                                projectRegistry.getMavenProject( groupId, artifactId, versionId );
-                            if ( mavenProject != null )
-                            {
-                                container =
-                                    new JavaProjectSourceContainer( JavaCore.create( mavenProject.getProject() ) );
-                            }
-                            else
-                            {
-                                IMaven maven = MavenPlugin.getMaven();
-                                try
-                                {
-                                    // check in local repository first
-                                    Artifact artifact =
-                                        maven.resolve( groupId, artifactId, versionId, "jar", "sources",
-                                                       Collections.<ArtifactRepository> emptyList(),
-                                                       new NullProgressMonitor() );
-                                    container =
-                                        new ExternalArchiveSourceContainer( artifact.getFile().getAbsolutePath(), true );
-                                }
-                                catch ( CoreException e )
-                                {
-                                    List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
-                                    repositories.addAll( maven.getArtifactRepositories() );
-                                    repositories.addAll( maven.getPluginArtifactRepositories() );
-                                    if ( !maven.isUnavailable( groupId, artifactId, versionId, "jar", "sources",
-                                                               repositories ) )
-                                    {
-                                        downloadJob.schedule( new ArtifactKey( groupId, artifactId, versionId,
-                                                                               "sources" ) );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // TODO check with nexus index
-                    }
-                    containers.put( location, container );
+                    container = createSourceContainer( location );
 
-                    if ( container != null )
-                    {
-                        container.init( director );
-                    }
+                    this.containers.put( location, container );
                 }
 
                 if ( container != null )
@@ -198,25 +131,100 @@ public class SourceLookupParticipant
         return null;
     }
 
-    private Properties loadPomProperties( String urlStr )
+    protected ISourceContainer createSourceContainer( String location )
+        throws CoreException
     {
+        List<ISourceContainer> containers = new ArrayList<ISourceContainer>();
+        for ( Properties pomProperties : loadPomProperties( location ) )
+        {
+            String projectName = pomProperties.getProperty( "m2e.projectName" );
+            File projectLocation = getFile( pomProperties, "m2e.projectLocation" );
+            IProject project =
+                projectName != null ? ResourcesPlugin.getWorkspace().getRoot().getProject( projectName ) : null;
+            if ( project != null && project.getLocation().toFile().equals( projectLocation ) )
+            {
+                containers.add( new JavaProjectSourceContainer( JavaCore.create( project ) ) );
+            }
+            else
+            {
+                String groupId = pomProperties.getProperty( "groupId" );
+                String artifactId = pomProperties.getProperty( "artifactId" );
+                String versionId = pomProperties.getProperty( "version" );
+                IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();
+                IMavenProjectFacade mavenProject = projectRegistry.getMavenProject( groupId, artifactId, versionId );
+                if ( mavenProject != null )
+                {
+                    containers.add( new JavaProjectSourceContainer( JavaCore.create( mavenProject.getProject() ) ) );
+                }
+                else
+                {
+                    IMaven maven = MavenPlugin.getMaven();
+
+                    // check in local repository first
+                    ArtifactRepository localRepository = maven.getLocalRepository();
+                    String relPath =
+                        maven.getArtifactPath( localRepository, groupId, artifactId, versionId, "jar", "sources" );
+                    File file = new File( localRepository.getBasedir(), relPath );
+                    if ( file.isFile() && file.canRead() )
+                    {
+                        containers.add( new ExternalArchiveSourceContainer( file.getAbsolutePath(), true ) );
+                    }
+                    else
+                    {
+                        List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
+                        repositories.addAll( maven.getArtifactRepositories() );
+                        repositories.addAll( maven.getPluginArtifactRepositories() );
+                        if ( !maven.isUnavailable( groupId, artifactId, versionId, "jar", "sources", repositories ) )
+                        {
+                            SourceLookupActivator.scheduleDownload( new ArtifactKey( groupId, artifactId, versionId,
+                                                                                     "sources" ) );
+                        }
+                    }
+                }
+            }
+        }
+
+        // TODO check with nexus index
+
+        if ( containers.isEmpty() )
+        {
+            return null;
+        }
+
+        for ( ISourceContainer child : containers )
+        {
+            child.init( director );
+        }
+
+        if ( containers.size() == 1 )
+        {
+            return containers.get( 0 );
+        }
+
+        return new CompositeSourceContainer( containers );
+    }
+
+    private List<Properties> loadPomProperties( String urlStr )
+    {
+        List<Properties> result = new ArrayList<Properties>();
         try
         {
             URL url = new URL( urlStr );
 
             if ( "file".equals( url.getProtocol() ) )
             {
+
                 File file = new File( url.getPath() );
                 if ( file.isDirectory() )
                 {
-                    return getPomProperties( new File( file, "META-INF/maven" ) );
+                    getPomProperties( new File( file, "META-INF/maven" ), result );
                 }
                 else if ( file.isFile() )
                 {
                     JarFile jar = new JarFile( file );
                     try
                     {
-                        return getPomProperties( jar );
+                        getPomProperties( jar, result );
                     }
                     finally
                     {
@@ -229,10 +237,10 @@ public class SourceLookupParticipant
         {
             // fall through
         }
-        return null;
+        return result;
     }
 
-    private Properties getPomProperties( JarFile jar )
+    private void getPomProperties( JarFile jar, List<Properties> result )
         throws IOException
     {
         Enumeration<JarEntry> entries = jar.entries();
@@ -249,18 +257,16 @@ public class SourceLookupParticipant
                     {
                         Properties properties = new Properties();
                         properties.load( is );
-
                         // TODO validate properties and path match
-                        return properties;
+                        result.add( properties );
                     }
                     finally
                     {
-                        is.close();
+                        IOUtil.close( is );
                     }
                 }
             }
         }
-        return null;
     }
 
     private File getFile( Properties properties, String name )
@@ -269,39 +275,35 @@ public class SourceLookupParticipant
         return value != null ? new File( value ) : null;
     }
 
-    private Properties getPomProperties( File dir )
+    private void getPomProperties( File dir, List<Properties> result )
     {
         File[] files = dir.listFiles();
         if ( files == null )
         {
-            return null;
+            return;
         }
         for ( File file : files )
         {
             if ( file.isDirectory() )
             {
-                Properties result = getPomProperties( file );
-                if ( result != null )
-                {
-                    return result;
-                }
+                getPomProperties( file, result );
             }
             else if ( file.isFile() && "pom.properties".equals( file.getName() ) )
             {
-                Properties result = new Properties();
                 try
                 {
                     InputStream is = new BufferedInputStream( new FileInputStream( file ) );
                     try
                     {
-                        result.load( is );
+                        Properties properties = new Properties();
+                        properties.load( is );
+                        // TODO validate properties and path match
+                        result.add( properties );
                     }
                     finally
                     {
                         IOUtil.close( is );
                     }
-                    // TODO validate properties and path match
-                    return result;
                 }
                 catch ( IOException e )
                 {
@@ -309,7 +311,6 @@ public class SourceLookupParticipant
                 }
             }
         }
-        return null;
     }
 
     // copy&paste from org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.generateSourceName(String)
@@ -335,9 +336,6 @@ public class SourceLookupParticipant
             container.dispose();
         }
         containers.clear();
-
-        downloadJob.cancel();
-        downloadJob = null;
     }
 
     public void sourceContainersChanged( ISourceLookupDirector director )

@@ -1,11 +1,11 @@
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class SourceLookupActivator
-    extends AbstractUIPlugin
+    extends Plugin
 {
 
     public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup";

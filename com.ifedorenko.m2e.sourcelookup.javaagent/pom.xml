@@ -12,7 +12,7 @@
 
   <parent>
     <groupId>com.ifedorenko.m2e</groupId>
-    <artifactId>m2e-dynamic-sourcelookup</artifactId>
+    <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 

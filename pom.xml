@@ -11,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.ifedorenko.m2e</groupId>
-  <artifactId>m2e-dynamic-sourcelookup</artifactId>
+  <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -42,7 +42,7 @@
   <modules>
     <module>com.ifedorenko.m2e.sourcelookup</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
-    <module>m2e-dynamic-sourcelookup-target</module>
+    <module>com.ifedorenko.m2e.sourcelookup.target</module>
   </modules>
 
   <build>
@@ -62,7 +62,7 @@
           <target>
             <artifact>
               <groupId>com.ifedorenko.m2e</groupId>
-              <artifactId>m2e-dynamic-sourcelookup-target</artifactId>
+              <artifactId>com.ifedorenko.m2e.sourcelookup.target</artifactId>
               <version>${project.version}</version>
               <classifier>eclipse</classifier>
             </artifact>

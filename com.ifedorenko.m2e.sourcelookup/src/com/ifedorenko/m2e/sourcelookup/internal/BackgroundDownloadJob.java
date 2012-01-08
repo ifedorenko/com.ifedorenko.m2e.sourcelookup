@@ -23,7 +23,7 @@ import org.eclipse.m2e.core.embedder.IMaven;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BackgroundDownloadJob
+class BackgroundDownloadJob
     extends Job
 {
     private static final Logger log = LoggerFactory.getLogger( BackgroundDownloadJob.class );

@@ -18,7 +18,7 @@ import org.eclipse.jdt.debug.core.IJavaReferenceType;
 import org.eclipse.jdt.debug.core.IJavaStackFrame;
 import org.eclipse.jdt.debug.core.IJavaType;
 
-final class JDIHelpers
+public final class JDIHelpers
 {
     private JDIHelpers()
     {

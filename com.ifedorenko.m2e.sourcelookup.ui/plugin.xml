@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.debug.ui.DebugView?after=emptyEditGroup">
+         <command
+               commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.ifedorenko.m2e.sourcelookup.ui.openPom"
+            name="Open Pom">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.ifedorenko.m2e.sourcelookup.ui.internal.OpenPomCommandHandler"
+            commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <adapt
+                           type="org.eclipse.jdt.debug.core.IJavaStackFrame">
+                     </adapt>
+                     <adapt
+                           type="org.eclipse.jdt.debug.core.IJavaVariable">
+                     </adapt>
+                  </or>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+   </extension>
+
+</plugin>

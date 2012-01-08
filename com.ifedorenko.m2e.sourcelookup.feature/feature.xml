@@ -25,6 +25,7 @@ Igor Fedorenko - initial API and implementation\n
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
+      
    </license>
 
    <requires>
@@ -35,6 +36,13 @@ Igor Fedorenko - initial API and implementation\n
 
    <plugin
          id="com.ifedorenko.m2e.sourcelookup"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.ifedorenko.m2e.sourcelookup.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

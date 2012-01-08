@@ -41,6 +41,7 @@
 
   <modules>
     <module>com.ifedorenko.m2e.sourcelookup</module>
+    <module>com.ifedorenko.m2e.sourcelookup.ui</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
     <module>com.ifedorenko.m2e.sourcelookup.target</module>
   </modules>

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings( "restriction" )
-class SourceLookupMavenLaunchParticipant
+public class SourceLookupMavenLaunchParticipant
     implements IMavenLaunchParticipant
 {
     private static final Logger log = LoggerFactory.getLogger( SourceLookupMavenLaunchParticipant.class );

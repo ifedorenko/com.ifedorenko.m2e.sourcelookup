@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2011-2012 Igor Fedorenko
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *      Igor Fedorenko - initial API and implementation
- *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.io.BufferedInputStream;
@@ -15,9 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarEntry;
@@ -31,18 +19,56 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
-/**
- * Scans given location for pom.properties and extracts IProject, IMavenProjectFacade or GAV.
- */
-abstract class PomPropertiesScanner<T>
+public abstract class PomPropertiesScanner<T>
 {
+
+    private static final MetaInfMavenScanner<Properties> SCANNER = new MetaInfMavenScanner<Properties>()
+    {
+
+        @Override
+        protected Properties visitFile( File file )
+            throws IOException
+        {
+            InputStream is = new BufferedInputStream( new FileInputStream( file ) );
+            try
+            {
+                Properties properties = new Properties();
+                properties.load( is );
+                // TODO validate properties and path match
+                return properties;
+            }
+            finally
+            {
+                IOUtil.close( is );
+            }
+        }
+
+        @Override
+        protected Properties visitJarEntry( JarFile jar, JarEntry entry )
+            throws IOException
+        {
+            InputStream is = jar.getInputStream( entry );
+            try
+            {
+                Properties properties = new Properties();
+                properties.load( is );
+                // TODO validate properties and path match
+                return properties;
+            }
+            finally
+            {
+                IOUtil.close( is );
+            }
+        }
+    };
+
     public List<T> scan( String location )
         throws CoreException
     {
         IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();
 
         List<T> result = new ArrayList<T>();
-        for ( Properties pomProperties : loadPomProperties( location ) )
+        for ( Properties pomProperties : SCANNER.scan( location, "pom.properties" ) )
         {
             T t;
 
@@ -90,6 +116,12 @@ abstract class PomPropertiesScanner<T>
         return result;
     }
 
+    private File getFile( Properties properties, String name )
+    {
+        String value = properties.getProperty( name );
+        return value != null ? new File( value ) : null;
+    }
+
     protected abstract T visitGAV( String groupId, String artifactId, String version )
         throws CoreException;
 
@@ -97,112 +129,4 @@ abstract class PomPropertiesScanner<T>
 
     protected abstract T visitProject( IProject project );
 
-    private List<Properties> loadPomProperties( String urlStr )
-    {
-        List<Properties> result = new ArrayList<Properties>();
-        try
-        {
-            URL url = new URL( urlStr );
-
-            if ( "file".equals( url.getProtocol() ) )
-            {
-
-                File file = new File( url.getPath() );
-                if ( file.isDirectory() )
-                {
-                    getPomProperties( new File( file, "META-INF/maven" ), result );
-                }
-                else if ( file.isFile() )
-                {
-                    JarFile jar = new JarFile( file );
-                    try
-                    {
-                        getPomProperties( jar, result );
-                    }
-                    finally
-                    {
-                        jar.close();
-                    }
-                }
-            }
-        }
-        catch ( Exception ex )
-        {
-            // fall through
-        }
-        return result;
-    }
-
-    private void getPomProperties( JarFile jar, List<Properties> result )
-        throws IOException
-    {
-        Enumeration<JarEntry> entries = jar.entries();
-        while ( entries.hasMoreElements() )
-        {
-            JarEntry entry = entries.nextElement();
-            if ( !entry.isDirectory() )
-            {
-                String name = entry.getName();
-                if ( name.startsWith( "META-INF/maven" ) && name.endsWith( "pom.properties" ) )
-                {
-                    InputStream is = jar.getInputStream( entry );
-                    try
-                    {
-                        Properties properties = new Properties();
-                        properties.load( is );
-                        // TODO validate properties and path match
-                        result.add( properties );
-                    }
-                    finally
-                    {
-                        IOUtil.close( is );
-                    }
-                }
-            }
-        }
-    }
-
-    private void getPomProperties( File dir, List<Properties> result )
-    {
-        File[] files = dir.listFiles();
-        if ( files == null )
-        {
-            return;
-        }
-        for ( File file : files )
-        {
-            if ( file.isDirectory() )
-            {
-                getPomProperties( file, result );
-            }
-            else if ( file.isFile() && "pom.properties".equals( file.getName() ) )
-            {
-                try
-                {
-                    InputStream is = new BufferedInputStream( new FileInputStream( file ) );
-                    try
-                    {
-                        Properties properties = new Properties();
-                        properties.load( is );
-                        // TODO validate properties and path match
-                        result.add( properties );
-                    }
-                    finally
-                    {
-                        IOUtil.close( is );
-                    }
-                }
-                catch ( IOException e )
-                {
-                    // ignore
-                }
-            }
-        }
-    }
-
-    private File getFile( Properties properties, String name )
-    {
-        String value = properties.getProperty( name );
-        return value != null ? new File( value ) : null;
-    }
 }

@@ -22,9 +22,7 @@ for sources is performed in the following order
 
 # Installation
 
-* Install m2e 1.1 M5 or better. As of 2011-12-18, compatible m2e version can be
-  installed from 
-  https://repository.sonatype.org/content/repositories/forge-sites/m2e/1.1.0/N/LATEST/
+* Install m2e 1.1 M5 or better from http://www.eclipse.org/m2e/download/
 * Install Dynamic Sources Lookup m2e extension from 
   http://ifedorenko.github.com/m2e-extras/
 

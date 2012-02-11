@@ -20,6 +20,8 @@ import org.eclipse.jdt.debug.core.IJavaType;
 
 public final class JDIHelpers
 {
+    public static final String STRATA_M2E = "m2e";
+
     private JDIHelpers()
     {
     }
@@ -51,14 +53,14 @@ public final class JDIHelpers
 
         if ( declaringType != null )
         {
-            String[] locations = declaringType.getSourceNames( "m2e" );
+            String[] locations = declaringType.getSourceNames( STRATA_M2E );
 
-            if ( locations == null || locations.length < 1 )
+            if ( locations == null || locations.length < 2 )
             {
                 return null;
             }
 
-            return locations[0];
+            return locations[1];
         }
 
         return null;
@@ -71,8 +73,8 @@ public final class JDIHelpers
         if ( fElement instanceof IJavaStackFrame )
         {
             IJavaStackFrame stackFrame = (IJavaStackFrame) fElement;
-            // under JSR 45 source path from the stack frame is more precise than anything derived from the type:
-            String sourcePath = stackFrame.getSourcePath();
+            // under JSR 45 source path from the stack frame is more precise than anything derived from the type
+            String sourcePath = stackFrame.getSourcePath( STRATA_M2E );
             if ( sourcePath != null )
             {
                 return sourcePath;
@@ -95,9 +97,14 @@ public final class JDIHelpers
 
         if ( declaringType != null )
         {
-            String declaringTypeName = declaringType.getName();
-            String[] sourcePaths = declaringType.getSourcePaths( null );
-            return sourcePaths != null ? sourcePaths[0] : generateSourceName( declaringTypeName );
+            String[] sourcePaths = declaringType.getSourcePaths( STRATA_M2E );
+
+            if ( sourcePaths != null && sourcePaths.length > 0 && sourcePaths[0] != null )
+            {
+                return sourcePaths[0];
+            }
+
+            return generateSourceName( declaringType.getName() );
         }
 
         return null;

@@ -62,6 +62,7 @@ public class Premain
                     {
                         public void visitSource( String source, String debug )
                         {
+                            String javaSource = source;
                             if ( debug != null )
                             {
                                 System.err.println( "m2e SMAP merge is not supported!" );
@@ -69,19 +70,26 @@ public class Premain
                             }
                             else
                             {
+                                // as a workaround for 368212, mangle standard java strata source name
+                                // this will force JDT use m2e strata exclusively
+                                javaSource = ".";
+
                                 StringBuilder smap = new StringBuilder();
                                 smap.append( "SMAP\n" );
-                                smap.append( source ).append( "\n" );
-                                smap.append( "Java\n" );
+                                smap.append( javaSource ).append( "\n" );
+                                smap.append( "Java\n" ); // default strata name
                                 smap.append( "*S m2e\n" );
                                 smap.append( "*F\n" );
-                                smap.append( "1 " ).append( location ).append( "\n" );
-                                smap.append( "*L\n" );// JDT insists on LineSection
+                                smap.append( "1 " ).append( source ).append( "\n" );
+                                smap.append( "2 " ).append( location ).append( "\n" );
+                                // JSR-045, StratumSection
+                                // "One FileSection and one LineSection (in either order) must follow the StratumSection"
+                                smap.append( "*L\n" );
                                 smap.append( "*E\n" );
                                 debug = smap.toString();
                             }
 
-                            super.visitSource( source, debug );
+                            super.visitSource( javaSource, debug );
                         };
 
                     }, 0 );

@@ -156,7 +156,10 @@ class SourceLookupParticipant
     {
         for ( ISourceContainer container : containers.values() )
         {
-            container.dispose();
+            if ( container != null ) // possible for non-maven jars
+            {
+                container.dispose();
+            }
         }
         containers.clear();
     }

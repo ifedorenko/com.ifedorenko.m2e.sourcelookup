@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupParticipant;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
 import org.eclipse.m2e.internal.launch.MavenLaunchUtils;
 import org.slf4j.Logger;
@@ -57,6 +58,22 @@ public class SourceLookupMavenLaunchParticipant
     public List<ISourceLookupParticipant> getSourceLookupParticipants( ILaunchConfiguration configuration,
                                                                        ILaunch launch, IProgressMonitor monitor )
     {
-        return Collections.<ISourceLookupParticipant> singletonList( new SourceLookupParticipant() );
+        List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
+        participants.add( new SourceLookupParticipant() );
+
+        // as a workaround for 368212, javaagent mangles standard java jsr45 strata, which breaks custom source
+        // code lookup configuration. To make this work, contribute m2e-aware JavaSourceLookupParticipant, which
+        // uses source path information from m2e strata
+        participants.add( new JavaSourceLookupParticipant()
+        {
+            @Override
+            public String getSourceName( Object object )
+                throws CoreException
+            {
+                String sourcePath = JDIHelpers.getSourcePath( object );
+                return sourcePath != null ? sourcePath : super.getSourceName( object );
+            }
+        } );
+        return participants;
     }
 }

@@ -16,7 +16,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.version>0.14.0-SNAPSHOT</tycho.version>
+    <tycho.version>0.14.0</tycho.version>
   </properties>
 
   <repositories>

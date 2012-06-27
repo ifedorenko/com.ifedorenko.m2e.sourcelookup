@@ -16,18 +16,18 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.version>0.14.0</tycho.version>
+    <tycho.version>0.15.0</tycho.version>
   </properties>
 
   <repositories>
     <repository>
-      <id>m2e-1.1-latest</id>
-      <url>https://repository.sonatype.org/content/repositories/forge-sites/m2e/1.1.0/N/LATEST/</url>
+      <id>eclipse</id>
+      <url>http://download.eclipse.org/releases/juno</url>
       <layout>p2</layout>
     </repository>
     <repository>
       <id>m2e-extras</id>
-      <url>https://repository.sonatype.org/content/repositories/forge-sites/m2e-extras/0.15.0/N/0.15.0.201109290002/</url>
+      <url>https://repository.sonatype.org/content/repositories/forge-sites/m2e-extras/0.15.0/N/0.15.0.201206251206</url>
       <layout>p2</layout>
     </repository>
   </repositories>
@@ -43,7 +43,6 @@
     <module>com.ifedorenko.m2e.sourcelookup</module>
     <module>com.ifedorenko.m2e.sourcelookup.ui</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
-    <module>com.ifedorenko.m2e.sourcelookup.target</module>
   </modules>
 
   <build>
@@ -53,22 +52,6 @@
         <artifactId>tycho-maven-plugin</artifactId>
         <version>${tycho.version}</version>
         <extensions>true</extensions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <target>
-            <artifact>
-              <groupId>com.ifedorenko.m2e</groupId>
-              <artifactId>com.ifedorenko.m2e.sourcelookup.target</artifactId>
-              <version>${project.version}</version>
-              <classifier>eclipse</classifier>
-            </artifact>
-          </target>
-        </configuration>
       </plugin>
     </plugins>
   </build>

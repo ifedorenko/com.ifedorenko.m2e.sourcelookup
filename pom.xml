@@ -32,15 +32,9 @@
     </repository>
   </repositories>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>tycho-snapshots</id>
-      <url>https://oss.sonatype.org/content/groups/public/</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <modules>
     <module>com.ifedorenko.m2e.sourcelookup</module>
+    <module>com.ifedorenko.m2e.sourcelookup.pde</module>
     <module>com.ifedorenko.m2e.sourcelookup.ui</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
   </modules>

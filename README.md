@@ -20,9 +20,13 @@ for sources is performed in the following order
 * sources jar artifact corresponding to the GAV is resolved from Maven
   repositories.
 
+In addition to Maven-specific source code lookup, implementation also supports
+Equinox-based runtimes, which is particularly useful for debugging Tycho builds
+where Equinox is embedded in Maven runtime.
+
 # Installation
 
-* Install m2e 1.1 M5 or better from http://www.eclipse.org/m2e/download/
+* Install m2e 1.1 or better from http://www.eclipse.org/m2e/download/
 * Install Dynamic Sources Lookup m2e extension from 
   http://ifedorenko.github.com/m2e-extras/
 

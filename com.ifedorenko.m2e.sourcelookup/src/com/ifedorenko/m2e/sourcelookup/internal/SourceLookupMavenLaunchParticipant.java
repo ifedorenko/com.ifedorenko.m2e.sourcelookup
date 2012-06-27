@@ -11,7 +11,9 @@
 package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +61,16 @@ public class SourceLookupMavenLaunchParticipant
                                                                        ILaunch launch, IProgressMonitor monitor )
     {
         List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
-        participants.add( new SourceLookupParticipant() );
+
+        ServiceLoader<ISourceLookupParticipant> serviceLoader =
+            ServiceLoader.load( ISourceLookupParticipant.class,
+                                SourceLookupMavenLaunchParticipant.class.getClassLoader() );
+
+        Iterator<ISourceLookupParticipant> participantIterator = serviceLoader.iterator();
+        while ( participantIterator.hasNext() )
+        {
+            participants.add( participantIterator.next() );
+        }
 
         // as a workaround for 368212, javaagent mangles standard java jsr45 strata, which breaks custom source
         // code lookup configuration. To make this work, contribute m2e-aware JavaSourceLookupParticipant, which

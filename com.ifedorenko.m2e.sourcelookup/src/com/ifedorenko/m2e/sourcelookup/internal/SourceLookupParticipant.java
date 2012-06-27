@@ -30,7 +30,7 @@ import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
-class SourceLookupParticipant
+public class SourceLookupParticipant
     implements ISourceLookupParticipant
 {
 

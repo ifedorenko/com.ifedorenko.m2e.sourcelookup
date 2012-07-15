@@ -12,7 +12,6 @@ package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -30,19 +29,16 @@ public abstract class MetaInfMavenScanner<T>
     public List<T> scan( String location, String filename )
     {
         List<T> result = new ArrayList<T>();
-        try
+        File file = UrlUtils.toFile( location );
+        if ( file != null )
         {
-            URL url = new URL( location );
-
-            if ( "file".equals( url.getProtocol() ) )
+            if ( file.isDirectory() )
             {
-
-                File file = new File( url.getPath() );
-                if ( file.isDirectory() )
-                {
-                    scanFilesystem( new File( file, META_INF_MAVEN ), filename, result );
-                }
-                else if ( file.isFile() )
+                scanFilesystem( new File( file, META_INF_MAVEN ), filename, result );
+            }
+            else if ( file.isFile() )
+            {
+                try
                 {
                     JarFile jar = new JarFile( file );
                     try
@@ -54,11 +50,11 @@ public abstract class MetaInfMavenScanner<T>
                         jar.close();
                     }
                 }
+                catch ( IOException e )
+                {
+                    // fall through
+                }
             }
-        }
-        catch ( Exception ex )
-        {
-            // fall through
         }
         return result;
     }

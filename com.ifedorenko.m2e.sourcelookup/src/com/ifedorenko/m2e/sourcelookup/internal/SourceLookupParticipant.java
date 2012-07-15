@@ -17,8 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
@@ -83,7 +87,19 @@ public class SourceLookupParticipant
     protected ISourceContainer createSourceContainer( String location )
         throws CoreException
     {
-        List<ISourceContainer> containers = new PomPropertiesScanner<ISourceContainer>()
+        List<ISourceContainer> containers = null;
+
+        // look among workspace projects first
+        for ( IMavenProjectFacade facade : MavenPlugin.getMavenProjectRegistry().getProjects() )
+        {
+            if ( isLocationEquals( facade.getOutputLocation(), location )
+                || isLocationEquals( facade.getTestOutputLocation(), location ) )
+            {
+                return new JavaProjectSourceContainer( JavaCore.create( facade.getProject() ) );
+            }
+        }
+
+        containers = new PomPropertiesScanner<ISourceContainer>()
         {
             @Override
             protected ISourceContainer visitGAV( String groupId, String artifactId, String version )
@@ -143,6 +159,18 @@ public class SourceLookupParticipant
         }
 
         return new CompositeSourceContainer( containers );
+    }
+
+    private boolean isLocationEquals( IPath workspaceLocation, String url )
+    {
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IFolder folder = root.getFolder( workspaceLocation );
+        if ( folder == null )
+        {
+            return false;
+        }
+        IPath location = folder.getLocation();
+        return location != null && location.equals( UrlUtils.toPath( url ) );
     }
 
     public String getSourceName( Object object )

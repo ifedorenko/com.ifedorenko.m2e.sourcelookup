@@ -15,3 +15,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
 Fragment-Host: com.ifedorenko.m2e.sourcelookup
+Export-Package: copied.org.eclipse.pde.internal.launching.sourcelookup;x-internal:=true

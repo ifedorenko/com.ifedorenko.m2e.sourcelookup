@@ -75,7 +75,10 @@ public class PDESourceLookupParticipant
         {
             PDESourceLookupQuery query = new PDESourceLookupQuery( this, object );
             SafeRunner.run( query );
-            sourceElements = new Object[] { query.getResult() };
+            if ( query.getResult() != null )
+            {
+                sourceElements = new Object[] { query.getResult() };
+            }
         }
         return sourceElements;
     }

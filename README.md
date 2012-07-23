@@ -53,3 +53,6 @@ and is enabled by default for all debug Maven launches.
   matching sources.
 * javaagent implementation will not instrument classes that have existing
   JSR-45 SMAP.
+* Exception stack traces are little messed up (all sources are shown as ``.''),
+  this is unfortunate sideeffect of a workaround 
+  for https://bugs.eclipse.org/bugs/show_bug.cgi?id=368212 

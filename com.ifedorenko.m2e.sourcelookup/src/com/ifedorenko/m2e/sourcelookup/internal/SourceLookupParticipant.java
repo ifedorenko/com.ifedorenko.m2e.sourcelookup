@@ -19,31 +19,41 @@ import java.util.Map;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
+import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
+import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
 
 public class SourceLookupParticipant
-    implements ISourceLookupParticipant
+    implements ISourceLookupParticipant, IMavenProjectChangedListener
 {
 
     private ISourceLookupDirector director;
 
-    private Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
+    private final Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
 
     public void init( ISourceLookupDirector director )
     {
+        MavenPlugin.getMavenProjectRegistry().addMavenProjectChangedListener( this );
         this.director = director;
     }
 
@@ -102,9 +112,13 @@ public class SourceLookupParticipant
         containers = new PomPropertiesScanner<ISourceContainer>()
         {
             @Override
-            protected ISourceContainer visitGAV( String groupId, String artifactId, String version )
+            protected ISourceContainer visitArtifact( ArtifactKey artifact )
                 throws CoreException
             {
+                String groupId = artifact.getGroupId();
+                String artifactId = artifact.getArtifactId();
+                String version = artifact.getVersion();
+
                 IMaven maven = MavenPlugin.getMaven();
 
                 // check in local repository first
@@ -133,7 +147,59 @@ public class SourceLookupParticipant
             @Override
             protected ISourceContainer visitMavenProject( IMavenProjectFacade mavenProject )
             {
-                return new JavaProjectSourceContainer( JavaCore.create( mavenProject.getProject() ) );
+                IJavaProject javaProject = JavaCore.create( mavenProject.getProject() );
+
+                List<ISourceContainer> containers = new ArrayList<ISourceContainer>();
+
+                boolean hasSources = false;
+
+                try
+                {
+                    for ( IClasspathEntry cpe : javaProject.getRawClasspath() )
+                    {
+                        switch ( cpe.getEntryKind() )
+                        {
+                            case IClasspathEntry.CPE_SOURCE:
+                                hasSources = true;
+                                break;
+                            case IClasspathEntry.CPE_LIBRARY:
+                                IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+                                IResource lib = workspaceRoot.findMember( cpe.getPath() );
+                                IPackageFragmentRoot fragmentRoot;
+                                if ( lib != null )
+                                {
+                                    fragmentRoot = javaProject.getPackageFragmentRoot( lib );
+                                }
+                                else
+                                {
+                                    fragmentRoot = javaProject.getPackageFragmentRoot( cpe.getPath().toOSString() );
+                                }
+                                containers.add( new PackageFragmentRootSourceContainer( fragmentRoot ) );
+                                break;
+                        }
+                    }
+                }
+                catch ( JavaModelException e )
+                {
+                    // ignore... maybe log
+                }
+
+                if ( hasSources )
+                {
+                    containers.add( 0, new JavaProjectSourceContainer( javaProject ) );
+                }
+
+                if ( containers.isEmpty() )
+                {
+                    return null;
+                }
+
+                if ( containers.size() == 1 )
+                {
+                    return containers.get( 0 );
+                }
+
+                return new CompositeSourceContainer( containers );
             }
 
             @Override
@@ -182,20 +248,35 @@ public class SourceLookupParticipant
 
     public void dispose()
     {
-        for ( ISourceContainer container : containers.values() )
+        disposeContainers();
+        MavenPlugin.getMavenProjectRegistry().removeMavenProjectChangedListener( this );
+    }
+
+    protected void disposeContainers()
+    {
+        synchronized ( containers )
         {
-            if ( container != null ) // possible for non-maven jars
+            for ( ISourceContainer container : containers.values() )
             {
-                container.dispose();
+                if ( container != null ) // possible for non-maven jars
+                {
+                    container.dispose();
+                }
             }
+            containers.clear();
         }
-        containers.clear();
     }
 
     public void sourceContainersChanged( ISourceLookupDirector director )
     {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void mavenProjectChanged( MavenProjectChangedEvent[] events, IProgressMonitor monitor )
+    {
+        disposeContainers();
     }
 
 }

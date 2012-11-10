@@ -37,6 +37,8 @@
     <module>com.ifedorenko.m2e.sourcelookup.pde</module>
     <module>com.ifedorenko.m2e.sourcelookup.ui</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
+    <module>com.ifedorenko.m2e.binaryproject</module>
+    <module>com.ifedorenko.m2e.binaryproject.tests</module>
   </modules>
 
   <build>

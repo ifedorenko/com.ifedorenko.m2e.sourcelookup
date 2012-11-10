@@ -106,7 +106,7 @@ public abstract class PomPropertiesScanner<T>
                 }
                 else
                 {
-                    t = visitGAV( groupId, artifactId, version );
+                    t = visitArtifact( new ArtifactKey( groupId, artifactId, version, null ) );
                 }
             }
 
@@ -122,8 +122,7 @@ public abstract class PomPropertiesScanner<T>
             IndexedArtifactFile indexed = identify( file );
             if ( indexed != null )
             {
-                ArtifactKey artifactKey = indexed.getArtifactKey();
-                T t = visitGAV( artifactKey.getGroupId(), artifactKey.getArtifactId(), artifactKey.getVersion() );
+                T t = visitArtifact( indexed.getArtifactKey() );
                 if ( t != null )
                 {
                     result.add( t );
@@ -174,7 +173,7 @@ public abstract class PomPropertiesScanner<T>
         return value != null ? new File( value ) : null;
     }
 
-    protected abstract T visitGAV( String groupId, String artifactId, String version )
+    protected abstract T visitArtifact( ArtifactKey artifact )
         throws CoreException;
 
     protected abstract T visitMavenProject( IMavenProjectFacade mavenProject );

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarEntry;
@@ -16,6 +17,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ArtifactKey;
+import org.eclipse.m2e.core.internal.index.IIndex;
+import org.eclipse.m2e.core.internal.index.IndexedArtifactFile;
+import org.eclipse.m2e.core.internal.index.nexus.CompositeIndex;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
@@ -111,9 +116,56 @@ public abstract class PomPropertiesScanner<T>
             }
         }
 
-        // TODO check with nexus index
+        File file = UrlUtils.toFile( location );
+        if ( file.isFile() )
+        {
+            IndexedArtifactFile indexed = identify( file );
+            if ( indexed != null )
+            {
+                ArtifactKey artifactKey = indexed.getArtifactKey();
+                T t = visitGAV( artifactKey.getGroupId(), artifactKey.getArtifactId(), artifactKey.getVersion() );
+                if ( t != null )
+                {
+                    result.add( t );
+                }
+            }
+        }
 
         return result;
+    }
+
+    protected IndexedArtifactFile identify( File file )
+        throws CoreException
+    {
+        IIndex index = MavenPlugin.getIndexManager().getAllIndexes();
+
+        List<IndexedArtifactFile> identified;
+        if ( index instanceof CompositeIndex )
+        {
+            identified = ( (CompositeIndex) index ).identifyAll( file );
+        }
+        else
+        {
+            IndexedArtifactFile indexed = index.identify( file );
+            if ( indexed != null )
+            {
+                identified = Collections.singletonList( indexed );
+            }
+            else
+            {
+                identified = Collections.emptyList();
+            }
+        }
+
+        for ( IndexedArtifactFile indexed : identified )
+        {
+            if ( indexed.sourcesExists == IIndex.PRESENT )
+            {
+                return indexed;
+            }
+        }
+
+        return null;
     }
 
     private File getFile( Properties properties, String name )

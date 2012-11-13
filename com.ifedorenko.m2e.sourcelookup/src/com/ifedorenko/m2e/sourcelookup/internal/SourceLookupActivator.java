@@ -54,9 +54,9 @@ public class SourceLookupActivator
         return plugin;
     }
 
-    public static void scheduleDownload( ArtifactKey artifactKey )
+    public static void scheduleDownload( ArtifactKey artifactKey, Runnable callback )
     {
-        getDefault().downloadJob.schedule( artifactKey );
+        getDefault().downloadJob.schedule( artifactKey, callback );
     }
 
 }

@@ -28,7 +28,20 @@ class BackgroundDownloadJob
 {
     private static final Logger log = LoggerFactory.getLogger( BackgroundDownloadJob.class );
 
-    private final ArrayList<ArtifactKey> queue = new ArrayList<ArtifactKey>();
+    private static class QueueItem
+    {
+        public final ArtifactKey artifact;
+
+        public final Runnable callback;
+
+        public QueueItem( ArtifactKey artifact, Runnable callback )
+        {
+            this.artifact = artifact;
+            this.callback = callback;
+        }
+    }
+
+    private final ArrayList<QueueItem> queue = new ArrayList<QueueItem>();
 
     private final IMaven maven;
 
@@ -41,34 +54,36 @@ class BackgroundDownloadJob
     @Override
     protected IStatus run( IProgressMonitor monitor )
     {
-        ArrayList<ArtifactKey> requests;
+        ArrayList<QueueItem> requests;
         synchronized ( this.queue )
         {
-            requests = new ArrayList<ArtifactKey>( this.queue );
+            requests = new ArrayList<QueueItem>( this.queue );
             this.queue.clear();
         }
 
-        for ( ArtifactKey key : requests )
+        for ( QueueItem queueItem : requests )
         {
+            ArtifactKey artifact = queueItem.artifact;
             try
             {
-                maven.resolve( key.getGroupId(), key.getArtifactId(), key.getVersion(), "jar", key.getClassifier(),
-                               null, monitor );
+                maven.resolve( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "jar",
+                               artifact.getClassifier(), null, monitor );
+                queueItem.callback.run();
             }
             catch ( CoreException e )
             {
-                log.debug( "Could not download sources artifact", e );
+                log.debug( "Could not download sources artifact {}", artifact, e );
             }
         }
 
         return Status.OK_STATUS;
     }
 
-    public void schedule( ArtifactKey key )
+    public void schedule( ArtifactKey key, Runnable callback )
     {
         synchronized ( queue )
         {
-            queue.add( key );
+            queue.add( new QueueItem( key, callback ) );
             schedule( 1000L );
         }
     }

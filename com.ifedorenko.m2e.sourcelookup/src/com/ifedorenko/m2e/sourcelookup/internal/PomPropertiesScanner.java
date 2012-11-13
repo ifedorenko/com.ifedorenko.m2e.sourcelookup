@@ -26,6 +26,7 @@ import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
 public abstract class PomPropertiesScanner<T>
 {
+    IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();
 
     private static final MetaInfMavenScanner<Properties> SCANNER = new MetaInfMavenScanner<Properties>()
     {
@@ -70,7 +71,6 @@ public abstract class PomPropertiesScanner<T>
     public List<T> scan( String location )
         throws CoreException
     {
-        IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();
 
         List<T> result = new ArrayList<T>();
         for ( Properties pomProperties : SCANNER.scan( location, "pom.properties" ) )
@@ -99,15 +99,7 @@ public abstract class PomPropertiesScanner<T>
                 String groupId = pomProperties.getProperty( "groupId" );
                 String artifactId = pomProperties.getProperty( "artifactId" );
                 String version = pomProperties.getProperty( "version" );
-                IMavenProjectFacade mavenProject = projectRegistry.getMavenProject( groupId, artifactId, version );
-                if ( mavenProject != null )
-                {
-                    t = visitMavenProject( mavenProject );
-                }
-                else
-                {
-                    t = visitArtifact( new ArtifactKey( groupId, artifactId, version, null ) );
-                }
+                t = visitGAVC( groupId, artifactId, version, null );
             }
 
             if ( t != null )
@@ -122,7 +114,8 @@ public abstract class PomPropertiesScanner<T>
             IndexedArtifactFile indexed = identify( file );
             if ( indexed != null )
             {
-                T t = visitArtifact( indexed.getArtifactKey() );
+                ArtifactKey a = indexed.getArtifactKey();
+                T t = visitGAVC( a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getClassifier() );
                 if ( t != null )
                 {
                     result.add( t );
@@ -165,6 +158,22 @@ public abstract class PomPropertiesScanner<T>
         }
 
         return null;
+    }
+
+    protected T visitGAVC( String groupId, String artifactId, String version, String classifier )
+        throws CoreException
+    {
+        T t;
+        IMavenProjectFacade mavenProject = projectRegistry.getMavenProject( groupId, artifactId, version );
+        if ( mavenProject != null )
+        {
+            t = visitMavenProject( mavenProject );
+        }
+        else
+        {
+            t = visitArtifact( new ArtifactKey( groupId, artifactId, version, classifier ) );
+        }
+        return t;
     }
 
     private File getFile( Properties properties, String name )

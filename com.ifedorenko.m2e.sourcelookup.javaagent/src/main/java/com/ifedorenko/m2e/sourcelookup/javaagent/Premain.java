@@ -70,10 +70,6 @@ public class Premain
                             }
                             else
                             {
-                                // as a workaround for 368212, mangle standard java strata source name
-                                // this will force JDT use m2e strata exclusively
-                                javaSource = ".";
-
                                 StringBuilder smap = new StringBuilder();
                                 smap.append( "SMAP\n" );
                                 smap.append( javaSource ).append( "\n" );

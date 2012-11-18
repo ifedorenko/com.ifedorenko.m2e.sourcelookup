@@ -2,7 +2,7 @@
 <feature
       id="com.ifedorenko.m2e.sourcelookup.feature"
       label="m2e dynamic source code lookup"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="Igor Fedorenko">
 
    <description>

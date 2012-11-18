@@ -12,8 +12,10 @@ retrived by Eclipse JDT debugger over JDWP.
 
 The class folders and jar files are scanned for 
 META-INF/maven/**/pom.properties to identify m2e project location and Maven 
-artifact (groupId,artifactId,version) tuple or "GAV" for short. The search
-for sources is performed in the following order
+artifact (groupId,artifactId,version) tuple or "GAV" for short. Enabled 
+Maven (Nexus) indexes are also consulted to identify jar file GAV.  
+
+The search for sources is performed in the following order
 * m2e workspace project name and location, if present, are matched to existing
   workspace projects
 * artifact GAV is matched to existing workspace projects
@@ -26,7 +28,9 @@ where Equinox is embedded in Maven runtime.
 
 # Installation
 
-* Install m2e 1.1 or better from http://www.eclipse.org/m2e/download/
+* Install patched JDT with https://bugs.eclipse.org/bugs/show_bug.cgi?id=368212
+  applied
+* Install m2e 1.3 or better from http://www.eclipse.org/m2e/download/
 * Install Dynamic Sources Lookup m2e extension from 
   http://ifedorenko.github.com/m2e-extras/
 
@@ -35,24 +39,26 @@ where Equinox is embedded in Maven runtime.
 Dynamic Sources Lookup m2e extension does not require any special configuration
 and is enabled by default for all debug Maven launches.
 
+# New in version 1.1
+
+* Requires m2e 1.3 and patched jdt
+* [new] Maven (Nexus) indexes are now used to identify jar files GAV.
+* [new] Ability to import artifacts as "Maven Binary" projects. Binary projects
+  allow conditional breakpoints and other operations that require java project.
+* [fix] Source editor should more reliably refresh after sources jar download.
+* [fix] Exception stack traces do not show source file names  
+
+
 # Known limitations
 
 * Requires Java 5 or later but only tested with Java 6. Will not work and will
   likely cause JVM startup failure for Java 1.4 and earlier. As a 
   workaround, disable "Dynamic Sources Lookup" Maven Launch Extension in the 
   launch configuration dialog.
-* Sources editor is not automatically refreshed after required sources jar
-  was downloaded from Maven repository. Click in correspoding Java stack
-  frame in Debug view to force sources editor refresh.
 * Sources resolution uses repositories and pluginRepositories configured in
   Maven User settings.xml but not the actual repository or snapshot repository
   from <distributionManagement> the artifact the class was loaded from.
 * Only locally running JVMs are supported. It is not possible to enable dynamic
   sources lookup for debug sessions connected to remotely running JVMs.
-* Does not use Maven/Nexus index to identify Jar file artifacts and find their 
-  matching sources.
 * javaagent implementation will not instrument classes that have existing
   JSR-45 SMAP.
-* Exception stack traces are little messed up (all sources are shown as ``.''),
-  this is unfortunate sideeffect of a workaround 
-  for https://bugs.eclipse.org/bugs/show_bug.cgi?id=368212 

@@ -45,34 +45,42 @@ public class ImportBinaryProjectHandler
                 return null;
             }
 
-            final List<ArtifactKey> artifacts = new PomPropertiesScanner<ArtifactKey>()
+            Job job = new Job( "Import binary projects" )
             {
                 @Override
-                protected ArtifactKey visitProject( IProject project )
+                protected IStatus run( IProgressMonitor monitor )
                 {
-                    return null;
-                }
+                    List<ArtifactKey> artifacts;
+                    try
+                    {
+                        artifacts = new PomPropertiesScanner<ArtifactKey>()
+                        {
+                            @Override
+                            protected ArtifactKey visitProject( IProject project )
+                            {
+                                return null;
+                            }
 
-                @Override
-                protected ArtifactKey visitMavenProject( IMavenProjectFacade mavenProject )
-                {
-                    return null;
-                }
+                            @Override
+                            protected ArtifactKey visitMavenProject( IMavenProjectFacade mavenProject )
+                            {
+                                return null;
+                            }
 
-                @Override
-                protected ArtifactKey visitArtifact( ArtifactKey artifact )
-                    throws CoreException
-                {
-                    return artifact;
-                }
-            }.scan( location );
+                            @Override
+                            protected ArtifactKey visitArtifact( ArtifactKey artifact )
+                                throws CoreException
+                            {
+                                return artifact;
+                            }
+                        }.scan( location );
+                    }
+                    catch ( CoreException e1 )
+                    {
+                        return e1.getStatus();
+                    }
 
-            if ( !artifacts.isEmpty() )
-            {
-                Job job = new Job( "Import binary projects" )
-                {
-                    @Override
-                    protected IStatus run( IProgressMonitor monitor )
+                    if ( !artifacts.isEmpty() )
                     {
                         List<IStatus> errors = new ArrayList<IStatus>();
 
@@ -81,26 +89,21 @@ public class ImportBinaryProjectHandler
                             try
                             {
                                 BinaryProjectPlugin.getInstance().create( artifact.getGroupId(),
-                                                                             artifact.getArtifactId(),
-                                                                             artifact.getVersion(), null, monitor );
+                                                                          artifact.getArtifactId(),
+                                                                          artifact.getVersion(), null, monitor );
                             }
                             catch ( CoreException e )
                             {
                                 errors.add( e.getStatus() );
                             }
                         }
-
-                        return Status.OK_STATUS;
                     }
-                };
-                job.schedule();
-            }
+                    return Status.OK_STATUS;
+                }
+            };
+            job.schedule();
         }
         catch ( DebugException e )
-        {
-            throw new ExecutionException( "Could not import binary project", e );
-        }
-        catch ( CoreException e )
         {
             throw new ExecutionException( "Could not import binary project", e );
         }

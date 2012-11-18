@@ -11,7 +11,6 @@
 package com.ifedorenko.m2e.sourcelookup.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.osgi.framework.BundleContext;
 
 public class SourceLookupActivator
@@ -22,7 +21,7 @@ public class SourceLookupActivator
 
     private static SourceLookupActivator plugin;
 
-    private BackgroundDownloadJob downloadJob;
+    private BackgroundProcessingJob backgroundJob;
 
     public SourceLookupActivator()
     {
@@ -35,14 +34,14 @@ public class SourceLookupActivator
 
         plugin = this;
 
-        downloadJob = new BackgroundDownloadJob();
+        backgroundJob = new BackgroundProcessingJob();
     }
 
     public void stop( BundleContext context )
         throws Exception
     {
-        downloadJob.cancel();
-        downloadJob = null;
+        backgroundJob.cancel();
+        backgroundJob = null;
 
         plugin = null;
 
@@ -54,9 +53,9 @@ public class SourceLookupActivator
         return plugin;
     }
 
-    public static void scheduleDownload( ArtifactKey artifactKey, Runnable callback )
+    public static void schedule( IRunnableWithProgress task )
     {
-        getDefault().downloadJob.schedule( artifactKey, callback );
+        getDefault().backgroundJob.schedule( task );
     }
 
 }

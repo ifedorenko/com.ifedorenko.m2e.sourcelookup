@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -53,6 +53,47 @@ public class SourceLookupParticipant
 
     private final Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
 
+    final IMaven maven = MavenPlugin.getMaven();;
+
+    private class CreateContainerRunnable
+        implements IRunnableWithProgress
+    {
+        private final Object element;
+
+        private final String location;
+
+        public CreateContainerRunnable( Object element, String location )
+        {
+            this.element = element;
+            this.location = location;
+        }
+
+        @Override
+        public void run( IProgressMonitor monitor )
+            throws CoreException
+        {
+            ISourceContainer container = createSourceContainer( monitor, location, monitor );
+            synchronized ( containers )
+            {
+                //
+                ISourceContainer oldContainer = containers.put( location, container );
+                if ( oldContainer != null )
+                {
+                    oldContainer.dispose();
+                }
+            }
+            if ( container != null )
+            {
+                director.clearSourceElements( element );
+                if ( element instanceof DebugElement )
+                {
+                    // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
+                    ( (DebugElement) element ).fireChangeEvent( DebugEvent.CONTENT );
+                }
+            }
+        }
+    }
+
     public void init( ISourceLookupDirector director )
     {
         MavenPlugin.getMavenProjectRegistry().addMavenProjectChangedListener( this );
@@ -78,7 +119,23 @@ public class SourceLookupParticipant
             }
             else
             {
-                container = createSourceContainer( fElement, location );
+                container = null;
+
+                // looks among workspace projects in caller (likely UI) thread. this is quick
+                for ( IMavenProjectFacade facade : MavenPlugin.getMavenProjectRegistry().getProjects() )
+                {
+                    if ( isLocationEquals( facade.getOutputLocation(), location )
+                        || isLocationEquals( facade.getTestOutputLocation(), location ) )
+                    {
+                        container = new JavaProjectSourceContainer( JavaCore.create( facade.getProject() ) );
+                        break;
+                    }
+                }
+
+                if ( container == null )
+                {
+                    SourceLookupActivator.schedule( new CreateContainerRunnable( fElement, location ) );
+                }
 
                 this.containers.put( location, container );
             }
@@ -99,22 +156,11 @@ public class SourceLookupParticipant
         return container.findSourceElements( sourcePath );
     }
 
-    protected ISourceContainer createSourceContainer( final Object fElement, final String location )
+    protected ISourceContainer createSourceContainer( final Object fElement, final String location,
+                                                      final IProgressMonitor monitor )
         throws CoreException
     {
-        List<ISourceContainer> containers = null;
-
-        // look among workspace projects first
-        for ( IMavenProjectFacade facade : MavenPlugin.getMavenProjectRegistry().getProjects() )
-        {
-            if ( isLocationEquals( facade.getOutputLocation(), location )
-                || isLocationEquals( facade.getTestOutputLocation(), location ) )
-            {
-                return new JavaProjectSourceContainer( JavaCore.create( facade.getProject() ) );
-            }
-        }
-
-        containers = new PomPropertiesScanner<ISourceContainer>()
+        List<ISourceContainer> containers = new PomPropertiesScanner<ISourceContainer>()
         {
             @Override
             protected ISourceContainer visitArtifact( ArtifactKey artifact )
@@ -126,41 +172,18 @@ public class SourceLookupParticipant
 
                 IMaven maven = MavenPlugin.getMaven();
 
-                // check in local repository first
-                ArtifactRepository localRepository = maven.getLocalRepository();
-                String relPath =
-                    maven.getArtifactPath( localRepository, groupId, artifactId, version, "jar", "sources" );
-                File file = new File( localRepository.getBasedir(), relPath );
-                if ( file.isFile() && file.canRead() )
+                List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
+                repositories.addAll( maven.getArtifactRepositories() );
+                repositories.addAll( maven.getPluginArtifactRepositories() );
+
+                if ( !maven.isUnavailable( groupId, artifactId, version, "jar", "sources", repositories ) )
                 {
-                    return new ExternalArchiveSourceContainer( file.getAbsolutePath(), true );
+                    Artifact resolve = maven.resolve( groupId, artifactId, version, "jar", "sources", null, monitor );
+
+                    return new ExternalArchiveSourceContainer( resolve.getFile().getAbsolutePath(), true );
                 }
-                else
-                {
-                    List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
-                    repositories.addAll( maven.getArtifactRepositories() );
-                    repositories.addAll( maven.getPluginArtifactRepositories() );
-                    if ( !maven.isUnavailable( groupId, artifactId, version, "jar", "sources", repositories ) )
-                    {
-                        Runnable callback = new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                refreshContainer( location );
-                                director.clearSourceElements( fElement );
-                                if ( fElement instanceof DebugElement )
-                                {
-                                    // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
-                                    ( (DebugElement) fElement ).fireChangeEvent( DebugEvent.CONTENT );
-                                }
-                            }
-                        };
-                        SourceLookupActivator.scheduleDownload( new ArtifactKey( groupId, artifactId, version,
-                                                                                 "sources" ), callback );
-                    }
-                    return null;
-                }
+
+                return null;
             }
 
             @Override
@@ -261,7 +284,6 @@ public class SourceLookupParticipant
     public String getSourceName( Object object )
         throws CoreException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 

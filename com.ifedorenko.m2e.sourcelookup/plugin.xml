@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
    <extension
          point="org.eclipse.m2e.launching.mavenLaunchParticipants">
       <mavenLaunchParticipant
@@ -9,6 +10,17 @@
             name="Dynamic Sources Lookup"
             modes="debug">
       </mavenLaunchParticipant>
+   </extension>
+
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.ifedorenko.m2e.sourcelookup.internal.JDIStratumTester"
+            id="com.ifedorenko.m2e.sourcelookup.jdiStratumTest"
+            namespace="com.ifedorenko.m2e.sourcelookup"
+            properties="m2estratum"
+            type="org.eclipse.debug.core.model.DebugElement">
+      </propertyTester>
    </extension>
 
 </plugin>

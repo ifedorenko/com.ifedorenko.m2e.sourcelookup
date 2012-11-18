@@ -33,46 +33,39 @@
             class="com.ifedorenko.m2e.sourcelookup.ui.internal.OpenPomCommandHandler"
             commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom">
          <enabledWhen>
-            <with
-                  variable="selection">
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <or>
-                     <adapt
-                           type="org.eclipse.jdt.debug.core.IJavaStackFrame">
-                     </adapt>
-                     <adapt
-                           type="org.eclipse.jdt.debug.core.IJavaVariable">
-                     </adapt>
-                  </or>
-               </iterate>
-            </with>
+            <reference
+                  definitionId="com.ifedorenko.m2e.sourcelookup.ui.m2estratum">
+            </reference>
          </enabledWhen>
       </handler>
       <handler
             class="com.ifedorenko.m2e.sourcelookup.ui.internal.ImportBinaryProjectHandler"
             commandId="com.ifedorenko.m2e.sourcelookup.ui.importBinaryProject">
          <enabledWhen>
-            <with
-                  variable="selection">
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <or>
-                     <adapt
-                           type="org.eclipse.jdt.debug.core.IJavaStackFrame">
-                     </adapt>
-                     <adapt
-                           type="org.eclipse.jdt.debug.core.IJavaVariable">
-                     </adapt>
-                  </or>
-               </iterate>
-            </with>
+            <reference
+                  definitionId="com.ifedorenko.m2e.sourcelookup.ui.m2estratum">
+            </reference>
          </enabledWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.ifedorenko.m2e.sourcelookup.ui.m2estratum">
+         <with
+               variable="selection">
+            <count
+                  value="1">
+            </count>
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <test
+                     property="com.ifedorenko.m2e.sourcelookup.m2estratum">
+               </test>
+            </iterate>
+         </with>
+      </definition>
    </extension>
 
 </plugin>

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
@@ -53,4 +54,14 @@ class CompositeSourceContainer
         return null;
     }
 
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        for ( ISourceContainer member : members )
+        {
+            member.dispose();
+        }
+        Arrays.fill( members, null );
+    }
 }

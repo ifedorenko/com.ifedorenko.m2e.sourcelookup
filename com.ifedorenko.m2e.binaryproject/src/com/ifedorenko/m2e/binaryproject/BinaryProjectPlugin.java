@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -47,6 +48,12 @@ public class BinaryProjectPlugin
     public static final String P_TYPE = "type";
 
     public static final String P_CLASSIFIER = "classifier";
+
+    /**
+     * Name of IProject persistent property that identifies absolute filesystem path of the target jar artifact of the
+     * workspace binary project.
+     */
+    public static final QualifiedName QNAME_JAR = new QualifiedName( PLUGIN_ID, "jar" );
 
     private static BinaryProjectPlugin SELF;
 

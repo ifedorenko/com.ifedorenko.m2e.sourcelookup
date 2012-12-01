@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.configurator.ProjectConfigurationRequest;
 import org.eclipse.m2e.jdt.IClasspathDescriptor;
@@ -64,13 +65,17 @@ public class ClasspathConfigurator
         List<ArtifactRepository> repositories = null; // TODO store in project preferences
 
         Artifact jar = maven.resolve( groupId, artifactId, version, type, classifier, repositories, monitor );
+        String jarLocation = jar.getFile().getAbsolutePath();
+
+        project.setPersistentProperty( BinaryProjectPlugin.QNAME_JAR, jarLocation );
+
         Artifact sources =
             maven.resolve( groupId, artifactId, version, type, getSourcesClassifier( classifier ), repositories,
                            monitor );
-        IClasspathEntryDescriptor libEntry =
-            classpath.addLibraryEntry( Path.fromOSString( jar.getFile().getAbsolutePath() ) );
+        IClasspathEntryDescriptor libEntry = classpath.addLibraryEntry( Path.fromOSString( jarLocation ) );
         libEntry.setExported( true );
         libEntry.setSourceAttachment( Path.fromOSString( sources.getFile().getAbsolutePath() ), null );
+        libEntry.setArtifactKey( new ArtifactKey( groupId, artifactId, version, classifier ) );
     }
 
     @Override

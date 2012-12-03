@@ -40,6 +40,11 @@ public class SourceLookupMavenLaunchParticipant
     @Override
     public String getVMArguments( ILaunchConfiguration configuration, ILaunch launch, IProgressMonitor monitor )
     {
+        return getVMArguments();
+    }
+
+    public static String getVMArguments()
+    {
         try
         {
             String javaagent =

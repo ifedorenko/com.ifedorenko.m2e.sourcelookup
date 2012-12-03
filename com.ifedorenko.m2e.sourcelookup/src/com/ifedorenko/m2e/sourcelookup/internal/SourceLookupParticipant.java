@@ -25,6 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.model.DebugElement;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
@@ -44,6 +45,8 @@ import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
+
+import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
 
 public class SourceLookupParticipant
     implements ISourceLookupParticipant, IMavenProjectChangedListener
@@ -128,6 +131,15 @@ public class SourceLookupParticipant
                         || isLocationEquals( facade.getTestOutputLocation(), location ) )
                     {
                         container = new JavaProjectSourceContainer( JavaCore.create( facade.getProject() ) );
+                        break;
+                    }
+
+                    String jarLocation = facade.getProject().getPersistentProperty( BinaryProjectPlugin.QNAME_JAR );
+                    if ( jarLocation != null && Path.fromOSString( jarLocation ).equals( UrlUtils.toPath( location ) ) )
+                    {
+                        IJavaProject javaProject = JavaCore.create( facade.getProject() );
+                        IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot( jarLocation );
+                        container = new PackageFragmentRootSourceContainer( fragmentRoot );
                         break;
                     }
                 }

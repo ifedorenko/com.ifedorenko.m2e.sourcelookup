@@ -148,7 +148,10 @@ public class SourceLookupParticipant
                 {
                     SourceLookupActivator.schedule( new CreateContainerRunnable( fElement, location ) );
                 }
-
+                else
+                {
+                    container.init( director );
+                }
                 this.containers.put( location, container );
             }
         }

@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -72,7 +74,7 @@ public abstract class PomPropertiesScanner<T>
         throws CoreException
     {
 
-        List<T> result = new ArrayList<T>();
+        Set<T> result = new LinkedHashSet<T>();
         for ( Properties pomProperties : SCANNER.scan( location, "pom.properties" ) )
         {
             T t;
@@ -123,7 +125,7 @@ public abstract class PomPropertiesScanner<T>
             }
         }
 
-        return result;
+        return new ArrayList<T>( result );
     }
 
     protected IndexedArtifactFile identify( File file )

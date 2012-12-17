@@ -3,7 +3,6 @@ package com.ifedorenko.m2e.sourcelookup.internal;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.debug.core.DebugException;
 
-
 public class JDIStratumTester
     extends PropertyTester
 {
@@ -11,14 +10,16 @@ public class JDIStratumTester
     @Override
     public boolean test( Object receiver, String property, Object[] args, Object expectedValue )
     {
+        boolean result;
         try
         {
-            return JDIHelpers.getLocation( receiver ) != null;
+            result = JDIHelpers.getLocation( receiver ) != null;
         }
         catch ( DebugException e )
         {
-            return false;
+            result = false;
         }
+        return result;
     }
 
 }

@@ -5,14 +5,20 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.debug.ui.DebugView?after=emptyEditGroup">
+            locationURI="popup:org.eclipse.ui.popup.any?after=emptyEditGroup">
          <command
                commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom"
                style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
          </command>
          <command
                commandId="com.ifedorenko.m2e.sourcelookup.ui.importBinaryProject"
                style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>

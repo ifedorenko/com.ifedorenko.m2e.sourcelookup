@@ -33,6 +33,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.MetaInfMavenScanner;
 
+@SuppressWarnings( "restriction" )
 public class OpenPomCommandHandler
     extends AbstractHandler
 {

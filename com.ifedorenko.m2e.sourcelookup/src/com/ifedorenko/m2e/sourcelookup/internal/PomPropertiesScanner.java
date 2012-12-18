@@ -26,6 +26,7 @@ import org.eclipse.m2e.core.internal.index.nexus.CompositeIndex;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
+@SuppressWarnings( "restriction" )
 public abstract class PomPropertiesScanner<T>
 {
     IMavenProjectRegistry projectRegistry = MavenPlugin.getMavenProjectRegistry();

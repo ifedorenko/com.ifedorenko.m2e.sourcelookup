@@ -28,49 +28,9 @@ public class ImportBinaryProjectHandler
     {
         ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
 
-        if ( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
-        {
-            return null;
-        }
         try
         {
-            final String location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
-
-            if ( location == null )
-            {
-                return null;
-            }
-
-            Job job = new AbstractBinaryProjectsImportJob()
-            {
-                @Override
-                protected List<ArtifactKey> getArtifactKeys()
-                    throws CoreException
-                {
-                    return new PomPropertiesScanner<ArtifactKey>()
-                    {
-                        @Override
-                        protected ArtifactKey visitProject( IProject project )
-                        {
-                            return null;
-                        }
-
-                        @Override
-                        protected ArtifactKey visitMavenProject( IMavenProjectFacade mavenProject )
-                        {
-                            return null;
-                        }
-
-                        @Override
-                        protected ArtifactKey visitArtifact( ArtifactKey artifact )
-                            throws CoreException
-                        {
-                            return artifact;
-                        }
-                    }.scan( location );
-                }
-            };
-            job.schedule();
+            importBinaryProjects( selection );
         }
         catch ( DebugException e )
         {
@@ -78,5 +38,53 @@ public class ImportBinaryProjectHandler
         }
 
         return null;
+    }
+
+    public static void importBinaryProjects( ISelection selection )
+        throws DebugException
+    {
+        if ( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
+        {
+            return;
+        }
+
+        final String location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
+
+        if ( location == null )
+        {
+            return;
+        }
+
+        Job job = new AbstractBinaryProjectsImportJob()
+        {
+            @Override
+            protected List<ArtifactKey> getArtifactKeys()
+                throws CoreException
+            {
+                return new PomPropertiesScanner<ArtifactKey>()
+                {
+                    @Override
+                    protected ArtifactKey visitProject( IProject project )
+                    {
+                        return null;
+                    }
+
+                    @Override
+                    protected ArtifactKey visitMavenProject( IMavenProjectFacade mavenProject )
+                    {
+                        return null;
+                    }
+
+                    @Override
+                    protected ArtifactKey visitArtifact( ArtifactKey artifact )
+                        throws CoreException
+                    {
+                        return artifact;
+                    }
+                }.scan( location );
+            }
+        };
+        job.setUser( true );
+        job.schedule();
     }
 }

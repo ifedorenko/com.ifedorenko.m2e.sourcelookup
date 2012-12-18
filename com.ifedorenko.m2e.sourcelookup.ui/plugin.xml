@@ -73,5 +73,21 @@
          </with>
       </definition>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="com.ifedorenko.m2e.sourcelookup.ui.bug396796workaround"
+            objectClass="com.ifedorenko.m2e.sourcelookup.internal.JDILocation">
+         <action
+               class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.ImportBinaryProjectAction"
+               icon="icons/binary_project.gif"
+               id="com.ifedorenko.m2e.sourcelookup.ui.actionImportBinaryProject"
+               label="Import Binary Project (396796)"
+               menubarPath="emptyEditGroup"
+               style="push">
+         </action>
+      </objectContribution>
+   </extension>
 
 </plugin>

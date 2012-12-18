@@ -26,6 +26,11 @@
       <layout>p2</layout>
     </repository>
     <repository>
+      <id>eclipse-43M4</id>
+      <url>http://download.eclipse.org/eclipse/updates/4.3milestones</url>
+      <layout>p2</layout>
+    </repository>
+    <repository>
       <id>m2e-extras</id>
       <url>http://nexus.tesla.io:8081/nexus/content/sites/m2e.extras/m2e/1.3.0/N/LATEST/</url>
       <layout>p2</layout>

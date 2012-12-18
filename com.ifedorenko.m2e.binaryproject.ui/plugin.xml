@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.m2e"
+            class="com.ifedorenko.m2e.binaryproject.ui.internal.BinaryProjectImportWizard"
+            icon="icons/binary_project.gif"
+            id="com.ifedorenko.m2e.binaryproject.ui.binaryProjectImportWizard"
+            name="Materialize Maven Binary Projects">
+      </wizard>
+   </extension>
+
+</plugin>

@@ -32,13 +32,11 @@ public class DynamicSourceLookupTab
         lblJvmStartupParameters.setText( "JVM startup parameters" );
 
         Text text = new Text( composite, SWT.BORDER | SWT.WRAP | SWT.MULTI );
-        text.setEditable( false );
-        text.setText( SourceLookupMavenLaunchParticipant.getVMArguments() );
-        GridData gd_text = new GridData( SWT.FILL, SWT.TOP, true, true, 1, 1 );
-        gd_text.widthHint = 200;
-        gd_text.minimumHeight = 100;
+        GridData gd_text = new GridData( SWT.FILL, SWT.FILL, true, true, 1, 1 );
         gd_text.horizontalIndent = 10;
         text.setLayoutData( gd_text );
+        text.setEditable( false );
+        text.setText( SourceLookupMavenLaunchParticipant.getVMArguments() );
     }
 
     @Override

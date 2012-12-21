@@ -93,7 +93,7 @@ public abstract class PomPropertiesScanner<T>
             File projectLocation = getFile( pomProperties, "m2e.projectLocation" );
             IProject project =
                 projectName != null ? ResourcesPlugin.getWorkspace().getRoot().getProject( projectName ) : null;
-            if ( project != null && project.getLocation().toFile().equals( projectLocation ) )
+            if ( project != null && project.isAccessible() && project.getLocation().toFile().equals( projectLocation ) )
             {
                 IMavenProjectFacade mavenProject = projectRegistry.getProject( project );
 

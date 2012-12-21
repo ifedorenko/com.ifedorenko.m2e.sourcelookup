@@ -51,14 +51,14 @@ public class OpenPomCommandHandler
 
         try
         {
-            final String location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
+            final File location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
 
             if ( location == null )
             {
                 return null;
             }
 
-            final String name = new File( location ).getName();
+            final String name = location.getName();
 
             List<IEditorInput> inputs = new MetaInfMavenScanner<IEditorInput>()
             {

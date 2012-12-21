@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -22,6 +23,8 @@ public class SourceLookupActivator
     private static SourceLookupActivator plugin;
 
     private BackgroundProcessingJob backgroundJob;
+
+    private JavaProjectSources javaProjectSources;
 
     public SourceLookupActivator()
     {
@@ -43,6 +46,9 @@ public class SourceLookupActivator
         backgroundJob.cancel();
         backgroundJob = null;
 
+        javaProjectSources.close();
+        javaProjectSources = null;
+
         plugin = null;
 
         super.stop( context );
@@ -58,4 +64,20 @@ public class SourceLookupActivator
         getDefault().backgroundJob.schedule( task );
     }
 
+    public static JavaProjectSources getWorkspaceSources()
+        throws CoreException
+    {
+        return getDefault().getWorkspaceSources0();
+    }
+
+    private synchronized JavaProjectSources getWorkspaceSources0()
+        throws CoreException
+    {
+        if ( javaProjectSources == null )
+        {
+            javaProjectSources = new JavaProjectSources();
+            javaProjectSources.initialize();
+        }
+        return javaProjectSources;
+    }
 }

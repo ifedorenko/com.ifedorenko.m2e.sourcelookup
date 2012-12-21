@@ -26,10 +26,9 @@ public abstract class MetaInfMavenScanner<T>
 
     private static final String META_INF_MAVEN = "META-INF/maven";
 
-    public List<T> scan( String location, String filename )
+    public List<T> scan( File file, String filename )
     {
         List<T> result = new ArrayList<T>();
-        File file = UrlUtils.toFile( location );
         if ( file != null )
         {
             if ( file.isDirectory() )

@@ -11,6 +11,8 @@
 package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.jdt.debug.core.IJavaObject;
@@ -30,7 +32,7 @@ public final class JDIHelpers
     // jdt debug boilerplate and other ideas are "borrowed" from
     // org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.run()
 
-    public static String getLocation( Object fElement )
+    public static File getLocation( Object fElement )
         throws DebugException
     {
         if ( fElement instanceof JDILocation )
@@ -74,7 +76,18 @@ public final class JDIHelpers
                 return null;
             }
 
-            return locations[1];
+            try
+            {
+                URL url = new URL( locations[1] );
+                if ( "file".equals( url.getProtocol() ) )
+                {
+                    return new File( url.getPath() );
+                }
+            }
+            catch ( MalformedURLException e )
+            {
+                // fall through
+            }
         }
 
         return null;
@@ -140,5 +153,4 @@ public final class JDIHelpers
             qualifiedTypeName = qualifiedTypeName.substring( 0, index );
         return qualifiedTypeName.replace( '.', File.separatorChar ) + ".java"; //$NON-NLS-1$
     }
-
 }

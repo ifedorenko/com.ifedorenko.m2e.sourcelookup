@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,28 +18,19 @@ import java.util.Map;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.DebugElement;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
-import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -46,26 +38,24 @@ import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
 
-import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
-
 public class SourceLookupParticipant
     implements ISourceLookupParticipant, IMavenProjectChangedListener
 {
 
     private ISourceLookupDirector director;
 
-    private final Map<String, ISourceContainer> containers = new HashMap<String, ISourceContainer>();
+    private final Map<File, ISourceContainer> containers = new HashMap<File, ISourceContainer>();
 
-    final IMaven maven = MavenPlugin.getMaven();;
+    final IMaven maven = MavenPlugin.getMaven();
 
     private class CreateContainerRunnable
         implements IRunnableWithProgress
     {
         private final Object element;
 
-        private final String location;
+        private final File location;
 
-        public CreateContainerRunnable( Object element, String location )
+        public CreateContainerRunnable( Object element, File location )
         {
             this.element = element;
             this.location = location;
@@ -106,7 +96,7 @@ public class SourceLookupParticipant
     public Object[] findSourceElements( Object fElement )
         throws CoreException
     {
-        String location = JDIHelpers.getLocation( fElement );
+        File location = JDIHelpers.getLocation( fElement );
 
         if ( location == null )
         {
@@ -114,6 +104,7 @@ public class SourceLookupParticipant
         }
 
         ISourceContainer container;
+
         synchronized ( this.containers )
         {
             if ( this.containers.containsKey( location ) )
@@ -122,25 +113,17 @@ public class SourceLookupParticipant
             }
             else
             {
-                container = null;
+                final JavaProjectSources workspaceSources = SourceLookupActivator.getWorkspaceSources();
 
-                // looks among workspace projects in caller (likely UI) thread. this is quick
-                for ( IMavenProjectFacade facade : MavenPlugin.getMavenProjectRegistry().getProjects() )
+                container = workspaceSources.getProjectSourceContainer( location );
+
+                if ( container == null )
                 {
-                    if ( isLocationEquals( facade.getOutputLocation(), location )
-                        || isLocationEquals( facade.getTestOutputLocation(), location ) )
-                    {
-                        container = new JavaProjectSourceContainer( JavaCore.create( facade.getProject() ) );
-                        break;
-                    }
+                    IStackFrame[] stackFrames = getStackFrames( fElement );
 
-                    String jarLocation = facade.getProject().getPersistentProperty( BinaryProjectPlugin.QNAME_JAR );
-                    if ( jarLocation != null && Path.fromOSString( jarLocation ).equals( UrlUtils.toPath( location ) ) )
+                    if ( stackFrames != null )
                     {
-                        IJavaProject javaProject = JavaCore.create( facade.getProject() );
-                        IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot( jarLocation );
-                        container = new PackageFragmentRootSourceContainer( fragmentRoot );
-                        break;
+                        container = workspaceSources.getContextSourceContainer( location, stackFrames );
                     }
                 }
 
@@ -171,7 +154,27 @@ public class SourceLookupParticipant
         return container.findSourceElements( sourcePath );
     }
 
-    protected ISourceContainer createSourceContainer( final Object fElement, final String location,
+    private IStackFrame[] getStackFrames( Object element )
+        throws DebugException
+    {
+        if ( element instanceof IStackFrame )
+        {
+            IStackFrame frame = (IStackFrame) element;
+            IStackFrame[] frames = frame.getThread().getStackFrames();
+            for ( int i = 0; i < frames.length - 1; i++ )
+            {
+                if ( frames[i] == frame )
+                {
+                    IStackFrame[] stack = new IStackFrame[frames.length - i - 1];
+                    System.arraycopy( frames, i + 1, stack, 0, frames.length - i - 1 );
+                    return stack;
+                }
+            }
+        }
+        return null;
+    }
+
+    protected ISourceContainer createSourceContainer( final Object fElement, final File location,
                                                       final IProgressMonitor monitor )
         throws CoreException
     {
@@ -204,59 +207,7 @@ public class SourceLookupParticipant
             @Override
             protected ISourceContainer visitMavenProject( IMavenProjectFacade mavenProject )
             {
-                IJavaProject javaProject = JavaCore.create( mavenProject.getProject() );
-
-                List<ISourceContainer> containers = new ArrayList<ISourceContainer>();
-
-                boolean hasSources = false;
-
-                try
-                {
-                    for ( IClasspathEntry cpe : javaProject.getRawClasspath() )
-                    {
-                        switch ( cpe.getEntryKind() )
-                        {
-                            case IClasspathEntry.CPE_SOURCE:
-                                hasSources = true;
-                                break;
-                            case IClasspathEntry.CPE_LIBRARY:
-                                IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-                                IResource lib = workspaceRoot.findMember( cpe.getPath() );
-                                IPackageFragmentRoot fragmentRoot;
-                                if ( lib != null )
-                                {
-                                    fragmentRoot = javaProject.getPackageFragmentRoot( lib );
-                                }
-                                else
-                                {
-                                    fragmentRoot = javaProject.getPackageFragmentRoot( cpe.getPath().toOSString() );
-                                }
-                                containers.add( new PackageFragmentRootSourceContainer( fragmentRoot ) );
-                                break;
-                        }
-                    }
-                }
-                catch ( JavaModelException e )
-                {
-                    // ignore... maybe log
-                }
-
-                if ( hasSources )
-                {
-                    containers.add( 0, new JavaProjectSourceContainer( javaProject ) );
-                }
-
-                if ( containers.isEmpty() )
-                {
-                    return null;
-                }
-
-                if ( containers.size() == 1 )
-                {
-                    return containers.get( 0 );
-                }
-
-                return new CompositeSourceContainer( containers );
+                return JavaProjectSources.getProjectSourceContainer( JavaCore.create( mavenProject.getProject() ) );
             }
 
             @Override
@@ -282,18 +233,6 @@ public class SourceLookupParticipant
         }
 
         return new CompositeSourceContainer( containers );
-    }
-
-    private boolean isLocationEquals( IPath workspaceLocation, String url )
-    {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IFolder folder = root.getFolder( workspaceLocation );
-        if ( folder == null )
-        {
-            return false;
-        }
-        IPath location = folder.getLocation();
-        return location != null && location.equals( UrlUtils.toPath( url ) );
     }
 
     public String getSourceName( Object object )

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Igor Fedorenko
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *      Igor Fedorenko - initial API and implementation
+ *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.io.BufferedInputStream;
@@ -71,10 +81,9 @@ public abstract class PomPropertiesScanner<T>
         }
     };
 
-    public List<T> scan( String location )
+    public List<T> scan( File location )
         throws CoreException
     {
-
         Set<T> result = new LinkedHashSet<T>();
         for ( Properties pomProperties : SCANNER.scan( location, "pom.properties" ) )
         {
@@ -111,10 +120,9 @@ public abstract class PomPropertiesScanner<T>
             }
         }
 
-        File file = UrlUtils.toFile( location );
-        if ( file.isFile() )
+        if ( location.isFile() )
         {
-            IndexedArtifactFile indexed = identify( file );
+            IndexedArtifactFile indexed = identify( location );
             if ( indexed != null )
             {
                 ArtifactKey a = indexed.getArtifactKey();

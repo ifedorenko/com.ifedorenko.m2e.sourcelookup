@@ -1,5 +1,6 @@
 package com.ifedorenko.m2e.sourcelookup.ui.internal;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -48,7 +49,7 @@ public class ImportBinaryProjectHandler
             return;
         }
 
-        final String location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
+        final File location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
 
         if ( location == null )
         {

@@ -129,6 +129,12 @@ public class SourceLookupParticipant
 
                 if ( container == null )
                 {
+                    // this is still better than name-only lookup performed by default jdt source lookup participant
+                    container = workspaceSources.getAnySourceContainer( location );
+                }
+
+                if ( container == null )
+                {
                     SourceLookupActivator.schedule( new CreateContainerRunnable( fElement, location ) );
                 }
                 else

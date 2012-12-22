@@ -370,4 +370,20 @@ public class JavaProjectSources
             processDelta( childDelta, remove, add );
         }
     }
+
+    public ISourceContainer getAnySourceContainer( File location )
+    {
+        synchronized ( lock )
+        {
+            for ( JavaProjectInfo project : locations.values() )
+            {
+                IPackageFragmentRoot fragmentRoot = project.getPackageFragmentRoot( location );
+                if ( fragmentRoot != null )
+                {
+                    return new PackageFragmentRootSourceContainer( fragmentRoot );
+                }
+            }
+        }
+        return null;
+    }
 }

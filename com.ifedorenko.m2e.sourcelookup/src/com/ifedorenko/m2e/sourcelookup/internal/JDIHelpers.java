@@ -19,6 +19,7 @@ import org.eclipse.jdt.debug.core.IJavaObject;
 import org.eclipse.jdt.debug.core.IJavaReferenceType;
 import org.eclipse.jdt.debug.core.IJavaStackFrame;
 import org.eclipse.jdt.debug.core.IJavaType;
+import org.eclipse.jdt.debug.core.IJavaValue;
 import org.eclipse.jdt.debug.core.IJavaVariable;
 
 public final class JDIHelpers
@@ -60,7 +61,8 @@ public final class JDIHelpers
         }
         else if ( fElement instanceof IJavaVariable )
         {
-            IJavaType javaType = ( (IJavaVariable) fElement ).getJavaType();
+            IJavaVariable javaVariable = (IJavaVariable) fElement;
+            IJavaType javaType = ( (IJavaValue) javaVariable.getValue() ).getJavaType();
             if ( javaType instanceof IJavaReferenceType )
             {
                 declaringType = (IJavaReferenceType) javaType;

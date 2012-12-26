@@ -22,15 +22,11 @@
   <repositories>
     <repository>
       <id>eclipse</id>
-      <url>http://download.eclipse.org/releases/juno</url>
+      <url>http://download.eclipse.org/releases/kepler</url>
       <layout>p2</layout>
     </repository>
     <repository>
-      <id>eclipse-43M4</id>
-      <url>http://download.eclipse.org/eclipse/updates/4.3milestones</url>
-      <layout>p2</layout>
-    </repository>
-    <repository>
+      <!-- this is needed for m2e.tests.common -->
       <id>m2e-extras</id>
       <url>http://nexus.tesla.io:8081/nexus/content/sites/m2e.extras/m2e/1.3.0/N/LATEST/</url>
       <layout>p2</layout>
@@ -46,6 +42,7 @@
     <module>com.ifedorenko.m2e.sourcelookup</module>
     <module>com.ifedorenko.m2e.sourcelookup.pde</module>
     <module>com.ifedorenko.m2e.sourcelookup.ui</module>
+    <module>com.ifedorenko.m2e.sourcelookup.launch</module>
     <module>com.ifedorenko.m2e.sourcelookup.feature</module>
     <module>com.ifedorenko.m2e.binaryproject</module>
     <module>com.ifedorenko.m2e.binaryproject.ui</module>

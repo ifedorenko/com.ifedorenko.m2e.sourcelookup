@@ -29,6 +29,7 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -163,9 +164,24 @@ public class SourceLookupParticipant
     private IStackFrame[] getStackFrames( Object element )
         throws DebugException
     {
+        IStackFrame frame = null;
         if ( element instanceof IStackFrame )
         {
-            IStackFrame frame = (IStackFrame) element;
+            frame = (IStackFrame) element;
+        }
+        if ( frame == null )
+        {
+            // not sure how useful this is
+            // it makes variable type lookup more precise when the same dependency is referenced from multiple projects
+            // the same dependency will be found by scanning all workspace projects, albeit in that case the same
+            // "correct" dependency may come from "wrong" project.
+            // this logic also introduces dependency on debug.ui, the only ui dependency of this bundle.
+            // ui dependency is not a big deal, but the gain is not great either.
+            // ... and this is really long comment to justify so little code with so little gain :-)
+            frame = (IStackFrame) DebugUITools.getDebugContext().getAdapter( IStackFrame.class );
+        }
+        if ( frame != null )
+        {
             IStackFrame[] frames = frame.getThread().getStackFrames();
             for ( int i = 0; i < frames.length - 1; i++ )
             {

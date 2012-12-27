@@ -66,7 +66,7 @@ public class SourceLookupParticipant
         public void run( IProgressMonitor monitor )
             throws CoreException
         {
-            ISourceContainer container = createSourceContainer( monitor, location, monitor );
+            ISourceContainer container = createSourceContainer( location, monitor );
             synchronized ( containers )
             {
                 //
@@ -196,8 +196,7 @@ public class SourceLookupParticipant
         return null;
     }
 
-    protected ISourceContainer createSourceContainer( final Object fElement, final File location,
-                                                      final IProgressMonitor monitor )
+    protected ISourceContainer createSourceContainer( final File location, final IProgressMonitor monitor )
         throws CoreException
     {
         List<ISourceContainer> containers = new PomPropertiesScanner<ISourceContainer>()
@@ -294,17 +293,4 @@ public class SourceLookupParticipant
     {
         disposeContainers();
     }
-
-    protected void refreshContainer( String location )
-    {
-        synchronized ( containers )
-        {
-            ISourceContainer container = containers.remove( location );
-            if ( container != null )
-            {
-                container.dispose();
-            }
-        }
-    }
-
 }

@@ -65,7 +65,20 @@ public class SourceLookupParticipant
         public void run( IProgressMonitor monitor )
             throws CoreException
         {
-            refreshSourceLookup( element, monitor );
+            File location = JDIHelpers.getLocation( element );
+
+            if ( location == null )
+            {
+                return;
+            }
+
+            ISourceContainer container = discoverSourceContainer( location, monitor );
+
+            if ( putSourceContainer( location, container ) )
+            {
+                updateDebugElement( element );
+            }
+
         }
     }
 
@@ -78,7 +91,7 @@ public class SourceLookupParticipant
     public Object[] findSourceElements( Object fElement )
         throws CoreException
     {
-        ISourceContainer container = getSourceContainer( fElement, null /* async */);
+        ISourceContainer container = getSourceContainer( fElement, false /* don't refresh cache */, null /* async */);
 
         if ( container == null )
         {
@@ -95,7 +108,7 @@ public class SourceLookupParticipant
         return container.findSourceElements( sourcePath );
     }
 
-    public ISourceContainer getSourceContainer( Object fElement, IProgressMonitor monitor )
+    public ISourceContainer getSourceContainer( Object fElement, boolean refresh, IProgressMonitor monitor )
         throws CoreException
     {
         File location = JDIHelpers.getLocation( fElement );
@@ -109,7 +122,7 @@ public class SourceLookupParticipant
 
         synchronized ( this.containers )
         {
-            if ( this.containers.containsKey( location ) )
+            if ( !refresh && this.containers.containsKey( location ) )
             {
                 container = this.containers.get( location );
             }
@@ -139,7 +152,7 @@ public class SourceLookupParticipant
                 {
                     if ( monitor != null )
                     {
-                        container = createSourceContainer( location, monitor );
+                        container = discoverSourceContainer( location, monitor );
                     }
                     else
                     {
@@ -152,7 +165,10 @@ public class SourceLookupParticipant
                     container.init( director );
                 }
 
-                this.containers.put( location, container );
+                if ( putSourceContainer( location, container ) && refresh )
+                {
+                    updateDebugElement( fElement );
+                }
             }
         }
 
@@ -194,7 +210,12 @@ public class SourceLookupParticipant
         return null;
     }
 
-    protected ISourceContainer createSourceContainer( final File location, final IProgressMonitor monitor )
+    /**
+     * Scans specified code location. Scan is relatively long-running because it involves for pom.properties and
+     * matching location to artifact GAV using Nexus indexer. It will also resolve sources.jar from Maven for code that
+     * does not come from workspace projects.
+     */
+    protected ISourceContainer discoverSourceContainer( final File location, final IProgressMonitor monitor )
         throws CoreException
     {
         List<ISourceContainer> containers = new PomPropertiesScanner<ISourceContainer>()
@@ -292,17 +313,18 @@ public class SourceLookupParticipant
         disposeContainers();
     }
 
-    public void refreshSourceLookup( Object element, final IProgressMonitor monitor )
-        throws DebugException, CoreException
+    void updateDebugElement( Object debugElement )
     {
-        File location = JDIHelpers.getLocation( element );
-
-        if ( location == null )
+        director.clearSourceElements( debugElement );
+        if ( debugElement instanceof DebugElement )
         {
-            return;
+            // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
+            ( (DebugElement) debugElement ).fireChangeEvent( DebugEvent.CONTENT );
         }
+    }
 
-        ISourceContainer container = createSourceContainer( location, monitor );
+    boolean putSourceContainer( File location, ISourceContainer container )
+    {
         synchronized ( containers )
         {
             //
@@ -311,15 +333,7 @@ public class SourceLookupParticipant
             {
                 oldContainer.dispose();
             }
-        }
-        if ( container != null )
-        {
-            director.clearSourceElements( element );
-            if ( element instanceof DebugElement )
-            {
-                // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
-                ( (DebugElement) element ).fireChangeEvent( DebugEvent.CONTENT );
-            }
+            return oldContainer != null || container != null;
         }
     }
 

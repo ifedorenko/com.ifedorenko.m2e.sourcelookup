@@ -79,6 +79,13 @@ Problem: as of 2012-12-22, show actual/declared type only work when target type 
          This seems like unnecessary jdt ui limitation around OpenTypeAction, which requires IJavaElement and
          does not allow sources from external jars or source directories.
 
+* Import binary project on ServletHolder.handle stack frame
+
+Expected: org.eclipse.jetty:jetty-servlet:8.1.4.v20120524 project is created in workspace
+Expected: debugger automatically refreshes to show ServletHolder.java from workspace project
+Expected: Display view provides codeassist for 'se...' sevlet variable, shows the variable value
+     ^^^^ 2012-12-29 does not work, apparently CurrentFrameContext.getLocalVariables chokes on mpce==null
+
 # Thread context sources lookup
 
 * Run "mvn clean install" on lib module, close lib workspace project
@@ -99,5 +106,4 @@ Expected: source lookup switches back to webapp classpath dependency
 
 * Refresh source viewer from sourcelookup properties dialog or by swithcing stack frames
 Expected: source lookup uses webapp classpath dependency
-   2012-12-27 broken
 

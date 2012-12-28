@@ -146,7 +146,7 @@ public class SourceLookupInfoDialog
             {
                 try
                 {
-                    sourceLookup.refreshSourceLookup( debugElement, monitor );
+                    sourceLookup.getSourceContainer( debugElement, true, monitor );
                 }
                 catch ( CoreException e1 )
                 {
@@ -175,7 +175,7 @@ public class SourceLookupInfoDialog
         return new Point( 450, 300 );
     }
 
-    private void updateDisplay( IProgressMonitor moninot )
+    private void updateDisplay( IProgressMonitor moninor )
     {
         try
         {
@@ -219,7 +219,7 @@ public class SourceLookupInfoDialog
             textGAV.setText( artifacts.toString() );
             textJavaProject.setText( projects.toString() );
 
-            ISourceContainer container = sourceLookup.getSourceContainer( debugElement, moninot /* sync */);
+            ISourceContainer container = sourceLookup.getSourceContainer( debugElement, false, moninor /* sync */);
 
             textSourceContainer.setText( toString( container ) );
         }

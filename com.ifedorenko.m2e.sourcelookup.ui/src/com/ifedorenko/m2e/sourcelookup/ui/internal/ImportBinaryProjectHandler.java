@@ -71,7 +71,7 @@ public class ImportBinaryProjectHandler
 
                     try
                     {
-                        sourceLookup.refreshSourceLookup( debugElement, monitor );
+                        sourceLookup.getSourceContainer( debugElement, true, monitor );
                     }
                     catch ( CoreException e )
                     {

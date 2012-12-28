@@ -11,7 +11,7 @@
 
 Expected: [a, b, Hello, world!]
 
-* Set breakpoint at WebappServlet #26 
+* Set breakpoint at WebappServlet #36 
 * Debug the webapp
 
 Expected: "Source not found." editor
@@ -26,10 +26,9 @@ Expected: Variables view, open declared type of lib opens sources from lib/ proj
 
 # Conditional breakpoint in workspace projects
 
-* Edit condition of the breakpoint at WebappServlet #26, set lib != null
+* Edit condition of the breakpoint at WebappServlet #36, set lib != null
 
 Expected: codeassist works in breakpoint condition editor field
-Expected: codeassist works 
 Expected: debugger stops at the breakpoint
 
 # Indexer-based external sources lookup
@@ -60,6 +59,11 @@ Expected: debugger stops with "unable to compile conditional breakpoint" error m
 
 Expected: ServletHolder.java is displayed
 Expected: Open Pom on the stack frame opens jetty-servlet 8.1.4.v20120524 pom.xml
+** in kepler m4 Open Pom is broken due to platform ui bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=396796 
+
+# Sourcelookup properties
+
+Expected: dialog shows expected values, Copy and Refresh work (refresh can be tested by closing source viewer)
 
 
 # Binary project
@@ -68,7 +72,6 @@ Expected: Open Pom on the stack frame opens jetty-servlet 8.1.4.v20120524 pom.xm
 
 Expected: org.eclipse.jetty.orbit_javax.servlet_3.0.0.v201112011016 project is created in workspace
 Expected: debugger automatically refreshes to show HttpServlet.java from workspace binary project
-          ^^^ does not work as of 2012-12-08, select another frame and go back to refresh
 Expected: Display view provides codeassist for 'me...' method variable, shows the variable value
 
 Expected: Variables view, show actual and declared type of Response shows sources from binary project
@@ -82,7 +85,7 @@ Problem: as of 2012-12-22, show actual/declared type only work when target type 
 
 Expected: webapp project switches workspace dependency to locally installed lib-0.0.1-SNAPSHOT.jar
 
-* Set breakpoint on Lib #12
+* Set breakpoint on Lib #17
 
 Expected: Lib.java from webapp classpath dependency jar is displayed
 
@@ -93,4 +96,8 @@ Expected: Lib.java from binary project is displayed
 
 * Delete lib-0.0.1-SNAPSHOT workspace project
 Expected: source lookup switches back to webapp classpath dependency
+
+* Refresh source viewer from sourcelookup properties dialog or by swithcing stack frames
+Expected: source lookup uses webapp classpath dependency
+   2012-12-27 broken
 

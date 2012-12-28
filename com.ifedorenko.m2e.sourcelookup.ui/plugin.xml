@@ -87,6 +87,13 @@
                menubarPath="emptyEditGroup"
                style="push">
          </action>
+         <action
+               class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.OpenSourceLookupInfoDialogAction"
+               id="com.ifedorenko.m2e.sourcelookup.ui.actionOpenSourceLookupInfoDialog"
+               label="Dynamic Sourcelookup"
+               menubarPath="emptyEditGroup"
+               style="push">
+         </action>
       </objectContribution>
    </extension>
 

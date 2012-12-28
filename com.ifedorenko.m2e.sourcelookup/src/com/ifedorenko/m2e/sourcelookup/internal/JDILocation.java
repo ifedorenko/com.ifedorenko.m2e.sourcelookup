@@ -14,15 +14,23 @@ import java.io.File;
 
 public class JDILocation
 {
+    private final Object debugElement;
+
     private final File location;
 
-    JDILocation( File location )
+    JDILocation( Object debugElement, File location )
     {
+        this.debugElement = debugElement;
         this.location = location;
     }
 
     public File getLocation()
     {
         return location;
+    }
+
+    public Object getDebugElement()
+    {
+        return debugElement;
     }
 }

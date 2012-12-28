@@ -34,7 +34,7 @@ public class JDILocationAdapterFactory
             File location = JDIHelpers.getLocation( adaptableObject );
             if ( location != null )
             {
-                return new JDILocation( location );
+                return new JDILocation( adaptableObject, location );
             }
         }
         catch ( DebugException e )

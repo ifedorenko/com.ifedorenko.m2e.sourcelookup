@@ -54,37 +54,16 @@ public class SourceLookupParticipant
     {
         private final Object element;
 
-        private final File location;
-
-        public CreateContainerRunnable( Object element, File location )
+        public CreateContainerRunnable( Object element )
         {
             this.element = element;
-            this.location = location;
         }
 
         @Override
         public void run( IProgressMonitor monitor )
             throws CoreException
         {
-            ISourceContainer container = createSourceContainer( location, monitor );
-            synchronized ( containers )
-            {
-                //
-                ISourceContainer oldContainer = containers.put( location, container );
-                if ( oldContainer != null )
-                {
-                    oldContainer.dispose();
-                }
-            }
-            if ( container != null )
-            {
-                director.clearSourceElements( element );
-                if ( element instanceof DebugElement )
-                {
-                    // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
-                    ( (DebugElement) element ).fireChangeEvent( DebugEvent.CONTENT );
-                }
-            }
+            refreshSourceLookup( element, monitor );
         }
     }
 
@@ -95,6 +74,26 @@ public class SourceLookupParticipant
     }
 
     public Object[] findSourceElements( Object fElement )
+        throws CoreException
+    {
+        ISourceContainer container = getSourceContainer( fElement, null /* async */);
+
+        if ( container == null )
+        {
+            return null;
+        }
+
+        String sourcePath = JDIHelpers.getSourcePath( fElement );
+        if ( sourcePath == null )
+        {
+            // can't really happen
+            return null;
+        }
+
+        return container.findSourceElements( sourcePath );
+    }
+
+    public ISourceContainer getSourceContainer( Object fElement, IProgressMonitor monitor )
         throws CoreException
     {
         File location = JDIHelpers.getLocation( fElement );
@@ -136,29 +135,26 @@ public class SourceLookupParticipant
 
                 if ( container == null )
                 {
-                    SourceLookupActivator.schedule( new CreateContainerRunnable( fElement, location ) );
+                    if ( monitor != null )
+                    {
+                        container = createSourceContainer( location, monitor );
+                    }
+                    else
+                    {
+                        SourceLookupActivator.schedule( new CreateContainerRunnable( fElement ) );
+                    }
                 }
-                else
+
+                if ( container != null )
                 {
                     container.init( director );
                 }
+
                 this.containers.put( location, container );
             }
         }
 
-        if ( container == null )
-        {
-            return null;
-        }
-
-        String sourcePath = JDIHelpers.getSourcePath( fElement );
-        if ( sourcePath == null )
-        {
-            // can't really happen
-            return null;
-        }
-
-        return container.findSourceElements( sourcePath );
+        return container;
     }
 
     private IStackFrame[] getStackFrames( Object element )
@@ -292,5 +288,36 @@ public class SourceLookupParticipant
     public void mavenProjectChanged( MavenProjectChangedEvent[] events, IProgressMonitor monitor )
     {
         disposeContainers();
+    }
+
+    public void refreshSourceLookup( Object element, IProgressMonitor monitor )
+        throws DebugException, CoreException
+    {
+        File location = JDIHelpers.getLocation( element );
+
+        if ( location == null )
+        {
+            return;
+        }
+
+        ISourceContainer container = createSourceContainer( location, monitor );
+        synchronized ( containers )
+        {
+            //
+            ISourceContainer oldContainer = containers.put( location, container );
+            if ( oldContainer != null )
+            {
+                oldContainer.dispose();
+            }
+        }
+        if ( container != null )
+        {
+            director.clearSourceElements( element );
+            if ( element instanceof DebugElement )
+            {
+                // this is apparently needed to flush StackFrameSourceDisplayAdapter cache
+                ( (DebugElement) element ).fireChangeEvent( DebugEvent.CONTENT );
+            }
+        }
     }
 }

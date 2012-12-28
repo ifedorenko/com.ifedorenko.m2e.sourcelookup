@@ -295,11 +295,6 @@ public class SourceLookupParticipant
     public void refreshSourceLookup( Object element, final IProgressMonitor monitor )
         throws DebugException, CoreException
     {
-        if ( element instanceof JDILocation )
-        {
-            element = ( (JDILocation) element ).getDebugElement();
-        }
-
         File location = JDIHelpers.getLocation( element );
 
         if ( location == null )
@@ -330,11 +325,6 @@ public class SourceLookupParticipant
 
     public static SourceLookupParticipant getSourceLookup( Object debugElement )
     {
-        if ( debugElement instanceof JDILocation )
-        {
-            debugElement = ( (JDILocation) debugElement ).getDebugElement();
-        }
-
         ISourceLocator sourceLocator = null;
         if ( debugElement instanceof IDebugElement )
         {

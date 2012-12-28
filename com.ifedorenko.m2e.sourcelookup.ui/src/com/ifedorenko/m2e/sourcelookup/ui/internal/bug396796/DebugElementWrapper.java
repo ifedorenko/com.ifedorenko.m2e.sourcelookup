@@ -8,17 +8,20 @@
  * Contributors:
  *      Igor Fedorenko - initial API and implementation
  *******************************************************************************/
-package com.ifedorenko.m2e.sourcelookup.internal;
+package com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796;
 
 import java.io.File;
 
-public class JDILocation
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+
+public class DebugElementWrapper
 {
     private final Object debugElement;
 
     private final File location;
 
-    JDILocation( Object debugElement, File location )
+    DebugElementWrapper( Object debugElement, File location )
     {
         this.debugElement = debugElement;
         this.location = location;
@@ -32,5 +35,19 @@ public class JDILocation
     public Object getDebugElement()
     {
         return debugElement;
+    }
+
+    public static Object getDebugElement( ISelection selection )
+    {
+        Object element = null;
+        if ( selection instanceof IStructuredSelection && !selection.isEmpty() )
+        {
+            element = ( (IStructuredSelection) selection ).getFirstElement();
+            if ( element instanceof DebugElementWrapper )
+            {
+                element = ( (DebugElementWrapper) element ).getDebugElement();
+            }
+        }
+        return element;
     }
 }

@@ -22,15 +22,4 @@
             type="org.eclipse.debug.core.model.DebugElement">
       </propertyTester>
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.debug.core.model.IDebugElement"
-            class="com.ifedorenko.m2e.sourcelookup.internal.JDILocationAdapterFactory">
-         <adapter
-               type="com.ifedorenko.m2e.sourcelookup.internal.JDILocation">
-         </adapter>
-      </factory>
-   </extension>
-
 </plugin>

@@ -5,7 +5,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?after=emptyEditGroup">
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
                commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom"
                style="push">
@@ -78,7 +78,7 @@
       <objectContribution
             adaptable="true"
             id="com.ifedorenko.m2e.sourcelookup.ui.bug396796workaround"
-            objectClass="com.ifedorenko.m2e.sourcelookup.internal.JDILocation">
+            objectClass="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapper">
          <action
                class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.ImportBinaryProjectAction"
                icon="icons/binary_project.gif"
@@ -95,6 +95,16 @@
                style="push">
          </action>
       </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.debug.core.model.IDebugElement"
+            class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapperFactory">
+         <adapter
+               type="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapper">
+         </adapter>
+      </factory>
    </extension>
 
 </plugin>

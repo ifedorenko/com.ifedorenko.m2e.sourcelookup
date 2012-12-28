@@ -36,11 +36,6 @@ public final class JDIHelpers
     public static File getLocation( Object fElement )
         throws DebugException
     {
-        if ( fElement instanceof JDILocation )
-        {
-            return ( (JDILocation) fElement ).getLocation();
-        }
-
         IJavaReferenceType declaringType = null;
         if ( fElement instanceof IJavaStackFrame )
         {

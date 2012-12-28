@@ -32,27 +32,24 @@ public class ImportBinaryProjectHandler
     {
         ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
 
-        try
+        if ( selection instanceof IStructuredSelection && !selection.isEmpty() )
         {
-            importBinaryProjects( selection );
-        }
-        catch ( DebugException e )
-        {
-            throw new ExecutionException( "Could not import binary project", e );
+            try
+            {
+                importBinaryProjects( ( (IStructuredSelection) selection ).getFirstElement() );
+            }
+            catch ( DebugException e )
+            {
+                throw new ExecutionException( "Could not import binary project", e );
+            }
         }
 
         return null;
     }
 
-    public static void importBinaryProjects( ISelection selection )
+    public static void importBinaryProjects( final Object debugElement )
         throws DebugException
     {
-        if ( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
-        {
-            return;
-        }
-
-        final Object debugElement = ( (IStructuredSelection) selection ).getFirstElement();
 
         final File location = JDIHelpers.getLocation( debugElement );
 

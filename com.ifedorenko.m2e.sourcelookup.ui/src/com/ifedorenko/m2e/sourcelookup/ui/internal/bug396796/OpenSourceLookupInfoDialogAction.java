@@ -12,12 +12,10 @@ package com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.ifedorenko.m2e.sourcelookup.internal.JDILocation;
 import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.ui.internal.SourceLookupInfoDialog;
 
@@ -32,14 +30,10 @@ public class OpenSourceLookupInfoDialogAction
     @Override
     public void run( IAction action )
     {
-        if ( selection instanceof IStructuredSelection )
+        final Object debugElement = DebugElementWrapper.getDebugElement( selection );
+        final SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
+        if ( debugElement != null && sourceLookup != null )
         {
-            JDILocation wrapper = (JDILocation) ( (IStructuredSelection) selection ).getFirstElement();
-
-            Object debugElement = wrapper.getDebugElement();
-
-            SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
-
             new SourceLookupInfoDialog( getShell(), debugElement, sourceLookup ).open();
         }
     }

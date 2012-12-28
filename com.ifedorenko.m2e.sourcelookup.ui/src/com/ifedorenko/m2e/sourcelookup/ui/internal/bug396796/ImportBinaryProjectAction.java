@@ -23,7 +23,7 @@ public class ImportBinaryProjectAction
     {
         try
         {
-            ImportBinaryProjectHandler.importBinaryProjects( selection );
+            ImportBinaryProjectHandler.importBinaryProjects( DebugElementWrapper.getDebugElement( selection ) );
         }
         catch ( DebugException e )
         {

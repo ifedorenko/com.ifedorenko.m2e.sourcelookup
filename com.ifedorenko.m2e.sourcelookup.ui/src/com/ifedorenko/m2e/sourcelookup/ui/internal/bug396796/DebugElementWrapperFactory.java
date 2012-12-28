@@ -8,7 +8,7 @@
  * Contributors:
  *      Igor Fedorenko - initial API and implementation
  *******************************************************************************/
-package com.ifedorenko.m2e.sourcelookup.internal;
+package com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796;
 
 import java.io.File;
 
@@ -16,16 +16,18 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugElement;
 
+import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
+
 @SuppressWarnings( "rawtypes" )
-public class JDILocationAdapterFactory
+public class DebugElementWrapperFactory
     implements IAdapterFactory
 {
-    private static final Class[] ADAPTER_LIST = new Class[] { JDILocation.class, };
+    private static final Class[] ADAPTER_LIST = new Class[] { DebugElementWrapper.class, };
 
     @Override
     public Object getAdapter( Object adaptableObject, Class adapterType )
     {
-        if ( !JDILocation.class.equals( adapterType ) || !( adaptableObject instanceof IDebugElement ) )
+        if ( !DebugElementWrapper.class.equals( adapterType ) || !( adaptableObject instanceof IDebugElement ) )
         {
             return null;
         }
@@ -34,7 +36,7 @@ public class JDILocationAdapterFactory
             File location = JDIHelpers.getLocation( adaptableObject );
             if ( location != null )
             {
-                return new JDILocation( adaptableObject, location );
+                return new DebugElementWrapper( adaptableObject, location );
             }
         }
         catch ( DebugException e )

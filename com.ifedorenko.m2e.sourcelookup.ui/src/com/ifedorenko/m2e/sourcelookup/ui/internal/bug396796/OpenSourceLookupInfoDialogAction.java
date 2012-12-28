@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796;
 
-import org.eclipse.debug.core.model.IDebugElement;
-import org.eclipse.debug.core.model.ISourceLocator;
-import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
-import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -42,24 +38,7 @@ public class OpenSourceLookupInfoDialogAction
 
             Object debugElement = wrapper.getDebugElement();
 
-            ISourceLocator sourceLocator = null;
-            if ( debugElement instanceof IDebugElement )
-            {
-                sourceLocator = ( (IDebugElement) debugElement ).getLaunch().getSourceLocator();
-            }
-
-            SourceLookupParticipant sourceLookup = null;
-            if ( sourceLocator instanceof ISourceLookupDirector )
-            {
-                for ( ISourceLookupParticipant participant : ( (ISourceLookupDirector) sourceLocator ).getParticipants() )
-                {
-                    if ( participant instanceof SourceLookupParticipant )
-                    {
-                        sourceLookup = (SourceLookupParticipant) participant;
-                        break;
-                    }
-                }
-            }
+            SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
 
             new SourceLookupInfoDialog( getShell(), debugElement, sourceLookup ).open();
         }

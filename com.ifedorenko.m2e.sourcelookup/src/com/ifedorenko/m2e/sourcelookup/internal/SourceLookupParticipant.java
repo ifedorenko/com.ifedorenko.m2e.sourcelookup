@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.DebugElement;
+import org.eclipse.debug.core.model.IDebugElement;
+import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
@@ -290,9 +292,14 @@ public class SourceLookupParticipant
         disposeContainers();
     }
 
-    public void refreshSourceLookup( Object element, IProgressMonitor monitor )
+    public void refreshSourceLookup( Object element, final IProgressMonitor monitor )
         throws DebugException, CoreException
     {
+        if ( element instanceof JDILocation )
+        {
+            element = ( (JDILocation) element ).getDebugElement();
+        }
+
         File location = JDIHelpers.getLocation( element );
 
         if ( location == null )
@@ -319,5 +326,33 @@ public class SourceLookupParticipant
                 ( (DebugElement) element ).fireChangeEvent( DebugEvent.CONTENT );
             }
         }
+    }
+
+    public static SourceLookupParticipant getSourceLookup( Object debugElement )
+    {
+        if ( debugElement instanceof JDILocation )
+        {
+            debugElement = ( (JDILocation) debugElement ).getDebugElement();
+        }
+
+        ISourceLocator sourceLocator = null;
+        if ( debugElement instanceof IDebugElement )
+        {
+            sourceLocator = ( (IDebugElement) debugElement ).getLaunch().getSourceLocator();
+        }
+
+        SourceLookupParticipant sourceLookup = null;
+        if ( sourceLocator instanceof ISourceLookupDirector )
+        {
+            for ( ISourceLookupParticipant participant : ( (ISourceLookupDirector) sourceLocator ).getParticipants() )
+            {
+                if ( participant instanceof SourceLookupParticipant )
+                {
+                    sourceLookup = (SourceLookupParticipant) participant;
+                    break;
+                }
+            }
+        }
+        return sourceLookup;
     }
 }

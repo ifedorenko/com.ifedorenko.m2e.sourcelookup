@@ -8,6 +8,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,6 +21,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
 import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.PomPropertiesScanner;
+import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant;
 
 public class ImportBinaryProjectHandler
     extends AbstractHandler
@@ -49,7 +52,9 @@ public class ImportBinaryProjectHandler
             return;
         }
 
-        final File location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
+        final Object debugElement = ( (IStructuredSelection) selection ).getFirstElement();
+
+        final File location = JDIHelpers.getLocation( debugElement );
 
         if ( location == null )
         {
@@ -58,6 +63,28 @@ public class ImportBinaryProjectHandler
 
         Job job = new AbstractBinaryProjectsImportJob()
         {
+            @Override
+            protected IStatus run( IProgressMonitor monitor )
+            {
+                IStatus status = super.run( monitor );
+
+                if ( status.isOK() )
+                {
+                    SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
+
+                    try
+                    {
+                        sourceLookup.refreshSourceLookup( debugElement, monitor );
+                    }
+                    catch ( CoreException e )
+                    {
+                        status = e.getStatus();
+                    }
+                }
+
+                return status;
+            }
+
             @Override
             protected List<ArtifactKey> getArtifactKeys()
                 throws CoreException

@@ -13,30 +13,18 @@ package com.ifedorenko.m2e.sourcelookup.ui.internal;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator
+public class SourceLookupUIActivator
     extends AbstractUIPlugin
 {
 
-    // The plug-in ID
     public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup.ui"; //$NON-NLS-1$
 
-    // The shared instance
-    private static Activator plugin;
+    private static SourceLookupUIActivator plugin;
 
-    /**
-     * The constructor
-     */
-    public Activator()
+    public SourceLookupUIActivator()
     {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-     */
     public void start( BundleContext context )
         throws Exception
     {
@@ -44,10 +32,6 @@ public class Activator
         plugin = this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-     */
     public void stop( BundleContext context )
         throws Exception
     {
@@ -55,12 +39,7 @@ public class Activator
         super.stop( context );
     }
 
-    /**
-     * Returns the shared instance
-     * 
-     * @return the shared instance
-     */
-    public static Activator getDefault()
+    public static SourceLookupUIActivator getDefault()
     {
         return plugin;
     }

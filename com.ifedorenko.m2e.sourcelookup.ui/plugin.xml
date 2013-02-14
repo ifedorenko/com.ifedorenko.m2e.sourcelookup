@@ -8,6 +8,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
                commandId="com.ifedorenko.m2e.sourcelookup.ui.openPom"
+               icon="icons/open_pom.gif"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -15,6 +16,14 @@
          </command>
          <command
                commandId="com.ifedorenko.m2e.sourcelookup.ui.importBinaryProject"
+               icon="icons/binary_project.gif"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.ifedorenko.m2e.sourcelookup.ui.openSourceLookupInfoDialog"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -32,6 +41,10 @@
             id="com.ifedorenko.m2e.sourcelookup.ui.importBinaryProject"
             name="Import Binary Project">
       </command>
+      <command
+            id="com.ifedorenko.m2e.sourcelookup.ui.openSourceLookupInfoDialog"
+            name="Source Lookup Info">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -47,6 +60,15 @@
       <handler
             class="com.ifedorenko.m2e.sourcelookup.ui.internal.ImportBinaryProjectHandler"
             commandId="com.ifedorenko.m2e.sourcelookup.ui.importBinaryProject">
+         <enabledWhen>
+            <reference
+                  definitionId="com.ifedorenko.m2e.sourcelookup.ui.m2estratum">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.ifedorenko.m2e.sourcelookup.ui.internal.OpenSourceLookupInfoDialogCommandHandler"
+            commandId="com.ifedorenko.m2e.sourcelookup.ui.openSourceLookupInfoDialog">
          <enabledWhen>
             <reference
                   definitionId="com.ifedorenko.m2e.sourcelookup.ui.m2estratum">
@@ -73,38 +95,4 @@
          </with>
       </definition>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="com.ifedorenko.m2e.sourcelookup.ui.bug396796workaround"
-            objectClass="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapper">
-         <action
-               class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.ImportBinaryProjectAction"
-               icon="icons/binary_project.gif"
-               id="com.ifedorenko.m2e.sourcelookup.ui.actionImportBinaryProject"
-               label="Import Binary Project (396796)"
-               menubarPath="emptyEditGroup"
-               style="push">
-         </action>
-         <action
-               class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.OpenSourceLookupInfoDialogAction"
-               id="com.ifedorenko.m2e.sourcelookup.ui.actionOpenSourceLookupInfoDialog"
-               label="Dynamic Sourcelookup"
-               menubarPath="emptyEditGroup"
-               style="push">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.debug.core.model.IDebugElement"
-            class="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapperFactory">
-         <adapter
-               type="com.ifedorenko.m2e.sourcelookup.ui.internal.bug396796.DebugElementWrapper">
-         </adapter>
-      </factory>
-   </extension>
-
 </plugin>

@@ -37,7 +37,6 @@ Expected: debugger stops at the breakpoint
 
 Expected: jetty javax.servel-3.0.0 sources jar is downloaded and debugger shows source file
 Expected: Open Pom on the stack frame does not work
-** in kepler m4 Open Pom is broken due to platform ui bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=396796 
 
 * Put breakpoint at HttpServlet #732
 
@@ -59,7 +58,6 @@ Expected: debugger stops with "unable to compile conditional breakpoint" error m
 
 Expected: ServletHolder.java is displayed
 Expected: Open Pom on the stack frame opens jetty-servlet 8.1.4.v20120524 pom.xml
-** in kepler m4 Open Pom is broken due to platform ui bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=396796 
 
 # Sourcelookup properties
 
@@ -85,6 +83,7 @@ Expected: org.eclipse.jetty:jetty-servlet:8.1.4.v20120524 project is created in 
 Expected: debugger automatically refreshes to show ServletHolder.java from workspace project
 Expected: Display view provides codeassist for 'se...' sevlet variable, shows the variable value
      ^^^^ 2012-12-29 does not work, apparently CurrentFrameContext.getLocalVariables chokes on mpce==null
+          opened https://bugs.eclipse.org/bugs/show_bug.cgi?id=400636 with proposed fix
 
 # Thread context sources lookup
 

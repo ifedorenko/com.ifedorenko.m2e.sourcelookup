@@ -28,8 +28,8 @@ where Equinox is embedded in Maven runtime.
 
 # Installation
 
-* Install Eclipse SDK 4.3 M4 or better from http://download.eclipse.org/eclipse/downloads/ 
-* Install m2e 1.3 M4 or better from http://www.eclipse.org/m2e/download/
+* Install Eclipse SDK 4.3 M5 or better from http://download.eclipse.org/eclipse/downloads/ 
+* Install m2e 1.3 or better from http://www.eclipse.org/m2e/download/
 * Install Dynamic Sources Lookup m2e extension from 
   http://ifedorenko.github.com/m2e-extras/
 
@@ -40,7 +40,7 @@ and is enabled by default for all debug Maven launches.
 
 # New in version 1.1
 
-* Requires m2e 1.3 M4 and Eclipse 4.3 (Kepler) M4
+* Requires m2e 1.3 and Eclipse 4.3 (Kepler) M5
 * [new] Maven (Nexus) indexes are now used to identify jar files GAV.
 * [new] Ability to import artifacts as "Maven Binary" projects. Binary projects
   allow conditional breakpoints and other operations that require java project.

@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.jdt.internal.launching.JavaSourceLookupDirector;
+import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupParticipant;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
 import org.eclipse.m2e.internal.launch.MavenLaunchUtils;
 import org.slf4j.Logger;
@@ -64,6 +67,11 @@ public class SourceLookupMavenLaunchParticipant
     public List<ISourceLookupParticipant> getSourceLookupParticipants( ILaunchConfiguration configuration,
                                                                        ILaunch launch, IProgressMonitor monitor )
     {
+        return getSourceLookupParticipants();
+    }
+
+    private static List<ISourceLookupParticipant> getSourceLookupParticipants()
+    {
         List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
 
         ServiceLoader<ISourceLookupParticipant> serviceLoader =
@@ -77,5 +85,28 @@ public class SourceLookupMavenLaunchParticipant
         }
 
         return participants;
+    }
+
+    /**
+     * Returns fully initialised ISourceLocator instance.
+     */
+    public static JavaSourceLookupDirector newSourceLocator( String mode )
+    {
+        final List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
+        if ( ILaunchManager.DEBUG_MODE.equals( mode ) )
+        {
+            participants.addAll( getSourceLookupParticipants() );
+        }
+        participants.add( new JavaSourceLookupParticipant() );
+        JavaSourceLookupDirector sourceLocator = new JavaSourceLookupDirector()
+        {
+            @Override
+            public void initializeParticipants()
+            {
+                addParticipants( participants.toArray( new ISourceLookupParticipant[participants.size()] ) );
+            }
+        };
+        sourceLocator.initializeParticipants();
+        return sourceLocator;
     }
 }

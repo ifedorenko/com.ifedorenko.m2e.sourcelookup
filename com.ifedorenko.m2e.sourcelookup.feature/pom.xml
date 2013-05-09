@@ -51,4 +51,56 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>publish-site</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.tesla.tycho</groupId>
+            <artifactId>feature-zip-plugin</artifactId>
+            <version>0.0.1</version>
+            <configuration>
+              <sourceDirectory>${project.build.directory}/site</sourceDirectory>
+              <zip>${project.build.directory}/${project.artifactId}-${project.version}-site.zip</zip>
+            </configuration>
+            <executions>
+              <execution>
+                <id>feature-zip</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>zip</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>        
+          <!--
+           |
+           | Only deploy the update site zip to the server using the maven-upload-plugin.
+           |
+           -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>maven-upload-plugin</artifactId>
+            <version>0.0.1</version>
+            <executions>
+              <execution>
+                <id>publish-site</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>upload-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-site.zip</file>
+                  <serverId>${serverIdInSettingsXml}</serverId>
+                  <repositoryUrl>${repositoryUrl}</repositoryUrl>
+                  <repositoryPath>${repositoryPath}</repositoryPath>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

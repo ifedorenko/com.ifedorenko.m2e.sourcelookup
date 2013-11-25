@@ -36,11 +36,6 @@
       <url>http://nexus.tesla.io:8081/nexus/content/sites/m2e.extras/m2e/1.4.0/N/LATEST/</url>
       <layout>p2</layout>
     </repository>
-    <repository>
-      <id>m2e-mavenarchiver</id>
-      <url>http://nexus.tesla.io:8081/nexus/content/sites/m2e.extras/m2eclipse-mavenarchiver/0.15.0/N/0.15.0.201207090125/</url>
-      <layout>p2</layout>
-    </repository>
   </repositories>
 
   <modules>

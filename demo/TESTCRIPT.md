@@ -82,8 +82,6 @@ Problem: as of 2012-12-22, show actual/declared type only work when target type 
 Expected: org.eclipse.jetty:jetty-servlet:8.1.4.v20120524 project is created in workspace
 Expected: debugger automatically refreshes to show ServletHolder.java from workspace project
 Expected: Display view provides codeassist for 'se...' sevlet variable, shows the variable value
-     ^^^^ 2012-12-29 does not work, apparently CurrentFrameContext.getLocalVariables chokes on mpce==null
-          opened https://bugs.eclipse.org/bugs/show_bug.cgi?id=400636 with proposed fix
 
 # Thread context sources lookup
 

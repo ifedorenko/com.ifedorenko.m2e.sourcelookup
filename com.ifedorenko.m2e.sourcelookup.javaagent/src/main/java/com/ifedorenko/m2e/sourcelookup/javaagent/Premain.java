@@ -94,7 +94,8 @@ public class Premain
                 }
                 catch ( Exception e )
                 {
-                    e.printStackTrace();
+                    System.err.print( "Could not instrument class " + className + ": " );
+                    e.printStackTrace( System.err );
                 }
                 return null;
             }

@@ -38,6 +38,9 @@ where Equinox is embedded in Maven runtime.
 Dynamic Sources Lookup m2e extension does not require any special configuration
 and is enabled by default for all debug Maven launches.
 
+# New in version 1.1.0.201401182304
+* Preliminary java 8 support
+
 # New in version 1.1.0.201309291737
 * Maven 3.1.x and Tesla 3.1.x compatibility
 

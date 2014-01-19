@@ -8,7 +8,7 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>  
+  <modelVersion>4.0.0</modelVersion>
   <groupId>com.ifedorenko.m2e</groupId>
   <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
   <version>1.1.0-SNAPSHOT</version>
@@ -21,7 +21,7 @@
     <p2MetadataName>Dynamic Source Lookup</p2MetadataName>
     <serverIdInSettingsXml>m2e.extras</serverIdInSettingsXml>
     <repositoryUrl>http://repository.tesla.io:8081/nexus/service/local/repositories/m2e.extras/content-compressed/</repositoryUrl>
-    <repositoryPath>${repositoryPathId}/${unqualifiedVersion}/N/${unqualifiedVersion}.${buildQualifier}</repositoryPath>    
+    <repositoryPath>${repositoryPathId}/${unqualifiedVersion}/N/${unqualifiedVersion}.${buildQualifier}</repositoryPath>
   </properties>
 
   <repositories>
@@ -91,20 +91,20 @@
             </baselineRepositories>
           </configuration>
         </plugin>
-        <!--                                                                                                                                                                                                                 
-         |                                                                                                                                                                                                                   
-         | We only care about deploying the update site. Disable the deployment of the standard                                                                                                                              
-         | Maven resources and only deploy the update site in the feature build which is defined                                                                                                                             
-         | in the feature-build profile below.                                                                                                                                                                               
-         |                                                                                                                                                                                                                   
-         -->                                                                                                                                                                                                                 
-        <plugin>                                                                                                                                                                                                             
-          <groupId>org.apache.maven.plugins</groupId>                                                                                                                                                                        
-          <artifactId>maven-deploy-plugin</artifactId>                                                                                                                                                                       
-          <configuration>                                                                                                                                                                                                    
-            <skip>true</skip>                                                                                                                                                                                                
-          </configuration>                                                                                                                                                                                                   
-        </plugin>                          
+        <!--
+         |
+         | We only care about deploying the update site. Disable the deployment of the standard
+         | Maven resources and only deploy the update site in the feature build which is defined
+         | in the feature-build profile below.
+         |
+         -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

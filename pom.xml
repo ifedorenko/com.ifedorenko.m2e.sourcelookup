@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.version>0.18.1</tycho.version>
+    <tycho.version>0.19.0</tycho.version>
     <tycho-extras.version>${tycho.version}</tycho-extras.version>
     <repositoryPathId>sourcelookup</repositoryPathId>
     <p2MetadataName>Dynamic Source Lookup</p2MetadataName>
@@ -33,7 +33,7 @@
     <repository>
       <!-- this is needed for m2e.tests.common -->
       <id>m2e-extras</id>
-      <url>http://nexus.tesla.io:8081/nexus/content/sites/m2e.extras/m2e/1.4.0/N/LATEST/</url>
+      <url>http://repository.tesla.io:8081/nexus/content/sites/m2e.extras/m2e/1.4.0/N/LATEST/</url>
       <layout>p2</layout>
     </repository>
   </repositories>

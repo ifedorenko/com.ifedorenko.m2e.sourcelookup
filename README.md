@@ -28,15 +28,28 @@ where Equinox is embedded in Maven runtime.
 
 # Installation
 
-* Install Eclipse SDK 4.3 M5 or better from http://download.eclipse.org/eclipse/downloads/ 
-* Install m2e 1.3 or better from http://www.eclipse.org/m2e/download/
+* Install Eclipse SDK 4.3 or better from http://download.eclipse.org/eclipse/downloads/ 
+* Install m2e 1.4 or better from http://www.eclipse.org/m2e/download/
 * Install Dynamic Sources Lookup m2e extension from 
   http://ifedorenko.github.com/m2e-extras/
 
-# Use
+# Use for Maven launch configuration
 
 Dynamic Sources Lookup m2e extension does not require any special configuration
 and is enabled by default for all debug Maven launches.
+
+# Manual configuration of Dynamic Sources Lookup
+
+Dynamic Sources Lookup can be enabled for Java Application, Remote Java Application, 
+JUnit and likely all other java launch configuration types.
+
+* Add -javaagent to VM arguments using launch configuration dialog
+* Add <stringAttribute/> element to .launch file
+
+Source Lookup workspace preference page can be used to copy&paste exact values.
+
+# New in 1.1.0.201402120526
+* Ability to manually enable Dynamic Sources Lookup for any java launch configuration
 
 # New in version 1.1.0.201401182304
 * Preliminary java 8 support
@@ -56,14 +69,8 @@ and is enabled by default for all debug Maven launches.
 
 # Known limitations
 
-* Requires Java 5 or later but only tested with Java 6. Will not work and will
-  likely cause JVM startup failure for Java 1.4 and earlier. As a 
-  workaround, disable "Dynamic Sources Lookup" Maven Launch Extension in the 
-  launch configuration dialog.
 * Sources resolution uses repositories and pluginRepositories configured in
   Maven User settings.xml but not the actual repository or snapshot repository
   from <distributionManagement> the artifact the class was loaded from.
-* Only locally running JVMs are supported. It is not possible to enable dynamic
-  sources lookup for debug sessions connected to remotely running JVMs.
 * javaagent implementation will not instrument classes that have existing
   JSR-45 SMAP.

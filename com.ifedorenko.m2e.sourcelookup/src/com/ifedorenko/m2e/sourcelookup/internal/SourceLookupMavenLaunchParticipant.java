@@ -19,7 +19,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.jdt.internal.launching.JavaSourceLookupDirector;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
-import org.eclipse.m2e.internal.launch.MavenLaunchUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +44,7 @@ public class SourceLookupMavenLaunchParticipant
     {
         try
         {
-            String javaagent =
-                MavenLaunchUtils.getBundleEntry( SourceLookupActivator.getDefault().getBundle(),
-                                                 "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
-            return "-javaagent:" + javaagent;
+            return SourceLookupActivator.getDefault().getJavaagentString();
         }
         catch ( CoreException e )
         {

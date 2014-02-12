@@ -95,4 +95,13 @@
          </with>
       </definition>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.m2e.core.preferences.Maven2PreferencePage"
+            class="com.ifedorenko.m2e.sourcelookup.ui.internal.SourceLookupPreferencePage"
+            id="com.ifedorenko.m2e.sourcelookup.ui.internal.SourceLookupPreferencePage"
+            name="Source Lookup">
+      </page>
+   </extension>
 </plugin>

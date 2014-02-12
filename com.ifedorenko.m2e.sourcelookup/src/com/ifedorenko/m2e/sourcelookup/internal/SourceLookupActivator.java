@@ -80,4 +80,13 @@ public class SourceLookupActivator
         }
         return javaProjectSources;
     }
+
+    @SuppressWarnings( "restriction" )
+    public String getJavaagentString()
+        throws CoreException
+    {
+        return "-javaagent:"
+            + org.eclipse.m2e.internal.launch.MavenLaunchUtils.getBundleEntry( getBundle(),
+                                                                               "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
+    }
 }

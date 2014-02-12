@@ -43,8 +43,8 @@ and is enabled by default for all debug Maven launches.
 Dynamic Sources Lookup can be enabled for Java Application, Remote Java Application, 
 JUnit and likely all other java launch configuration types.
 
-* Add -javaagent to VM arguments using launch configuration dialog
-* Add <stringAttribute/> element to .launch file
+* Add `-javaagent` to VM arguments using launch configuration dialog
+* Add `<stringAttribute/>` element to .launch file
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
 

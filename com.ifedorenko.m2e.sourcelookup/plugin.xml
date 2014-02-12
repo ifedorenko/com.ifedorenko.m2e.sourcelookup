@@ -22,4 +22,12 @@
             type="org.eclipse.debug.core.model.DebugElement">
       </propertyTester>
    </extension>
+
+    <extension point="org.eclipse.debug.core.sourceLocators">
+       <sourceLocator 
+          id="com.ifedorenko.m2e.sourcelookupDirector"
+          class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupDirector"
+          name="Dynamic Source Locator">
+       </sourceLocator>
+   </extension>
 </plugin>

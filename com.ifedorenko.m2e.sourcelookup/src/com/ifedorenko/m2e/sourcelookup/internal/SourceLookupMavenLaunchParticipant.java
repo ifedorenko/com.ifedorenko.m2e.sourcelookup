@@ -10,19 +10,14 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.jdt.internal.launching.JavaSourceLookupDirector;
-import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupParticipant;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
 import org.eclipse.m2e.internal.launch.MavenLaunchUtils;
 import org.slf4j.Logger;
@@ -67,46 +62,16 @@ public class SourceLookupMavenLaunchParticipant
     public List<ISourceLookupParticipant> getSourceLookupParticipants( ILaunchConfiguration configuration,
                                                                        ILaunch launch, IProgressMonitor monitor )
     {
-        return getSourceLookupParticipants();
-    }
-
-    private static List<ISourceLookupParticipant> getSourceLookupParticipants()
-    {
-        List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
-
-        ServiceLoader<ISourceLookupParticipant> serviceLoader =
-            ServiceLoader.load( ISourceLookupParticipant.class,
-                                SourceLookupMavenLaunchParticipant.class.getClassLoader() );
-
-        Iterator<ISourceLookupParticipant> participantIterator = serviceLoader.iterator();
-        while ( participantIterator.hasNext() )
-        {
-            participants.add( participantIterator.next() );
-        }
-
-        return participants;
+        return SourceLookupDirector.getSourceLookupParticipants();
     }
 
     /**
      * Returns fully initialised ISourceLocator instance.
+     * 
+     * @deprecated Use {@link SourceLookupDirector#SourceLookupDirector(String)}
      */
     public static JavaSourceLookupDirector newSourceLocator( String mode )
     {
-        final List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
-        if ( ILaunchManager.DEBUG_MODE.equals( mode ) )
-        {
-            participants.addAll( getSourceLookupParticipants() );
-        }
-        participants.add( new JavaSourceLookupParticipant() );
-        JavaSourceLookupDirector sourceLocator = new JavaSourceLookupDirector()
-        {
-            @Override
-            public void initializeParticipants()
-            {
-                addParticipants( participants.toArray( new ISourceLookupParticipant[participants.size()] ) );
-            }
-        };
-        sourceLocator.initializeParticipants();
-        return sourceLocator;
+        return new SourceLookupDirector( mode );
     }
 }

@@ -48,6 +48,9 @@ JUnit and likely all other java launch configuration types.
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
 
+# New in 1.1.0.201402131627
+* Equinox classloading hook can now be used instead of javaagent to instrument classes 
+
 # New in 1.1.0.201402120526
 * Ability to manually enable Dynamic Sources Lookup for any java launch configuration
 

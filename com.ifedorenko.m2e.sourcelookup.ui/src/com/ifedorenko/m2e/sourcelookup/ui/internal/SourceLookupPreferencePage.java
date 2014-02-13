@@ -33,6 +33,8 @@ public class SourceLookupPreferencePage
 
     private Text launchFileAttribute;
 
+    private Text equinoxClasspath;
+
     public SourceLookupPreferencePage()
     {
         setMessage( "Manual configuration of dynamic source lookup" );
@@ -60,14 +62,21 @@ public class SourceLookupPreferencePage
         gl_composite.marginHeight = 0;
         composite.setLayout( gl_composite );
 
-        Label lblVMArguments = new Label( composite, SWT.NONE );
-        lblVMArguments.setText( "VM arguments:" );
-
-        vmArguments = new Text( composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP );
-        vmArguments.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 1, 1 ) );
         try
         {
+            Label lblVMArguments = new Label( composite, SWT.NONE );
+            lblVMArguments.setText( "VM arguments:" );
+
+            vmArguments = new Text( composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP );
+            vmArguments.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 1, 1 ) );
             vmArguments.setText( SourceLookupActivator.getDefault().getJavaagentString() );
+
+            Label lblEqiunoxFrameworkClasspath = new Label( composite, SWT.NONE );
+            lblEqiunoxFrameworkClasspath.setText( "Eqiunox framework classpath entry:" );
+
+            equinoxClasspath = new Text( composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP );
+            equinoxClasspath.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+            equinoxClasspath.setText( SourceLookupActivator.getDefault().getJavaagentLocation() );
 
             Label lblLaunchFileAttribute = new Label( composite, SWT.NONE );
             lblLaunchFileAttribute.setText( ".launch file attribute:" );

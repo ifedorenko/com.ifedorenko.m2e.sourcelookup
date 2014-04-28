@@ -9,19 +9,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.tesla.tycho</groupId>
+    <artifactId>tycho-support</artifactId>
+    <version>0.0.10</version>
+  </parent>  
   <groupId>com.ifedorenko.m2e</groupId>
   <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.version>0.19.0</tycho.version>
-    <tycho-extras.version>${tycho.version}</tycho-extras.version>
     <repositoryPathId>sourcelookup</repositoryPathId>
     <p2MetadataName>Dynamic Source Lookup</p2MetadataName>
-    <serverIdInSettingsXml>m2e.extras</serverIdInSettingsXml>
-    <repositoryUrl>http://repository.tesla.io:8081/nexus/service/local/repositories/m2e.extras/content-compressed/</repositoryUrl>
-    <repositoryPath>${repositoryPathId}/${unqualifiedVersion}/N/${unqualifiedVersion}.${buildQualifier}</repositoryPath>
   </properties>
 
   <repositories>
@@ -49,26 +49,16 @@
   </modules>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <extensions>true</extensions>
-      </plugin>
-    </plugins>
-
     <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-packaging-plugin</artifactId>
-          <version>${tycho.version}</version>
           <dependencies>
             <dependency>
               <groupId>org.eclipse.tycho.extras</groupId>
               <artifactId>tycho-buildtimestamp-jgit</artifactId>
-              <version>${tycho-extras.version}</version>
+              <version>${tychoVersion}</version>
             </dependency>
           </dependencies>
           <configuration>
@@ -81,7 +71,6 @@
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-plugin</artifactId>
-          <version>${tycho.version}</version>
           <configuration>
             <baselineRepositories>
               <repository>
@@ -90,32 +79,7 @@
             </baselineRepositories>
           </configuration>
         </plugin>
-        <!--
-         |
-         | We only care about deploying the update site. Disable the deployment of the standard
-         | Maven resources and only deploy the update site in the feature build which is defined
-         | in the feature-build profile below.
-         |
-         -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
-          <configuration>
-            <!-- http://maven.apache.org/plugins/maven-compiler-plugin/ -->
-            <source>1.6</source>
-            <target>1.6</target>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
-
 </project>

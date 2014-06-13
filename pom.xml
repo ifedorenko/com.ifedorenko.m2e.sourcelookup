@@ -29,13 +29,13 @@
   <repositories>
     <repository>
       <id>eclipse</id>
-      <url>http://download.eclipse.org/releases/kepler</url>
+      <url>http://download.eclipse.org/releases/luna</url>
       <layout>p2</layout>
     </repository>
     <repository>
       <!-- this is needed for m2e.tests.common -->
       <id>m2e-extras</id>
-      <url>http://repository.takari.io:8081/nexus/content/sites/m2e.extras/m2e/1.5.0/N/LATEST/</url>
+      <url>http://repository.takari.io:8081/nexus/content/sites/m2e.extras/m2e/1.6.0/N/LATEST/</url>
       <layout>p2</layout>
     </repository>
   </repositories>

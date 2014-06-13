@@ -48,7 +48,7 @@ JUnit and likely all other java launch configuration types.
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
 
-# New in 1.1.0.201406131207
+# New in 1.1.0.201406131218
 * asm 5.0.3, java 8 should be fully supported now
 
 # New in 1.1.0.201402131627

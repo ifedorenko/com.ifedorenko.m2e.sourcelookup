@@ -31,9 +31,9 @@ Expected: Variables view, open declared type of lib opens sources from lib/ proj
 Expected: codeassist works in breakpoint condition editor field
 Expected: debugger stops at the breakpoint
 
-# Indexer-based external sources lookup
+# Indexer-based external sources lookup (index download is disabled by default in m2e 1.5+)
 
-* Select HttpServlet.service stack frame
+* Select HttpServlet.service #735 stack frame
 
 Expected: jetty javax.servel-3.0.0 sources jar is downloaded and debugger shows source file
 Expected: Open Pom on the stack frame does not work
@@ -54,7 +54,7 @@ Expected: debugger stops with "unable to compile conditional breakpoint" error m
 
 # pom-based external sources lookup
 
-* Select ServletHolder.handle stack frame
+* Select ServletHolder.handle #598 stack frame
 
 Expected: ServletHolder.java is displayed
 Expected: Open Pom on the stack frame opens jetty-servlet 8.1.4.v20120524 pom.xml
@@ -66,13 +66,14 @@ Expected: dialog shows expected values, Copy and Refresh work (refresh can be te
 
 # Binary project
 
-* Import binary project on HttpServlet.service stack frame
+* Import binary project on HttpServlet.service #735 stack frame
 
 Expected: org.eclipse.jetty.orbit_javax.servlet_3.0.0.v201112011016 project is created in workspace
 Expected: debugger automatically refreshes to show HttpServlet.java from workspace binary project
 Expected: Display view provides codeassist for 'me...' method variable, shows the variable value
 
-Expected: Variables view, show actual and declared type of Response shows sources from binary project
+Expected: Variables view, show declared type of Response shows sources from binary project
+Expected (see problem below): show actual type fails with "Source not found" pop-up
 Problem: as of 2012-12-22, show actual/declared type only work when target type comes from a workspace project.
          This seems like unnecessary jdt ui limitation around OpenTypeAction, which requires IJavaElement and
          does not allow sources from external jars or source directories.

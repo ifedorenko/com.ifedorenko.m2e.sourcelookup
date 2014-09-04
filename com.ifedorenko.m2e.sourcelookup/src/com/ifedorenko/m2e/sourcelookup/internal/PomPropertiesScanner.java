@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -35,6 +37,13 @@ import org.eclipse.m2e.core.internal.index.IndexedArtifactFile;
 import org.eclipse.m2e.core.internal.index.nexus.CompositeIndex;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
+
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @SuppressWarnings( "restriction" )
 public abstract class PomPropertiesScanner<T>
@@ -122,7 +131,7 @@ public abstract class PomPropertiesScanner<T>
 
         if ( location.isFile() )
         {
-            IndexedArtifactFile indexed = identify( location );
+            IndexedArtifactFile indexed = identifyNexusIndexer( location );
             if ( indexed != null )
             {
                 ArtifactKey a = indexed.getArtifactKey();
@@ -132,12 +141,44 @@ public abstract class PomPropertiesScanner<T>
                     result.add( t );
                 }
             }
+
+            try
+            {
+                String sha1 = Files.hash( location, Hashing.sha1() ).toString();
+                URL url = new URL( "https://search.maven.org/solrsearch/select?q=1:" + sha1 );
+                InputStreamReader reader = new InputStreamReader( url.openStream(), Charsets.UTF_8 );
+                try
+                {
+                    JsonObject container = new Gson().fromJson( reader, JsonObject.class );
+                    JsonArray docs = container.get( "response" ).getAsJsonObject().get( "docs" ).getAsJsonArray();
+                    for ( int i = 0; i < docs.size(); i++ )
+                    {
+                        JsonObject doc = docs.get( i ).getAsJsonObject();
+                        String g = doc.get( "g" ).getAsString();
+                        String a = doc.get( "a" ).getAsString();
+                        String v = doc.get( "v" ).getAsString();
+                        T t = visitGAVC( g, a, v, null );
+                        if ( t != null )
+                        {
+                            result.add( t );
+                        }
+                    }
+                }
+                finally
+                {
+                    IOUtil.close( reader );
+                }
+            }
+            catch ( IOException e )
+            {
+                // XXX
+            }
         }
 
         return new ArrayList<T>( result );
     }
 
-    protected IndexedArtifactFile identify( File file )
+    protected IndexedArtifactFile identifyNexusIndexer( File file )
         throws CoreException
     {
         IIndex index = MavenPlugin.getIndexManager().getAllIndexes();

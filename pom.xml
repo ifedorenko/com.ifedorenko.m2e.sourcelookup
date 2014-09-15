@@ -10,9 +10,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.tesla.tycho</groupId>
+    <groupId>io.takari.tycho</groupId>
     <artifactId>tycho-support</artifactId>
-    <version>0.0.13</version>
+    <version>0.14.0</version>
   </parent>
   <groupId>com.ifedorenko.m2e</groupId>
   <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
@@ -21,22 +21,7 @@
 
   <properties>
     <repositoryPathId>sourcelookup</repositoryPathId>
-    <p2MetadataName>Dynamic Source Lookup</p2MetadataName>
   </properties>
-
-  <repositories>
-    <repository>
-      <id>eclipse</id>
-      <url>http://download.eclipse.org/releases/luna</url>
-      <layout>p2</layout>
-    </repository>
-    <repository>
-      <!-- this is needed for m2e.tests.common -->
-      <id>m2e-extras</id>
-      <url>http://repository.takari.io:8081/nexus/content/sites/m2e.extras/m2e/1.6.0/N/LATEST/</url>
-      <layout>p2</layout>
-    </repository>
-  </repositories>
 
   <modules>
     <module>com.ifedorenko.m2e.sourcelookup</module>
@@ -46,6 +31,7 @@
     <module>com.ifedorenko.m2e.binaryproject</module>
     <module>com.ifedorenko.m2e.binaryproject.ui</module>
     <module>com.ifedorenko.m2e.binaryproject.tests</module>
+    <module>com.ifedorenko.m2e.sourcelookup.repository</module>
   </modules>
 
   <build>
@@ -66,18 +52,6 @@
             <jgit.ignore>
               pom.xml
             </jgit.ignore>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-p2-plugin</artifactId>
-          <configuration>
-            <baselineRepositories>
-              <repository>
-                <url>http://ifedorenko.github.com/m2e-extras/</url>
-              </repository>
-            </baselineRepositories>
-            <compressRepository>false</compressRepository>
           </configuration>
         </plugin>
       </plugins>

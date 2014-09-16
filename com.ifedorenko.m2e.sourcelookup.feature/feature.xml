@@ -31,7 +31,6 @@ Igor Fedorenko - initial API and implementation\n
    <requires>
       <import feature="org.eclipse.jdt" version="3.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.m2e.feature" version="1.1.0" match="greaterOrEqual"/>
-      <import feature="io.takari.stats.m2e.feature" version="0.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

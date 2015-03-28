@@ -30,4 +30,13 @@
           name="Dynamic Source Locator">
        </sourceLocator>
    </extension>
+    <extension
+          point="org.eclipse.core.variables.dynamicVariables">
+       <variable
+             description="Returns absolute filesystem path of source lookup java agent."
+             name="sourcelookup_agent_path"
+             resolver="com.ifedorenko.m2e.sourcelookup.internal.AgentPathVariableResolver"
+             supportsArgument="false">
+       </variable>
+    </extension>
 </plugin>

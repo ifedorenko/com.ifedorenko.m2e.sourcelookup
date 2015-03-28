@@ -31,6 +31,8 @@ public class SourceLookupPreferencePage
 {
     private Text vmArguments;
 
+    private Text launchFileVMArguments;
+
     private Text launchFileAttribute;
 
     private Text equinoxClasspath;
@@ -48,7 +50,7 @@ public class SourceLookupPreferencePage
     @Override
     protected Control createContents( Composite parent )
     {
-        Composite composite = new Composite( parent, SWT.NONE )
+        Composite composite = new Composite( parent, SWT.NONE)
         {
             @Override
             public Point computeSize( int wHint, int hHint, boolean changed )
@@ -70,6 +72,13 @@ public class SourceLookupPreferencePage
             vmArguments = new Text( composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP );
             vmArguments.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 1, 1 ) );
             vmArguments.setText( SourceLookupActivator.getDefault().getJavaagentString() );
+
+            Label lblLaunchVMArguments = new Label( composite, SWT.NONE );
+            lblLaunchVMArguments.setText( ".launch file VM arguments:" );
+
+            launchFileVMArguments = new Text( composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP );
+            launchFileVMArguments.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 1, 1 ) );
+            launchFileVMArguments.setText( "-javaagent:${sourcelookup_agent_path}" );
 
             Label lblEqiunoxFrameworkClasspath = new Label( composite, SWT.NONE );
             lblEqiunoxFrameworkClasspath.setText( "Eqiunox framework classpath entry:" );

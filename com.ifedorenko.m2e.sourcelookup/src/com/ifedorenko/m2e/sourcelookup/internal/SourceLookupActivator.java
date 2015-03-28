@@ -10,8 +10,14 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import java.io.IOException;
+import java.net.URL;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 public class SourceLookupActivator
@@ -87,11 +93,17 @@ public class SourceLookupActivator
         return "-javaagent:" + getJavaagentLocation();
     }
 
-    @SuppressWarnings( "restriction" )
     public String getJavaagentLocation()
         throws CoreException
     {
-        return org.eclipse.m2e.internal.launch.MavenLaunchUtils.getBundleEntry( getBundle(),
-                                                                                "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
+        URL entry = getBundle().getEntry( "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
+        try
+        {
+            return FileLocator.toFileURL( entry ).getFile();
+        }
+        catch ( IOException e )
+        {
+            throw new CoreException( new Status( IStatus.ERROR, PLUGIN_ID, e.getMessage(), e ) );
+        }
     }
 }

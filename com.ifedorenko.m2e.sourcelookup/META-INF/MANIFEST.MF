@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.m2e.launching;bundle-version="[1.1.0,2.0.0)",
  com.google.guava;bundle-version="15.0.0",
  com.google.gson;bundle-version="2.2.4",
  org.eclipse.core.variables;bundle-version="3.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
+ JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
 Export-Package: com.ifedorenko.m2e.sourcelookup.internal;x-friends:="com.ifedorenko.m2e.sourcelookup.ui,com.ifedorenko.m2e.sourcelookup.pde"

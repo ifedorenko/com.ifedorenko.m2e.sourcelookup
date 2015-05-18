@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -99,9 +101,9 @@ public class SourceLookupActivator
         URL entry = getBundle().getEntry( "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
         try
         {
-            return FileLocator.toFileURL( entry ).getFile();
+            return new File( FileLocator.toFileURL( entry ).toURI() ).getCanonicalPath();
         }
-        catch ( IOException e )
+        catch ( IOException | URISyntaxException e )
         {
             throw new CoreException( new Status( IStatus.ERROR, PLUGIN_ID, e.getMessage(), e ) );
         }

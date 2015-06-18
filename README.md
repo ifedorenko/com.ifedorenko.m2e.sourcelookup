@@ -28,12 +28,7 @@ where Equinox is embedded in Maven runtime.
 
 # Installation
 
-* Install Eclipse SDK 4.4.1 or better from http://download.eclipse.org/eclipse/downloads/ 
-  <br/><strong>Avoid Eclipse Eclipse 4.4/Luna and 4.5/Mars M1</strong> Use Eclipse 4.4.1 
-  or 4.5 M2 instead. See [bug 437193](https://bugs.eclipse.org/bugs/show_bug.cgi?id=437193) 
-  for more details. 
-* Install m2e 1.5 or better from http://www.eclipse.org/m2e/download/
-* Install Dynamic Sources Lookup m2e extension from 
+* Dynamic Sources Lookup M2E is not part of Maven Development Tools, which be installed from 
   http://ifedorenko.github.com/m2e-extras/
 
 # Use for Maven launch configuration
@@ -50,6 +45,10 @@ JUnit and likely all other java launch configuration types.
 * Add `<stringAttribute/>` element to .launch file
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
+
+# New in 1.1.0.201506181114
+* M2E 1.6/Mars compatibility
+* `${sourcelookup_agent_path}` dynamic string variable, for portable custom launch configurations
 
 # New in 1.1.0.201409041614
 * Use Sonatype Central Repository REST API to identify artifacts

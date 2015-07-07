@@ -91,7 +91,7 @@ public class SourceLookupParticipant
     public Object[] findSourceElements( Object fElement )
         throws CoreException
     {
-        ISourceContainer container = getSourceContainer( fElement, false /* don't refresh cache */, null /* async */);
+        ISourceContainer container = getSourceContainer( fElement, false /* don't refresh cache */, null /* async */ );
 
         if ( container == null )
         {
@@ -132,20 +132,24 @@ public class SourceLookupParticipant
 
                 container = workspaceSources.getProjectSourceContainer( location );
 
+                Object hash = null;
+
                 if ( container == null )
                 {
+                    hash = Locations.hash( location );
+
                     IStackFrame[] stackFrames = getStackFrames( fElement );
 
                     if ( stackFrames != null )
                     {
-                        container = workspaceSources.getContextSourceContainer( location, stackFrames );
+                        container = workspaceSources.getContextSourceContainer( location, hash, stackFrames );
                     }
                 }
 
                 if ( container == null )
                 {
                     // this is still better than name-only lookup performed by default jdt source lookup participant
-                    container = workspaceSources.getAnySourceContainer( location );
+                    container = workspaceSources.getAnySourceContainer( location, hash );
                 }
 
                 if ( container == null )

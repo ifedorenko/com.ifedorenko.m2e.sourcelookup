@@ -12,7 +12,6 @@ package com.ifedorenko.m2e.sourcelookup.internal;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -41,6 +40,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 
+import com.google.common.collect.ImmutableMap;
 import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
 
 public class JavaProjectSources
@@ -52,10 +52,13 @@ public class JavaProjectSources
 
         private final Map<File, IPackageFragmentRoot> classpath;
 
+        private final Map<Object, IPackageFragmentRoot> hashes;
+
         public JavaProjectInfo( IJavaProject project, Map<File, IPackageFragmentRoot> classpath )
         {
             this.project = project;
-            this.classpath = Collections.unmodifiableMap( classpath );
+            this.classpath = ImmutableMap.copyOf( classpath );
+            this.hashes = Locations.hash( classpath );
         }
 
         public IJavaProject getJavaProject()
@@ -63,9 +66,14 @@ public class JavaProjectSources
             return project;
         }
 
-        public IPackageFragmentRoot getPackageFragmentRoot( File location )
+        public IPackageFragmentRoot getPackageFragmentRoot( File location, Object hash )
         {
-            return classpath.get( location );
+            IPackageFragmentRoot fragment = classpath.get( location );
+            if ( fragment == null )
+            {
+                fragment = hashes.get( hash );
+            }
+            return fragment;
         }
     }
 
@@ -94,7 +102,7 @@ public class JavaProjectSources
         return null;
     }
 
-    public ISourceContainer getContextSourceContainer( File location, IStackFrame[] stack )
+    public ISourceContainer getContextSourceContainer( File location, Object hash, IStackFrame[] stack )
         throws DebugException
     {
         for ( IStackFrame frame : stack )
@@ -112,7 +120,7 @@ public class JavaProjectSources
                 continue;
             }
 
-            final IPackageFragmentRoot fragment = info.getPackageFragmentRoot( location );
+            final IPackageFragmentRoot fragment = info.getPackageFragmentRoot( location, hash );
             if ( fragment != null )
             {
                 return new PackageFragmentRootSourceContainer( fragment );
@@ -371,13 +379,13 @@ public class JavaProjectSources
         }
     }
 
-    public ISourceContainer getAnySourceContainer( File location )
+    public ISourceContainer getAnySourceContainer( File location, Object hash )
     {
         synchronized ( lock )
         {
             for ( JavaProjectInfo project : locations.values() )
             {
-                IPackageFragmentRoot fragmentRoot = project.getPackageFragmentRoot( location );
+                IPackageFragmentRoot fragmentRoot = project.getPackageFragmentRoot( location, hash );
                 if ( fragmentRoot != null )
                 {
                     return new PackageFragmentRootSourceContainer( fragmentRoot );

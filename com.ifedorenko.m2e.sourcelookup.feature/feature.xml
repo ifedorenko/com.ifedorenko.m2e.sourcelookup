@@ -5,7 +5,7 @@
       version="1.1.0.qualifier"
       provider-name="Igor Fedorenko">
 
-   <description>
+   <description url="https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup">
       Allows Eclipse Java debugger lookup sources of Java classes dynamically
 loaded by Maven JVM, such as Maven plugins. 
 Supports multiple versions of the same class loaded by the Maven

@@ -39,14 +39,9 @@ public abstract class MetaInfMavenScanner<T>
             {
                 try
                 {
-                    JarFile jar = new JarFile( file );
-                    try
+                    try (JarFile jar = new JarFile( file ))
                     {
                         scanJar( jar, filename, result );
-                    }
-                    finally
-                    {
-                        jar.close();
                     }
                 }
                 catch ( IOException e )

@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -57,17 +56,12 @@ public abstract class PomPropertiesScanner<T>
         protected Properties visitFile( File file )
             throws IOException
         {
-            InputStream is = new BufferedInputStream( new FileInputStream( file ) );
-            try
+            try (InputStream is = new BufferedInputStream( new FileInputStream( file ) ))
             {
                 Properties properties = new Properties();
                 properties.load( is );
                 // TODO validate properties and path match
                 return properties;
-            }
-            finally
-            {
-                IOUtil.close( is );
             }
         }
 
@@ -75,17 +69,12 @@ public abstract class PomPropertiesScanner<T>
         protected Properties visitJarEntry( JarFile jar, JarEntry entry )
             throws IOException
         {
-            InputStream is = jar.getInputStream( entry );
-            try
+            try (InputStream is = jar.getInputStream( entry ))
             {
                 Properties properties = new Properties();
                 properties.load( is );
                 // TODO validate properties and path match
                 return properties;
-            }
-            finally
-            {
-                IOUtil.close( is );
             }
         }
     };
@@ -146,8 +135,7 @@ public abstract class PomPropertiesScanner<T>
             {
                 String sha1 = Files.hash( location, Hashing.sha1() ).toString();
                 URL url = new URL( "https://search.maven.org/solrsearch/select?q=1:" + sha1 );
-                InputStreamReader reader = new InputStreamReader( url.openStream(), Charsets.UTF_8 );
-                try
+                try (InputStreamReader reader = new InputStreamReader( url.openStream(), Charsets.UTF_8 ))
                 {
                     JsonObject container = new Gson().fromJson( reader, JsonObject.class );
                     JsonArray docs = container.get( "response" ).getAsJsonObject().get( "docs" ).getAsJsonArray();
@@ -163,10 +151,6 @@ public abstract class PomPropertiesScanner<T>
                             result.add( t );
                         }
                     }
-                }
-                finally
-                {
-                    IOUtil.close( reader );
                 }
             }
             catch ( IOException e )

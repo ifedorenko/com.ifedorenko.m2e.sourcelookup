@@ -28,8 +28,7 @@ where Equinox is embedded in Maven runtime.
 
 # Installation
 
-* Dynamic Sources Lookup M2E is not part of Maven Development Tools, which be installed from 
-  http://ifedorenko.github.com/m2e-extras/
+* Dynamic Sources Lookup M2E is now part of Maven Development Tools, which can be installed from http://ifedorenko.github.com/m2e-extras/
 
 # Use for Maven launch configuration
 

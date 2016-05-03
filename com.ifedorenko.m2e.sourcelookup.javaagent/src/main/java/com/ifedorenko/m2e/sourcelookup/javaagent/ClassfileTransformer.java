@@ -24,7 +24,7 @@ class ClassfileTransformer
         final ClassReader r = new ClassReader( classfileBuffer, 0, classfileBuffer.length );
         final ClassWriter w = new ClassWriter( 0 );
 
-        r.accept( new ClassVisitor( Opcodes.ASM4, w )
+        r.accept( new ClassVisitor( Opcodes.ASM5, w )
         {
             public void visitSource( String source, String debug )
             {

@@ -8,14 +8,14 @@
  * Contributors:
  *      Igor Fedorenko - initial API and implementation
  *******************************************************************************/
-package com.ifedorenko.m2e.sourcelookup.javaagent;
+package com.ifedorenko.m2e.sourcelookup.weaving;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
-class ClassfileTransformer
+public class ClassfileTransformer
 {
 
     public byte[] transform( byte[] classfileBuffer, final String location )
@@ -29,12 +29,8 @@ class ClassfileTransformer
             public void visitSource( String source, String debug )
             {
                 String javaSource = source;
-                if ( debug != null )
-                {
-                    System.err.println( "m2e SMAP merge is not supported!" );
-                    System.err.println( debug );
-                }
-                else
+                // TODO merge SMAP if present (always present when used together with Equinox weaver)
+                if ( debug == null )
                 {
                     StringBuilder smap = new StringBuilder();
                     smap.append( "SMAP\n" );

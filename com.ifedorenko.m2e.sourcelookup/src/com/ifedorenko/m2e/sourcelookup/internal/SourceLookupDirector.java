@@ -36,6 +36,7 @@ import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupPartici
 public class SourceLookupDirector
     extends JavaSourceLookupDirector
 {
+    public static final String ID = "com.ifedorenko.m2e.sourcelookupDirector";
 
     private final String mode;
 

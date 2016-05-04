@@ -17,9 +17,11 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
+import com.ifedorenko.m2e.sourcelookup.weaving.ClassfileTransformer;
+
 public class Premain
 {
-    static final ClassfileTransformer transformer = new ClassfileTransformer();
+    private static final ClassfileTransformer transformer = new ClassfileTransformer();
 
     public static void premain( String agentArgs, Instrumentation inst )
     {
@@ -34,6 +36,11 @@ public class Premain
                 try
                 {
                     if ( protectionDomain == null )
+                    {
+                        return null;
+                    }
+
+                    if ( className == null )
                     {
                         return null;
                     }

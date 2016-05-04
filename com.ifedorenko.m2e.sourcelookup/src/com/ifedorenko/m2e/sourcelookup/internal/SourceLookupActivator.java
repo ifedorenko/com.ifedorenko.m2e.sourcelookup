@@ -98,7 +98,13 @@ public class SourceLookupActivator
     public String getJavaagentLocation()
         throws CoreException
     {
-        URL entry = getBundle().getEntry( "com.ifedorenko.m2e.sourcelookup.javaagent.jar" );
+        return toLocalFile( getBundle().getEntry( "com.ifedorenko.m2e.sourcelookup.javaagent.jar" ) );
+    }
+
+    // TODO move to m2e Bundles
+    public static String toLocalFile( URL entry )
+        throws CoreException
+    {
         try
         {
             return new File( FileLocator.toFileURL( entry ).toURI() ).getCanonicalPath();

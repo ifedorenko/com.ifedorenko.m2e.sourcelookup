@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-SymbolicName: decentxml.app;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.5))"
+Require-Bundle: decentxml.wrapper,
+ org.eclipse.equinox.app

@@ -12,7 +12,7 @@
   <parent>
     <groupId>io.takari.tycho</groupId>
     <artifactId>tycho-support</artifactId>
-    <version>0.15.0</version>
+    <version>0.17.0</version>
   </parent>
   <groupId>com.ifedorenko.m2e</groupId>
   <artifactId>com.ifedorenko.m2e.sourcelookup-parent</artifactId>
@@ -21,6 +21,8 @@
 
   <properties>
     <repositoryPathId>sourcelookup</repositoryPathId>
+    
+    <m2e-core.url>${repoHost}/content/sites/m2e.extras/m2e/1.7.0/N/LATEST</m2e-core.url>
   </properties>
 
   <modules>

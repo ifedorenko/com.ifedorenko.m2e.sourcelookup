@@ -17,7 +17,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+
 
 public class OpenSourceLookupInfoDialogCommandHandler
     extends AbstractHandler

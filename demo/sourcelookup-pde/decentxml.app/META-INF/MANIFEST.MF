@@ -6,3 +6,5 @@ Bundle-Version: 0.0.1.qualifier
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.5))"
 Require-Bundle: decentxml.wrapper,
  org.eclipse.equinox.app
+Export-Package: decentxml.app
+Eclipse-ExtensibleAPI: true

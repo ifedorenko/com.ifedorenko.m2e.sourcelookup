@@ -19,9 +19,9 @@ import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
-import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.PomPropertiesScanner;
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant;
+import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
 
 public class ImportBinaryProjectHandler
     extends AbstractHandler

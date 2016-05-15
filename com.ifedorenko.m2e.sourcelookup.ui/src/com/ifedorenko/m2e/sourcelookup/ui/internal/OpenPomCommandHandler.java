@@ -30,8 +30,8 @@ import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction.MavenStorageEditor
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.MetaInfMavenScanner;
+import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
+import com.ifedorenko.m2e.sourcelookup.internal.launch.MetaInfMavenScanner;
 
 @SuppressWarnings( "restriction" )
 public class OpenPomCommandHandler

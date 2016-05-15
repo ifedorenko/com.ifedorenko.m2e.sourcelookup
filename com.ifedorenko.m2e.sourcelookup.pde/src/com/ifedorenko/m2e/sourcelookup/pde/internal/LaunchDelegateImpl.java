@@ -29,7 +29,6 @@ import org.eclipse.debug.core.model.IPersistableSourceLocator;
 import org.eclipse.debug.core.sourcelookup.IPersistableSourceLocator2;
 
 import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupActivator;
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupDirector;
 
 class LaunchDelegateImpl
 {
@@ -74,7 +73,7 @@ class LaunchDelegateImpl
     {
         Launch launch = new Launch( configuration, mode, null );
 
-        IPersistableSourceLocator locator = getLaunchManager().newSourceLocator( SourceLookupDirector.ID );
+        IPersistableSourceLocator locator = getLaunchManager().newSourceLocator( PDESourceLookupDirector.ID );
         String memento = configuration.getAttribute( ILaunchConfiguration.ATTR_SOURCE_LOCATOR_MEMENTO, (String) null );
         if ( memento == null )
         {

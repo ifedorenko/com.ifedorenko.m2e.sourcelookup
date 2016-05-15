@@ -17,10 +17,13 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
+
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.WorkspaceProjects;
 
 public class SourceLookupActivator
     extends Plugin
@@ -32,7 +35,7 @@ public class SourceLookupActivator
 
     private BackgroundProcessingJob backgroundJob;
 
-    private JavaProjectSources javaProjectSources;
+    private WorkspaceProjects javaProjectSources;
 
     public SourceLookupActivator()
     {
@@ -72,19 +75,19 @@ public class SourceLookupActivator
         getDefault().backgroundJob.schedule( task );
     }
 
-    public static JavaProjectSources getWorkspaceSources()
+    public static WorkspaceProjects getWorkspaceJavaProjects( IProgressMonitor monitor )
         throws CoreException
     {
-        return getDefault().getWorkspaceSources0();
+        return getDefault().getWorkspaceJavaProjects0( monitor );
     }
 
-    private synchronized JavaProjectSources getWorkspaceSources0()
+    private synchronized WorkspaceProjects getWorkspaceJavaProjects0( IProgressMonitor monitor )
         throws CoreException
     {
-        if ( javaProjectSources == null )
+        if ( javaProjectSources == null && monitor != null )
         {
-            javaProjectSources = new JavaProjectSources();
-            javaProjectSources.initialize();
+            javaProjectSources = new WorkspaceProjects();
+            javaProjectSources.initialize( monitor );
         }
         return javaProjectSources;
     }

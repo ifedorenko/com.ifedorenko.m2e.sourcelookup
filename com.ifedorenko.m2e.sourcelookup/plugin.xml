@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="projectSourceDescribers" name="Project Source Describers" schema="schema/projectSourceDescribers.exsd"/>
 
    <extension
          point="org.eclipse.m2e.launching.mavenLaunchParticipants">
       <mavenLaunchParticipant
-            class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupMavenLaunchParticipant"
+            class="com.ifedorenko.m2e.sourcelookup.internal.launch.SourceLookupMavenLaunchParticipant"
             id="com.ifedorenko.m2e.sourcelookup"
             name="Dynamic Sources Lookup"
             modes="debug">
@@ -15,7 +16,7 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="com.ifedorenko.m2e.sourcelookup.internal.JDIStratumTester"
+            class="com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIStratumTester"
             id="com.ifedorenko.m2e.sourcelookup.jdiStratumTest"
             namespace="com.ifedorenko.m2e.sourcelookup"
             properties="m2estratum"
@@ -26,7 +27,7 @@
     <extension point="org.eclipse.debug.core.sourceLocators">
        <sourceLocator 
           id="com.ifedorenko.m2e.sourcelookupDirector"
-          class="com.ifedorenko.m2e.sourcelookup.internal.SourceLookupDirector"
+          class="com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupDirector"
           name="Dynamic Source Locator">
        </sourceLocator>
    </extension>

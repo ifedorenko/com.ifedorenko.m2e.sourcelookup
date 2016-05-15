@@ -44,9 +44,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.ifedorenko.m2e.sourcelookup.internal.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.PomPropertiesScanner;
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupParticipant;
+import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
 
 public class SourceLookupInfoDialog
     extends Dialog

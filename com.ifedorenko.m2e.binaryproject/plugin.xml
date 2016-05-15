@@ -9,5 +9,11 @@
             name="Maven Binary Project">
       </lifecycleMapping>
    </extension>
+   <extension
+         point="com.ifedorenko.m2e.sourcelookup.projectSourceDescribers">
+      <describer
+            class="com.ifedorenko.m2e.binaryproject.sourcelookup.BinaryProjectDescriber">
+      </describer>
+   </extension>
 
 </plugin>

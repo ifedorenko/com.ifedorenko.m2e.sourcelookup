@@ -10,12 +10,6 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.takari.tycho</groupId>
-    <artifactId>tycho-support</artifactId>
-    <version>0.17.0</version>
-  </parent>
-
   <groupId>com.ifedorenko.m2e</groupId>
   <artifactId>classfile-transformation</artifactId>
   <version>1.2.0-SNAPSHOT</version>

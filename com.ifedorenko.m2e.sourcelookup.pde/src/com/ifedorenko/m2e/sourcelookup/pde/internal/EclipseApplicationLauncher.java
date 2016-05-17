@@ -15,31 +15,23 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.pde.launching.EclipseApplicationLaunchConfiguration;
 
-public class EclipseApplicationLauncher
-    extends EclipseApplicationLaunchConfiguration
-{
+public class EclipseApplicationLauncher extends EclipseApplicationLaunchConfiguration {
 
-    @Override
-    public String[] getProgramArguments( ILaunchConfiguration configuration )
-        throws CoreException
-    {
-        String[] programArguments = super.getProgramArguments( configuration );
-        LaunchDelegateImpl.injectFrameworkExtension( getConfigDir( configuration ) );
-        return programArguments;
-    }
+  @Override
+  public String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
+    String[] programArguments = super.getProgramArguments(configuration);
+    LaunchDelegateImpl.injectFrameworkExtension(getConfigDir(configuration));
+    return programArguments;
+  }
 
-    @Override
-    public String[] getVMArguments( ILaunchConfiguration configuration )
-        throws CoreException
-    {
-        return LaunchDelegateImpl.appendJavaagentString( super.getVMArguments( configuration ) );
-    }
+  @Override
+  public String[] getVMArguments(ILaunchConfiguration configuration) throws CoreException {
+    return LaunchDelegateImpl.appendJavaagentString(super.getVMArguments(configuration));
+  }
 
-    @Override
-    public ILaunch getLaunch( ILaunchConfiguration configuration, String mode )
-        throws CoreException
-    {
-        return LaunchDelegateImpl.getLaunch( configuration, mode );
-    }
+  @Override
+  public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+    return LaunchDelegateImpl.getLaunch(configuration, mode);
+  }
 
 }

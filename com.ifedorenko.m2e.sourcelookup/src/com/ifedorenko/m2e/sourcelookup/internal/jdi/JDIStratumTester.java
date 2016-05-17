@@ -13,23 +13,17 @@ package com.ifedorenko.m2e.sourcelookup.internal.jdi;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.debug.core.DebugException;
 
-public class JDIStratumTester
-    extends PropertyTester
-{
+public class JDIStratumTester extends PropertyTester {
 
-    @Override
-    public boolean test( Object receiver, String property, Object[] args, Object expectedValue )
-    {
-        boolean result;
-        try
-        {
-            result = JDIHelpers.getLocation( receiver ) != null;
-        }
-        catch ( DebugException e )
-        {
-            result = false;
-        }
-        return result;
+  @Override
+  public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+    boolean result;
+    try {
+      result = JDIHelpers.getLocation(receiver) != null;
+    } catch (DebugException e) {
+      result = false;
     }
+    return result;
+  }
 
 }

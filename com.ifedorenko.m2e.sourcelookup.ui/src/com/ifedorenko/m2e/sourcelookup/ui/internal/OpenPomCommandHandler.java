@@ -33,77 +33,57 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MetaInfMavenScanner;
 
-@SuppressWarnings( "restriction" )
-public class OpenPomCommandHandler
-    extends AbstractHandler
-{
+@SuppressWarnings("restriction")
+public class OpenPomCommandHandler extends AbstractHandler {
 
-    @Override
-    public Object execute( ExecutionEvent event )
-        throws ExecutionException
-    {
-        ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+  @Override
+  public Object execute(ExecutionEvent event) throws ExecutionException {
+    ISelection selection = HandlerUtil.getCurrentSelectionChecked(event);
 
-        if ( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
-        {
-            return null;
-        }
+    if (!(selection instanceof IStructuredSelection) || selection.isEmpty()) {
+      return null;
+    }
 
-        try
-        {
-            final File location = JDIHelpers.getLocation( ( (IStructuredSelection) selection ).getFirstElement() );
+    try {
+      final File location = JDIHelpers.getLocation(((IStructuredSelection) selection).getFirstElement());
 
-            if ( location == null )
-            {
-                return null;
-            }
-
-            final String name = location.getName();
-
-            List<IEditorInput> inputs = new MetaInfMavenScanner<IEditorInput>()
-            {
-                @Override
-                protected IEditorInput visitFile( File file )
-                    throws IOException
-                {
-                    return toEditorInput( name, new FileInputStream( file ) );
-                }
-
-                @Override
-                protected IEditorInput visitJarEntry( JarFile jar, JarEntry entry )
-                    throws IOException
-                {
-                    return toEditorInput( name, jar.getInputStream( entry ) );
-                }
-
-            }.scan( location, "pom.xml" );
-
-            if ( inputs.isEmpty() )
-            {
-                return null;
-            }
-
-            OpenPomAction.openEditor( inputs.get( 0 ), "pom.xml" );
-        }
-        catch ( CoreException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+      if (location == null) {
         return null;
+      }
+
+      final String name = location.getName();
+
+      List<IEditorInput> inputs = new MetaInfMavenScanner<IEditorInput>() {
+        @Override
+        protected IEditorInput visitFile(File file) throws IOException {
+          return toEditorInput(name, new FileInputStream(file));
+        }
+
+        @Override
+        protected IEditorInput visitJarEntry(JarFile jar, JarEntry entry) throws IOException {
+          return toEditorInput(name, jar.getInputStream(entry));
+        }
+
+      }.scan(location, "pom.xml");
+
+      if (inputs.isEmpty()) {
+        return null;
+      }
+
+      OpenPomAction.openEditor(inputs.get(0), "pom.xml");
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
-    static MavenStorageEditorInput toEditorInput( String name, InputStream is )
-        throws IOException
-    {
-        try
-        {
-            return new MavenStorageEditorInput( name, name, null, IOUtil.toByteArray( is ) );
-        }
-        finally
-        {
-            IOUtil.close( is );
-        }
+    return null;
+  }
+
+  static MavenStorageEditorInput toEditorInput(String name, InputStream is) throws IOException {
+    try {
+      return new MavenStorageEditorInput(name, name, null, IOUtil.toByteArray(is));
+    } finally {
+      IOUtil.close(is);
     }
+  }
 }

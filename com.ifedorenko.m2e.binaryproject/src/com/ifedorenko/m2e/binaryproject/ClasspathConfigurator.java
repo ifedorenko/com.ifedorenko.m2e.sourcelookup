@@ -33,71 +33,60 @@ import org.eclipse.m2e.jdt.IClasspathEntryDescriptor;
 import org.eclipse.m2e.jdt.internal.AbstractJavaProjectConfigurator;
 import org.eclipse.m2e.jdt.internal.BuildPathManager;
 
-@SuppressWarnings( "restriction" )
-public class ClasspathConfigurator
-    extends AbstractJavaProjectConfigurator
-{
+@SuppressWarnings("restriction")
+public class ClasspathConfigurator extends AbstractJavaProjectConfigurator {
 
-    @Override
-    protected void addProjectSourceFolders( IClasspathDescriptor classpath, ProjectConfigurationRequest request,
-                                            IProgressMonitor monitor )
-        throws CoreException
-    {
-    }
+  @Override
+  protected void addProjectSourceFolders(IClasspathDescriptor classpath, ProjectConfigurationRequest request,
+      IProgressMonitor monitor) throws CoreException {}
 
-    @Override
-    protected void addJavaNature( IProject project, IProgressMonitor monitor )
-        throws CoreException
-    {
-        addNature( project, JavaCore.NATURE_ID, IResource.KEEP_HISTORY | IResource.AVOID_NATURE_CONFIG, monitor );
-    }
+  @Override
+  protected void addJavaNature(IProject project, IProgressMonitor monitor) throws CoreException {
+    addNature(project, JavaCore.NATURE_ID, IResource.KEEP_HISTORY | IResource.AVOID_NATURE_CONFIG, monitor);
+  }
 
-    @Override
-    protected void invokeJavaProjectConfigurators( IClasspathDescriptor classpath, ProjectConfigurationRequest request,
-                                                   IProgressMonitor monitor )
-        throws CoreException
-    {
-        // TODO need repository information
+  @Override
+  protected void invokeJavaProjectConfigurators(IClasspathDescriptor classpath, ProjectConfigurationRequest request,
+      IProgressMonitor monitor) throws CoreException {
+    // TODO need repository information
 
-        IProject project = request.getProject();
+    IProject project = request.getProject();
 
-        IMaven maven = MavenPlugin.getMaven();
+    IMaven maven = MavenPlugin.getMaven();
 
-        IScopeContext projectScope = new ProjectScope( project );
-        IEclipsePreferences projectNode = projectScope.getNode( BinaryProjectPlugin.PLUGIN_ID );
+    IScopeContext projectScope = new ProjectScope(project);
+    IEclipsePreferences projectNode = projectScope.getNode(BinaryProjectPlugin.PLUGIN_ID);
 
-        String groupId = projectNode.get( BinaryProjectPlugin.P_GROUPID, (String) null );
-        String artifactId = projectNode.get( BinaryProjectPlugin.P_ARTIFACTID, (String) null );
-        String version = projectNode.get( BinaryProjectPlugin.P_VERSION, (String) null );
-        String type = projectNode.get( BinaryProjectPlugin.P_TYPE, "jar" );
-        String classifier = projectNode.get( BinaryProjectPlugin.P_CLASSIFIER, (String) null );
+    String groupId = projectNode.get(BinaryProjectPlugin.P_GROUPID, (String) null);
+    String artifactId = projectNode.get(BinaryProjectPlugin.P_ARTIFACTID, (String) null);
+    String version = projectNode.get(BinaryProjectPlugin.P_VERSION, (String) null);
+    String type = projectNode.get(BinaryProjectPlugin.P_TYPE, "jar");
+    String classifier = projectNode.get(BinaryProjectPlugin.P_CLASSIFIER, (String) null);
 
-        List<ArtifactRepository> repositories = null; // TODO store in project preferences
+    List<ArtifactRepository> repositories = null; // TODO store in project preferences
 
-        Artifact jar = maven.resolve( groupId, artifactId, version, type, classifier, repositories, monitor );
-        String jarLocation = jar.getFile().getAbsolutePath();
+    Artifact jar = maven.resolve(groupId, artifactId, version, type, classifier, repositories, monitor);
+    String jarLocation = jar.getFile().getAbsolutePath();
 
-        project.setPersistentProperty( BinaryProjectPlugin.QNAME_JAR, jarLocation );
+    project.setPersistentProperty(BinaryProjectPlugin.QNAME_JAR, jarLocation);
 
-        Artifact sources =
-            maven.resolve( groupId, artifactId, version, type, getSourcesClassifier( classifier ), repositories,
-                           monitor );
-        IClasspathEntryDescriptor libEntry = classpath.addLibraryEntry( Path.fromOSString( jarLocation ) );
-        libEntry.setExported( true );
-        libEntry.setSourceAttachment( Path.fromOSString( sources.getFile().getAbsolutePath() ), null );
-        libEntry.setArtifactKey( new ArtifactKey( groupId, artifactId, version, classifier ) );
-    }
+    Artifact sources =
+        maven.resolve(groupId, artifactId, version, type, getSourcesClassifier(classifier), repositories, monitor);
+    IClasspathEntryDescriptor libEntry = classpath.addLibraryEntry(Path.fromOSString(jarLocation));
+    libEntry.setExported(true);
+    libEntry.setSourceAttachment(Path.fromOSString(sources.getFile().getAbsolutePath()), null);
+    libEntry.setArtifactKey(new ArtifactKey(groupId, artifactId, version, classifier));
+  }
 
-    @Override
-    protected IContainer getOutputLocation( ProjectConfigurationRequest request, IProject project )
-    {
-        return project;
-    }
+  @Override
+  protected IContainer getOutputLocation(ProjectConfigurationRequest request, IProject project) {
+    return project;
+  }
 
-    static String getSourcesClassifier( String baseClassifier )
-    {
-        return BuildPathManager.CLASSIFIER_TESTS.equals( baseClassifier ) ? BuildPathManager.CLASSIFIER_TESTSOURCES
-                        : BuildPathManager.CLASSIFIER_SOURCES;
-    }
+  static String getSourcesClassifier(String baseClassifier) {
+    return BuildPathManager.CLASSIFIER_TESTS.equals(baseClassifier)
+        ? BuildPathManager.CLASSIFIER_TESTSOURCES
+        : BuildPathManager.CLASSIFIER_SOURCES;
+  }
 
 }

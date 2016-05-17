@@ -6,7 +6,6 @@ package com.ifedorenko.m2e.sourcelookup.internal;
  * @deprecated use {@link com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner}
  */
 public abstract class PomPropertiesScanner<T>
-    extends com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner<T>
-{
+    extends com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner<T> {
 
 }

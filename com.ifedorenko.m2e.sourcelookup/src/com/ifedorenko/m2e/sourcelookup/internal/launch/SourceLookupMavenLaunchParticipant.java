@@ -24,42 +24,33 @@ import org.slf4j.LoggerFactory;
 
 import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupActivator;
 
-@SuppressWarnings( "restriction" )
-public class SourceLookupMavenLaunchParticipant
-    implements IMavenLaunchParticipant
-{
-    private static final Logger log = LoggerFactory.getLogger( SourceLookupMavenLaunchParticipant.class );
+@SuppressWarnings("restriction")
+public class SourceLookupMavenLaunchParticipant implements IMavenLaunchParticipant {
+  private static final Logger log = LoggerFactory.getLogger(SourceLookupMavenLaunchParticipant.class);
 
-    @Override
-    public String getProgramArguments( ILaunchConfiguration configuration, ILaunch launch, IProgressMonitor monitor )
-    {
-        return null;
+  @Override
+  public String getProgramArguments(ILaunchConfiguration configuration, ILaunch launch, IProgressMonitor monitor) {
+    return null;
+  }
+
+  @Override
+  public String getVMArguments(ILaunchConfiguration configuration, ILaunch launch, IProgressMonitor monitor) {
+    return getVMArguments();
+  }
+
+  public static String getVMArguments() {
+    try {
+      return SourceLookupActivator.getDefault().getJavaagentString();
+    } catch (CoreException e) {
+      log.error("Could not locate required resource", e);
     }
 
-    @Override
-    public String getVMArguments( ILaunchConfiguration configuration, ILaunch launch, IProgressMonitor monitor )
-    {
-        return getVMArguments();
-    }
+    return null;
+  }
 
-    public static String getVMArguments()
-    {
-        try
-        {
-            return SourceLookupActivator.getDefault().getJavaagentString();
-        }
-        catch ( CoreException e )
-        {
-            log.error( "Could not locate required resource", e );
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<ISourceLookupParticipant> getSourceLookupParticipants( ILaunchConfiguration configuration,
-                                                                       ILaunch launch, IProgressMonitor monitor )
-    {
-        return Collections.<ISourceLookupParticipant>singletonList( new MavenSourceLookupParticipant() );
-    }
+  @Override
+  public List<ISourceLookupParticipant> getSourceLookupParticipants(ILaunchConfiguration configuration, ILaunch launch,
+      IProgressMonitor monitor) {
+    return Collections.<ISourceLookupParticipant>singletonList(new MavenSourceLookupParticipant());
+  }
 }

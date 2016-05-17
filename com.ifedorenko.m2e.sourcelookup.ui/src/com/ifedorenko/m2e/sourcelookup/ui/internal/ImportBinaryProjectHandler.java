@@ -23,93 +23,69 @@ import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
 
-public class ImportBinaryProjectHandler
-    extends AbstractHandler
-{
-    @Override
-    public Object execute( ExecutionEvent event )
-        throws ExecutionException
-    {
-        ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+public class ImportBinaryProjectHandler extends AbstractHandler {
+  @Override
+  public Object execute(ExecutionEvent event) throws ExecutionException {
+    ISelection selection = HandlerUtil.getCurrentSelectionChecked(event);
 
-        if ( selection instanceof IStructuredSelection && !selection.isEmpty() )
-        {
-            try
-            {
-                importBinaryProjects( ( (IStructuredSelection) selection ).getFirstElement() );
-            }
-            catch ( DebugException e )
-            {
-                throw new ExecutionException( "Could not import binary project", e );
-            }
-        }
-
-        return null;
+    if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+      try {
+        importBinaryProjects(((IStructuredSelection) selection).getFirstElement());
+      } catch (DebugException e) {
+        throw new ExecutionException("Could not import binary project", e);
+      }
     }
 
-    public static void importBinaryProjects( final Object debugElement )
-        throws DebugException
-    {
+    return null;
+  }
 
-        final File location = JDIHelpers.getLocation( debugElement );
+  public static void importBinaryProjects(final Object debugElement) throws DebugException {
 
-        if ( location == null )
-        {
-            return;
+    final File location = JDIHelpers.getLocation(debugElement);
+
+    if (location == null) {
+      return;
+    }
+
+    Job job = new AbstractBinaryProjectsImportJob() {
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        IStatus status = super.run(monitor);
+
+        if (status.isOK()) {
+          SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup(debugElement);
+
+          try {
+            sourceLookup.getSourceContainer(debugElement, true, monitor);
+          } catch (CoreException e) {
+            status = e.getStatus();
+          }
         }
 
-        Job job = new AbstractBinaryProjectsImportJob()
-        {
-            @Override
-            protected IStatus run( IProgressMonitor monitor )
-            {
-                IStatus status = super.run( monitor );
+        return status;
+      }
 
-                if ( status.isOK() )
-                {
-                    SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
+      @Override
+      protected List<ArtifactKey> getArtifactKeys() throws CoreException {
+        return new PomPropertiesScanner<ArtifactKey>() {
+          @Override
+          protected ArtifactKey visitProject(IProject project) {
+            return null;
+          }
 
-                    try
-                    {
-                        sourceLookup.getSourceContainer( debugElement, true, monitor );
-                    }
-                    catch ( CoreException e )
-                    {
-                        status = e.getStatus();
-                    }
-                }
+          @Override
+          protected ArtifactKey visitMavenProject(IMavenProjectFacade mavenProject) {
+            return null;
+          }
 
-                return status;
-            }
-
-            @Override
-            protected List<ArtifactKey> getArtifactKeys()
-                throws CoreException
-            {
-                return new PomPropertiesScanner<ArtifactKey>()
-                {
-                    @Override
-                    protected ArtifactKey visitProject( IProject project )
-                    {
-                        return null;
-                    }
-
-                    @Override
-                    protected ArtifactKey visitMavenProject( IMavenProjectFacade mavenProject )
-                    {
-                        return null;
-                    }
-
-                    @Override
-                    protected ArtifactKey visitArtifact( ArtifactKey artifact )
-                        throws CoreException
-                    {
-                        return artifact;
-                    }
-                }.scan( location );
-            }
-        };
-        job.setUser( true );
-        job.schedule();
-    }
+          @Override
+          protected ArtifactKey visitArtifact(ArtifactKey artifact) throws CoreException {
+            return artifact;
+          }
+        }.scan(location);
+      }
+    };
+    job.setUser(true);
+    job.schedule();
+  }
 }

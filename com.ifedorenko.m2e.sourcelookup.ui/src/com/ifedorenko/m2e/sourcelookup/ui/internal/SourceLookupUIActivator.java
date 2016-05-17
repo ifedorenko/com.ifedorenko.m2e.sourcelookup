@@ -13,35 +13,26 @@ package com.ifedorenko.m2e.sourcelookup.ui.internal;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-public class SourceLookupUIActivator
-    extends AbstractUIPlugin
-{
+public class SourceLookupUIActivator extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup.ui"; //$NON-NLS-1$
+  public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup.ui"; //$NON-NLS-1$
 
-    private static SourceLookupUIActivator plugin;
+  private static SourceLookupUIActivator plugin;
 
-    public SourceLookupUIActivator()
-    {
-    }
+  public SourceLookupUIActivator() {}
 
-    public void start( BundleContext context )
-        throws Exception
-    {
-        super.start( context );
-        plugin = this;
-    }
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
+    plugin = this;
+  }
 
-    public void stop( BundleContext context )
-        throws Exception
-    {
-        plugin = null;
-        super.stop( context );
-    }
+  public void stop(BundleContext context) throws Exception {
+    plugin = null;
+    super.stop(context);
+  }
 
-    public static SourceLookupUIActivator getDefault()
-    {
-        return plugin;
-    }
+  public static SourceLookupUIActivator getDefault() {
+    return plugin;
+  }
 
 }

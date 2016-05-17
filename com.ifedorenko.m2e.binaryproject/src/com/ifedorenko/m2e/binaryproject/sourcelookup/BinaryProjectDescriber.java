@@ -12,42 +12,33 @@ import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSour
 import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber;
 
-public class BinaryProjectDescriber
-    extends IProjectSourceDescriber
-{
+public class BinaryProjectDescriber extends IProjectSourceDescriber {
 
-    private static File getBinaryLocation( IJavaProject project )
-        throws CoreException
-    {
-        final String binaryLocation = project.getProject().getPersistentProperty( BinaryProjectPlugin.QNAME_JAR );
-        if ( binaryLocation == null )
-        {
-            return null;
-        }
-        return new File( binaryLocation );
+  private static File getBinaryLocation(IJavaProject project) throws CoreException {
+    final String binaryLocation = project.getProject().getPersistentProperty(BinaryProjectPlugin.QNAME_JAR);
+    if (binaryLocation == null) {
+      return null;
+    }
+    return new File(binaryLocation);
+  }
+
+  @Override
+  public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {
+    final File binaryLocation = getBinaryLocation(project);
+    if (binaryLocation == null) {
+      return;
     }
 
-    @Override
-    public void describeProject( IJavaProject project, IJavaProjectSourceDescription description )
-        throws CoreException
-    {
-        final File binaryLocation = getBinaryLocation( project );
-        if ( binaryLocation == null )
-        {
-            return;
-        }
+    Map<File, IPackageFragmentRoot> classpath = getClasspath(project);
+    IPackageFragmentRoot binary = classpath.remove(binaryLocation);
 
-        Map<File, IPackageFragmentRoot> classpath = getClasspath( project );
-        IPackageFragmentRoot binary = classpath.remove( binaryLocation );
-
-        if ( binary == null )
-        {
-            return; // this is a bug somewhere in my code
-        }
-
-        description.addDependencies( classpath );
-        description.addLocation( binaryLocation );
-        description.addSourceContainerFactory( () -> Collections.singleton( new PackageFragmentRootSourceContainer( binary ) ) );
+    if (binary == null) {
+      return; // this is a bug somewhere in my code
     }
+
+    description.addDependencies(classpath);
+    description.addLocation(binaryLocation);
+    description.addSourceContainerFactory(() -> Collections.singleton(new PackageFragmentRootSourceContainer(binary)));
+  }
 
 }

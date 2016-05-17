@@ -33,105 +33,83 @@ import org.eclipse.ui.IWorkbench;
 
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
 
-@SuppressWarnings( "restriction" )
-public class BinaryProjectImportWizard
-    extends Wizard
-    implements IImportWizard
-{
+@SuppressWarnings("restriction")
+public class BinaryProjectImportWizard extends Wizard implements IImportWizard {
 
-    private MavenDependenciesWizardPage artifactsPage;
+  private MavenDependenciesWizardPage artifactsPage;
 
-    private List<Dependency> initialDependencies;
+  private List<Dependency> initialDependencies;
 
-    public BinaryProjectImportWizard()
-    {
+  public BinaryProjectImportWizard() {}
+
+  @Override
+  public void init(IWorkbench workbench, IStructuredSelection selection) {
+    final List<Dependency> dependencies = new ArrayList<Dependency>();
+    for (Iterator<?> it = selection.iterator(); it.hasNext();) {
+      Object element = it.next();
+      ArtifactKey artifactKey = SelectionUtil.getType(element, ArtifactKey.class);
+      if (artifactKey != null) {
+        Dependency d = new Dependency();
+        d.setGroupId(artifactKey.getGroupId());
+        d.setArtifactId(artifactKey.getArtifactId());
+        d.setVersion(artifactKey.getVersion());
+        d.setClassifier(artifactKey.getClassifier());
+        dependencies.add(d);
+      }
     }
-
-    @Override
-    public void init( IWorkbench workbench, IStructuredSelection selection )
-    {
-        final List<Dependency> dependencies = new ArrayList<Dependency>();
-        for ( Iterator<?> it = selection.iterator(); it.hasNext(); )
-        {
-            Object element = it.next();
-            ArtifactKey artifactKey = SelectionUtil.getType( element, ArtifactKey.class );
-            if ( artifactKey != null )
-            {
-                Dependency d = new Dependency();
-                d.setGroupId( artifactKey.getGroupId() );
-                d.setArtifactId( artifactKey.getArtifactId() );
-                d.setVersion( artifactKey.getVersion() );
-                d.setClassifier( artifactKey.getClassifier() );
-                dependencies.add( d );
-            }
-        }
-        artifactsPage =
-            new MavenDependenciesWizardPage( new ProjectImportConfiguration(), "Artifacts",
-                                             "Select artifacts to import" )
-            {
-                @Override
-                protected void createAdvancedSettings( Composite composite, GridData gridData )
-                {
-                    // TODO profile can theoretically be usedful
-                }
-            };
-        artifactsPage.setDependencies( dependencies.toArray( new Dependency[dependencies.size()] ) );
-        artifactsPage.addListener( new ISelectionChangedListener()
-        {
-            @Override
-            public void selectionChanged( SelectionChangedEvent event )
-            {
-                getContainer().updateButtons();
-            }
-        } );
-        this.initialDependencies = Collections.unmodifiableList( dependencies );
-    }
-
-    @Override
-    public boolean performFinish()
-    {
-        final ArrayList<ArtifactKey> artifacts = new ArrayList<ArtifactKey>();
-
-        for ( Dependency dependency : artifactsPage.getDependencies() )
-        {
-            artifacts.add( new ArtifactKey( dependency.getGroupId(), dependency.getArtifactId(),
-                                            dependency.getVersion(), dependency.getClassifier() ) );
-        }
-
-        if ( artifacts.isEmpty() )
-        {
-            return false;
-        }
-
-        Job job = new AbstractBinaryProjectsImportJob()
-        {
-
-            @Override
-            protected List<ArtifactKey> getArtifactKeys()
-                throws CoreException
-            {
-                return artifacts;
-            }
+    artifactsPage =
+        new MavenDependenciesWizardPage(new ProjectImportConfiguration(), "Artifacts", "Select artifacts to import") {
+          @Override
+          protected void createAdvancedSettings(Composite composite, GridData gridData) {
+            // TODO profile can theoretically be usedful
+          }
         };
-        job.schedule();
+    artifactsPage.setDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
+    artifactsPage.addListener(new ISelectionChangedListener() {
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+        getContainer().updateButtons();
+      }
+    });
+    this.initialDependencies = Collections.unmodifiableList(dependencies);
+  }
 
-        return true;
+  @Override
+  public boolean performFinish() {
+    final ArrayList<ArtifactKey> artifacts = new ArrayList<ArtifactKey>();
+
+    for (Dependency dependency : artifactsPage.getDependencies()) {
+      artifacts.add(new ArtifactKey(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(),
+          dependency.getClassifier()));
     }
 
-    @Override
-    public boolean canFinish()
-    {
-        return artifactsPage.getDependencies().length > 0;
+    if (artifacts.isEmpty()) {
+      return false;
     }
 
-    @Override
-    public void addPages()
-    {
-        addPage( artifactsPage );
-    }
+    Job job = new AbstractBinaryProjectsImportJob() {
 
-    public List<Dependency> getInitialDependencies()
-    {
-        return initialDependencies;
-    }
+      @Override
+      protected List<ArtifactKey> getArtifactKeys() throws CoreException {
+        return artifacts;
+      }
+    };
+    job.schedule();
+
+    return true;
+  }
+
+  @Override
+  public boolean canFinish() {
+    return artifactsPage.getDependencies().length > 0;
+  }
+
+  @Override
+  public void addPages() {
+    addPage(artifactsPage);
+  }
+
+  public List<Dependency> getInitialDependencies() {
+    return initialDependencies;
+  }
 }

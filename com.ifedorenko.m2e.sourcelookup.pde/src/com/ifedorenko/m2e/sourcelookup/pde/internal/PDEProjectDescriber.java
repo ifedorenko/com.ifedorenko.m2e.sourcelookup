@@ -11,25 +11,20 @@ import org.eclipse.pde.core.plugin.PluginRegistry;
 
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber;
 
-public class PDEProjectDescriber
-    extends IProjectSourceDescriber
-{
+public class PDEProjectDescriber extends IProjectSourceDescriber {
 
-    @Override
-    public void describeProject( IJavaProject project, IJavaProjectSourceDescription description )
-        throws CoreException
-    {
-        IPluginModelBase bundle = PluginRegistry.findModel( project.getProject() );
+  @Override
+  public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {
+    IPluginModelBase bundle = PluginRegistry.findModel(project.getProject());
 
-        if ( bundle == null )
-        {
-            return;
-        }
-
-        description.addLocation( new File( bundle.getInstallLocation() ) );
-        description.addSourceContainerFactory( () -> Collections.singleton( new JavaProjectSourceContainer( project ) ) );
-
-        // TODO dependencies
+    if (bundle == null) {
+      return;
     }
+
+    description.addLocation(new File(bundle.getInstallLocation()));
+    description.addSourceContainerFactory(() -> Collections.singleton(new JavaProjectSourceContainer(project)));
+
+    // TODO dependencies
+  }
 
 }

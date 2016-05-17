@@ -25,96 +25,72 @@ import org.osgi.framework.BundleContext;
 
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.WorkspaceProjects;
 
-public class SourceLookupActivator
-    extends Plugin
-{
+public class SourceLookupActivator extends Plugin {
 
-    public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup";
+  public static final String PLUGIN_ID = "com.ifedorenko.m2e.sourcelookup";
 
-    private static SourceLookupActivator plugin;
+  private static SourceLookupActivator plugin;
 
-    private BackgroundProcessingJob backgroundJob;
+  private BackgroundProcessingJob backgroundJob;
 
-    private WorkspaceProjects javaProjectSources;
+  private WorkspaceProjects javaProjectSources;
 
-    public SourceLookupActivator()
-    {
+  public SourceLookupActivator() {}
+
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
+
+    plugin = this;
+
+    backgroundJob = new BackgroundProcessingJob();
+  }
+
+  public void stop(BundleContext context) throws Exception {
+    backgroundJob.cancel();
+    backgroundJob = null;
+
+    javaProjectSources.close();
+    javaProjectSources = null;
+
+    plugin = null;
+
+    super.stop(context);
+  }
+
+  public static SourceLookupActivator getDefault() {
+    return plugin;
+  }
+
+  public static void schedule(IRunnableWithProgress task) {
+    getDefault().backgroundJob.schedule(task);
+  }
+
+  public static WorkspaceProjects getWorkspaceJavaProjects(IProgressMonitor monitor) throws CoreException {
+    return getDefault().getWorkspaceJavaProjects0(monitor);
+  }
+
+  private synchronized WorkspaceProjects getWorkspaceJavaProjects0(IProgressMonitor monitor) throws CoreException {
+    if (javaProjectSources == null && monitor != null) {
+      javaProjectSources = new WorkspaceProjects();
+      javaProjectSources.initialize(monitor);
     }
+    return javaProjectSources;
+  }
 
-    public void start( BundleContext context )
-        throws Exception
-    {
-        super.start( context );
+  public String getJavaagentString() throws CoreException {
+    return "-javaagent:" + getJavaagentLocation();
+  }
 
-        plugin = this;
+  public String getJavaagentLocation() throws CoreException {
+    return toLocalFile(getBundle().getEntry("com.ifedorenko.m2e.sourcelookup.javaagent.jar"));
+  }
 
-        backgroundJob = new BackgroundProcessingJob();
+  // TODO move to m2e Bundles
+  public static String toLocalFile(URL entry) throws CoreException {
+    try {
+      return new File(FileLocator.toFileURL(entry).toURI()).getCanonicalPath();
+    } catch (IOException | URISyntaxException e) {
+      throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
     }
-
-    public void stop( BundleContext context )
-        throws Exception
-    {
-        backgroundJob.cancel();
-        backgroundJob = null;
-
-        javaProjectSources.close();
-        javaProjectSources = null;
-
-        plugin = null;
-
-        super.stop( context );
-    }
-
-    public static SourceLookupActivator getDefault()
-    {
-        return plugin;
-    }
-
-    public static void schedule( IRunnableWithProgress task )
-    {
-        getDefault().backgroundJob.schedule( task );
-    }
-
-    public static WorkspaceProjects getWorkspaceJavaProjects( IProgressMonitor monitor )
-        throws CoreException
-    {
-        return getDefault().getWorkspaceJavaProjects0( monitor );
-    }
-
-    private synchronized WorkspaceProjects getWorkspaceJavaProjects0( IProgressMonitor monitor )
-        throws CoreException
-    {
-        if ( javaProjectSources == null && monitor != null )
-        {
-            javaProjectSources = new WorkspaceProjects();
-            javaProjectSources.initialize( monitor );
-        }
-        return javaProjectSources;
-    }
-
-    public String getJavaagentString()
-        throws CoreException
-    {
-        return "-javaagent:" + getJavaagentLocation();
-    }
-
-    public String getJavaagentLocation()
-        throws CoreException
-    {
-        return toLocalFile( getBundle().getEntry( "com.ifedorenko.m2e.sourcelookup.javaagent.jar" ) );
-    }
-
-    // TODO move to m2e Bundles
-    public static String toLocalFile( URL entry )
-        throws CoreException
-    {
-        try
-        {
-            return new File( FileLocator.toFileURL( entry ).toURI() ).getCanonicalPath();
-        }
-        catch ( IOException | URISyntaxException e )
-        {
-            throw new CoreException( new Status( IStatus.ERROR, PLUGIN_ID, e.getMessage(), e ) );
-        }
-    }
+  }
 }

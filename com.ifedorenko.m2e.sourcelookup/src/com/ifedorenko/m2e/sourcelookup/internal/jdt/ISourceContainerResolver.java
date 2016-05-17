@@ -7,10 +7,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
-public interface ISourceContainerResolver
-{
+public interface ISourceContainerResolver {
 
-    Collection<ISourceContainer> resolveSourceContainers( File classesLocation, IProgressMonitor monitor )
-        throws CoreException;
+  Collection<ISourceContainer> resolveSourceContainers(File classesLocation, IProgressMonitor monitor)
+      throws CoreException;
 
 }

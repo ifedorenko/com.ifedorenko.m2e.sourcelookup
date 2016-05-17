@@ -26,52 +26,40 @@ import org.eclipse.m2e.core.project.configurator.ILifecycleMappingConfiguration;
 import org.eclipse.m2e.core.project.configurator.MojoExecutionKey;
 import org.eclipse.m2e.core.project.configurator.ProjectConfigurationRequest;
 
-@SuppressWarnings( "restriction" )
-public class BinaryProjectLifecycleMapping
-    extends AbstractLifecycleMapping
-{
-    private final ClasspathConfigurator configurator;
+@SuppressWarnings("restriction")
+public class BinaryProjectLifecycleMapping extends AbstractLifecycleMapping {
+  private final ClasspathConfigurator configurator;
 
-    public BinaryProjectLifecycleMapping()
-    {
-        ClasspathConfigurator configurator = new ClasspathConfigurator();
-        configurator.setProjectManager( MavenPlugin.getMavenProjectRegistry() );
-        configurator.setMavenConfiguration( MavenPlugin.getMavenConfiguration() );
-        configurator.setMarkerManager( MavenPluginActivator.getDefault().getMavenMarkerManager() );
+  public BinaryProjectLifecycleMapping() {
+    ClasspathConfigurator configurator = new ClasspathConfigurator();
+    configurator.setProjectManager(MavenPlugin.getMavenProjectRegistry());
+    configurator.setMavenConfiguration(MavenPlugin.getMavenConfiguration());
+    configurator.setMarkerManager(MavenPluginActivator.getDefault().getMavenMarkerManager());
 
-        this.configurator = configurator;
-    }
+    this.configurator = configurator;
+  }
 
-    @Override
-    public Map<MojoExecutionKey, List<AbstractBuildParticipant>> getBuildParticipants( IMavenProjectFacade project,
-                                                                                       IProgressMonitor monitor )
-        throws CoreException
-    {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<MojoExecutionKey, List<AbstractBuildParticipant>> getBuildParticipants(IMavenProjectFacade project,
+      IProgressMonitor monitor) throws CoreException {
+    return Collections.emptyMap();
+  }
 
-    @Override
-    public List<AbstractProjectConfigurator> getProjectConfigurators( IMavenProjectFacade project,
-                                                                      IProgressMonitor monitor )
-        throws CoreException
-    {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<AbstractProjectConfigurator> getProjectConfigurators(IMavenProjectFacade project,
+      IProgressMonitor monitor) throws CoreException {
+    return Collections.emptyList();
+  }
 
-    @Override
-    public boolean hasLifecycleMappingChanged( IMavenProjectFacade newFacade,
-                                               ILifecycleMappingConfiguration oldConfiguration, IProgressMonitor monitor )
-    {
-        return false;
-    }
+  @Override
+  public boolean hasLifecycleMappingChanged(IMavenProjectFacade newFacade,
+      ILifecycleMappingConfiguration oldConfiguration, IProgressMonitor monitor) {
+    return false;
+  }
 
-    public void configure( ProjectConfigurationRequest request, IProgressMonitor monitor )
-        throws CoreException
-    {
-        configurator.configure( request, monitor );
-    }
+  public void configure(ProjectConfigurationRequest request, IProgressMonitor monitor) throws CoreException {
+    configurator.configure(request, monitor);
+  }
 
-    public void unconfigure( ProjectConfigurationRequest request, IProgressMonitor monitor )
-    {
-    }
+  public void unconfigure(ProjectConfigurationRequest request, IProgressMonitor monitor) {}
 }

@@ -19,55 +19,43 @@ import java.security.ProtectionDomain;
 
 import com.ifedorenko.m2e.sourcelookup.weaving.ClassfileTransformer;
 
-public class Premain
-{
-    private static final ClassfileTransformer transformer = new ClassfileTransformer();
+public class Premain {
+  private static final ClassfileTransformer transformer = new ClassfileTransformer();
 
-    public static void premain( String agentArgs, Instrumentation inst )
-    {
-        System.err.println( "Dynamic source lookup support loaded." );
+  public static void premain(String agentArgs, Instrumentation inst) {
+    System.err.println("Dynamic source lookup support loaded.");
 
-        inst.addTransformer( new ClassFileTransformer()
-        {
-            public byte[] transform( ClassLoader loader, final String className, Class<?> classBeingRedefined,
-                                     ProtectionDomain protectionDomain, byte[] classfileBuffer )
-                throws IllegalClassFormatException
-            {
-                try
-                {
-                    if ( protectionDomain == null )
-                    {
-                        return null;
-                    }
+    inst.addTransformer(new ClassFileTransformer() {
+      public byte[] transform(ClassLoader loader, final String className, Class<?> classBeingRedefined,
+          ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+        try {
+          if (protectionDomain == null) {
+            return null;
+          }
 
-                    if ( className == null )
-                    {
-                        return null;
-                    }
+          if (className == null) {
+            return null;
+          }
 
-                    final CodeSource codeSource = protectionDomain.getCodeSource();
-                    if ( codeSource == null )
-                    {
-                        return null;
-                    }
+          final CodeSource codeSource = protectionDomain.getCodeSource();
+          if (codeSource == null) {
+            return null;
+          }
 
-                    final URL locationUrl = codeSource.getLocation();
-                    if ( locationUrl == null )
-                    {
-                        return null;
-                    }
+          final URL locationUrl = codeSource.getLocation();
+          if (locationUrl == null) {
+            return null;
+          }
 
-                    final String location = locationUrl.toExternalForm();
+          final String location = locationUrl.toExternalForm();
 
-                    return transformer.transform( classfileBuffer, location );
-                }
-                catch ( Exception e )
-                {
-                    System.err.print( "Could not instrument class " + className + ": " );
-                    e.printStackTrace( System.err );
-                }
-                return null;
-            }
-        } );
-    }
+          return transformer.transform(classfileBuffer, location);
+        } catch (Exception e) {
+          System.err.print("Could not instrument class " + className + ": ");
+          e.printStackTrace(System.err);
+        }
+        return null;
+      }
+    });
+  }
 }

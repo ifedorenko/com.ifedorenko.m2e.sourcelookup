@@ -35,39 +35,32 @@ import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupPartici
  * Note to self: JavaSourceLookupDirector is useful because it allows custom source lookup path in the launch
  * configuration.
  */
-@SuppressWarnings( "restriction" )
-public class SourceLookupDirector
-    extends JavaSourceLookupDirector
-{
-    public static final String ID = "com.ifedorenko.m2e.sourcelookupDirector";
+@SuppressWarnings("restriction")
+public class SourceLookupDirector extends JavaSourceLookupDirector {
+  public static final String ID = "com.ifedorenko.m2e.sourcelookupDirector";
 
-    private final String mode;
+  private final String mode;
 
-    public SourceLookupDirector()
-    {
-        this( null );
+  public SourceLookupDirector() {
+    this(null);
+  }
+
+  public SourceLookupDirector(String mode) {
+    this.mode = mode;
+  }
+
+  @Override
+  public void initializeParticipants() {
+    final List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
+    if (mode == null || ILaunchManager.DEBUG_MODE.equals(mode)) {
+      participants.addAll(getSourceLookupParticipants());
     }
+    participants.add(new JavaSourceLookupParticipant());
 
-    public SourceLookupDirector( String mode )
-    {
-        this.mode = mode;
-    }
+    addParticipants(participants.toArray(new ISourceLookupParticipant[participants.size()]));
+  }
 
-    @Override
-    public void initializeParticipants()
-    {
-        final List<ISourceLookupParticipant> participants = new ArrayList<ISourceLookupParticipant>();
-        if ( mode == null || ILaunchManager.DEBUG_MODE.equals( mode ) )
-        {
-            participants.addAll( getSourceLookupParticipants() );
-        }
-        participants.add( new JavaSourceLookupParticipant() );
-
-        addParticipants( participants.toArray( new ISourceLookupParticipant[participants.size()] ) );
-    }
-
-    protected Collection<ISourceLookupParticipant> getSourceLookupParticipants()
-    {
-        return Collections.singleton( new SourceLookupParticipant() );
-    }
+  protected Collection<ISourceLookupParticipant> getSourceLookupParticipants() {
+    return Collections.singleton(new SourceLookupParticipant());
+  }
 }

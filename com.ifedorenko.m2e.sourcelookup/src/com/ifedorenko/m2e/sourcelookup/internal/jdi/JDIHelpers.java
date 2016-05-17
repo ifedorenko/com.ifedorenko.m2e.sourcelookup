@@ -22,132 +22,96 @@ import org.eclipse.jdt.debug.core.IJavaType;
 import org.eclipse.jdt.debug.core.IJavaValue;
 import org.eclipse.jdt.debug.core.IJavaVariable;
 
-public final class JDIHelpers
-{
-    public static final String STRATA_M2E = "m2e";
+public final class JDIHelpers {
+  public static final String STRATA_M2E = "m2e";
 
-    private JDIHelpers()
-    {
+  private JDIHelpers() {}
+
+  // jdt debug boilerplate and other ideas are "borrowed" from
+  // org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.run()
+
+  public static File getLocation(Object fElement) throws DebugException {
+    IJavaReferenceType declaringType = null;
+    if (fElement instanceof IJavaStackFrame) {
+      IJavaStackFrame stackFrame = (IJavaStackFrame) fElement;
+      declaringType = stackFrame.getReferenceType();
+    } else if (fElement instanceof IJavaObject) {
+      IJavaType javaType = ((IJavaObject) fElement).getJavaType();
+      if (javaType instanceof IJavaReferenceType) {
+        declaringType = (IJavaReferenceType) javaType;
+      }
+    } else if (fElement instanceof IJavaReferenceType) {
+      declaringType = (IJavaReferenceType) fElement;
+    } else if (fElement instanceof IJavaVariable) {
+      IJavaVariable javaVariable = (IJavaVariable) fElement;
+      IJavaType javaType = ((IJavaValue) javaVariable.getValue()).getJavaType();
+      if (javaType instanceof IJavaReferenceType) {
+        declaringType = (IJavaReferenceType) javaType;
+      }
     }
 
-    // jdt debug boilerplate and other ideas are "borrowed" from
-    // org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.run()
+    if (declaringType != null) {
+      String[] locations = declaringType.getSourceNames(STRATA_M2E);
 
-    public static File getLocation( Object fElement )
-        throws DebugException
-    {
-        IJavaReferenceType declaringType = null;
-        if ( fElement instanceof IJavaStackFrame )
-        {
-            IJavaStackFrame stackFrame = (IJavaStackFrame) fElement;
-            declaringType = stackFrame.getReferenceType();
-        }
-        else if ( fElement instanceof IJavaObject )
-        {
-            IJavaType javaType = ( (IJavaObject) fElement ).getJavaType();
-            if ( javaType instanceof IJavaReferenceType )
-            {
-                declaringType = (IJavaReferenceType) javaType;
-            }
-        }
-        else if ( fElement instanceof IJavaReferenceType )
-        {
-            declaringType = (IJavaReferenceType) fElement;
-        }
-        else if ( fElement instanceof IJavaVariable )
-        {
-            IJavaVariable javaVariable = (IJavaVariable) fElement;
-            IJavaType javaType = ( (IJavaValue) javaVariable.getValue() ).getJavaType();
-            if ( javaType instanceof IJavaReferenceType )
-            {
-                declaringType = (IJavaReferenceType) javaType;
-            }
-        }
-
-        if ( declaringType != null )
-        {
-            String[] locations = declaringType.getSourceNames( STRATA_M2E );
-
-            if ( locations == null || locations.length < 2 )
-            {
-                return null;
-            }
-
-            try
-            {
-                URL url = new URL( locations[1] );
-                if ( "file".equals( url.getProtocol() ) )
-                {
-                    return new File( url.getPath() ).toPath().normalize().toFile();
-                }
-            }
-            catch ( MalformedURLException e )
-            {
-                // fall through
-            }
-        }
-
+      if (locations == null || locations.length < 2) {
         return null;
+      }
+
+      try {
+        URL url = new URL(locations[1]);
+        if ("file".equals(url.getProtocol())) {
+          return new File(url.getPath()).toPath().normalize().toFile();
+        }
+      } catch (MalformedURLException e) {
+        // fall through
+      }
     }
 
-    public static String getSourcePath( Object fElement )
-        throws DebugException
-    {
-        IJavaReferenceType declaringType = null;
-        if ( fElement instanceof IJavaStackFrame )
-        {
-            IJavaStackFrame stackFrame = (IJavaStackFrame) fElement;
-            // under JSR 45 source path from the stack frame is more precise than anything derived from the type
-            String sourcePath = stackFrame.getSourcePath( STRATA_M2E );
-            if ( sourcePath != null )
-            {
-                return sourcePath;
-            }
+    return null;
+  }
 
-            declaringType = stackFrame.getReferenceType();
-        }
-        else if ( fElement instanceof IJavaObject )
-        {
-            IJavaType javaType = ( (IJavaObject) fElement ).getJavaType();
-            if ( javaType instanceof IJavaReferenceType )
-            {
-                declaringType = (IJavaReferenceType) javaType;
-            }
-        }
-        else if ( fElement instanceof IJavaReferenceType )
-        {
-            declaringType = (IJavaReferenceType) fElement;
-        }
-        else if ( fElement instanceof IJavaVariable )
-        {
-            IJavaType javaType = ( (IJavaVariable) fElement ).getJavaType();
-            if ( javaType instanceof IJavaReferenceType )
-            {
-                declaringType = (IJavaReferenceType) javaType;
-            }
-        }
+  public static String getSourcePath(Object fElement) throws DebugException {
+    IJavaReferenceType declaringType = null;
+    if (fElement instanceof IJavaStackFrame) {
+      IJavaStackFrame stackFrame = (IJavaStackFrame) fElement;
+      // under JSR 45 source path from the stack frame is more precise than anything derived from the type
+      String sourcePath = stackFrame.getSourcePath(STRATA_M2E);
+      if (sourcePath != null) {
+        return sourcePath;
+      }
 
-        if ( declaringType != null )
-        {
-            String[] sourcePaths = declaringType.getSourcePaths( STRATA_M2E );
-
-            if ( sourcePaths != null && sourcePaths.length > 0 && sourcePaths[0] != null )
-            {
-                return sourcePaths[0];
-            }
-
-            return generateSourceName( declaringType.getName() );
-        }
-
-        return null;
+      declaringType = stackFrame.getReferenceType();
+    } else if (fElement instanceof IJavaObject) {
+      IJavaType javaType = ((IJavaObject) fElement).getJavaType();
+      if (javaType instanceof IJavaReferenceType) {
+        declaringType = (IJavaReferenceType) javaType;
+      }
+    } else if (fElement instanceof IJavaReferenceType) {
+      declaringType = (IJavaReferenceType) fElement;
+    } else if (fElement instanceof IJavaVariable) {
+      IJavaType javaType = ((IJavaVariable) fElement).getJavaType();
+      if (javaType instanceof IJavaReferenceType) {
+        declaringType = (IJavaReferenceType) javaType;
+      }
     }
 
-    // copy&paste from org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.generateSourceName(String)
-    private static String generateSourceName( String qualifiedTypeName )
-    {
-        int index = qualifiedTypeName.indexOf( '$' );
-        if ( index >= 0 )
-            qualifiedTypeName = qualifiedTypeName.substring( 0, index );
-        return qualifiedTypeName.replace( '.', File.separatorChar ) + ".java"; //$NON-NLS-1$
+    if (declaringType != null) {
+      String[] sourcePaths = declaringType.getSourcePaths(STRATA_M2E);
+
+      if (sourcePaths != null && sourcePaths.length > 0 && sourcePaths[0] != null) {
+        return sourcePaths[0];
+      }
+
+      return generateSourceName(declaringType.getName());
     }
+
+    return null;
+  }
+
+  // copy&paste from org.eclipse.pde.internal.launching.sourcelookup.PDESourceLookupQuery.generateSourceName(String)
+  private static String generateSourceName(String qualifiedTypeName) {
+    int index = qualifiedTypeName.indexOf('$');
+    if (index >= 0) qualifiedTypeName = qualifiedTypeName.substring(0, index);
+    return qualifiedTypeName.replace('.', File.separatorChar) + ".java"; //$NON-NLS-1$
+  }
 }

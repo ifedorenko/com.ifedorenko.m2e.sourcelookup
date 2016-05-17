@@ -48,229 +48,201 @@ import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
 
-public class SourceLookupInfoDialog
-    extends Dialog
-{
-    private final Object debugElement;
+public class SourceLookupInfoDialog extends Dialog {
+  private final Object debugElement;
 
-    private final SourceLookupParticipant sourceLookup;
+  private final SourceLookupParticipant sourceLookup;
 
-    private Text textLocation;
+  private Text textLocation;
 
-    private Text textGAV;
+  private Text textGAV;
 
-    private Text textJavaProject;
+  private Text textJavaProject;
 
-    private Text textSourceContainer;
+  private Text textSourceContainer;
 
-    // FIXME
-    private IProgressMonitor monitor = new NullProgressMonitor();
+  // FIXME
+  private IProgressMonitor monitor = new NullProgressMonitor();
 
-    public SourceLookupInfoDialog( Shell parentShell, Object debugElement, SourceLookupParticipant sourceLookup )
-    {
-        super( parentShell );
-        setShellStyle( SWT.RESIZE | SWT.TITLE );
-        this.debugElement = debugElement;
-        this.sourceLookup = sourceLookup;
-    }
+  public SourceLookupInfoDialog(Shell parentShell, Object debugElement, SourceLookupParticipant sourceLookup) {
+    super(parentShell);
+    setShellStyle(SWT.RESIZE | SWT.TITLE);
+    this.debugElement = debugElement;
+    this.sourceLookup = sourceLookup;
+  }
 
-    @Override
-    protected void configureShell( Shell newShell )
-    {
-        super.configureShell( newShell );
-        newShell.setText( "Source lookup properties" );
-    }
+  @Override
+  protected void configureShell(Shell newShell) {
+    super.configureShell(newShell);
+    newShell.setText("Source lookup properties");
+  }
 
-    @Override
-    protected Control createDialogArea( Composite parent )
-    {
-        Composite container = (Composite) super.createDialogArea( parent );
-        container.setLayout( new GridLayout( 2, false ) );
+  @Override
+  protected Control createDialogArea(Composite parent) {
+    Composite container = (Composite) super.createDialogArea(parent);
+    container.setLayout(new GridLayout(2, false));
 
-        Label lblCodeLocation = new Label( container, SWT.NONE );
-        lblCodeLocation.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, false, false, 1, 1 ) );
-        lblCodeLocation.setText( "Code location:" );
+    Label lblCodeLocation = new Label(container, SWT.NONE);
+    lblCodeLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+    lblCodeLocation.setText("Code location:");
 
-        textLocation = new Text( container, SWT.BORDER | SWT.WRAP | SWT.MULTI );
-        textLocation.setEditable( false );
-        textLocation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+    textLocation = new Text(container, SWT.BORDER | SWT.WRAP | SWT.MULTI);
+    textLocation.setEditable(false);
+    textLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-        Label lblGav = new Label( container, SWT.NONE );
-        lblGav.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, false, false, 1, 1 ) );
-        lblGav.setText( "GAV:" );
+    Label lblGav = new Label(container, SWT.NONE);
+    lblGav.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+    lblGav.setText("GAV:");
 
-        textGAV = new Text( container, SWT.BORDER | SWT.WRAP );
-        textGAV.setEditable( false );
-        textGAV.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+    textGAV = new Text(container, SWT.BORDER | SWT.WRAP);
+    textGAV.setEditable(false);
+    textGAV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-        Label lblJavaProject = new Label( container, SWT.NONE );
-        lblJavaProject.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, false, false, 1, 1 ) );
-        lblJavaProject.setText( "Java project:" );
+    Label lblJavaProject = new Label(container, SWT.NONE);
+    lblJavaProject.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+    lblJavaProject.setText("Java project:");
 
-        textJavaProject = new Text( container, SWT.BORDER | SWT.WRAP );
-        textJavaProject.setEditable( false );
-        textJavaProject.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+    textJavaProject = new Text(container, SWT.BORDER | SWT.WRAP);
+    textJavaProject.setEditable(false);
+    textJavaProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-        Label lblSourceContainer = new Label( container, SWT.NONE );
-        lblSourceContainer.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, false, false, 1, 1 ) );
-        lblSourceContainer.setText( "Source container:" );
+    Label lblSourceContainer = new Label(container, SWT.NONE);
+    lblSourceContainer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+    lblSourceContainer.setText("Source container:");
 
-        textSourceContainer = new Text( container, SWT.BORDER | SWT.WRAP );
-        textSourceContainer.setEditable( false );
-        textSourceContainer.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+    textSourceContainer = new Text(container, SWT.BORDER | SWT.WRAP);
+    textSourceContainer.setEditable(false);
+    textSourceContainer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-        Composite fillerComposite = new Composite( container, SWT.NONE );
-        fillerComposite.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, true, 2, 1 ) );
+    Composite fillerComposite = new Composite(container, SWT.NONE);
+    fillerComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 2, 1));
 
-        Composite actionsComposite = new Composite( container, SWT.NONE );
-        actionsComposite.setLayout( new RowLayout( SWT.HORIZONTAL ) );
-        actionsComposite.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false, 2, 1 ) );
+    Composite actionsComposite = new Composite(container, SWT.NONE);
+    actionsComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+    actionsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
 
-        Button btnCopy = new Button( actionsComposite, SWT.NONE );
-        btnCopy.addSelectionListener( new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected( SelectionEvent e )
-            {
-                copyToClipboard();
-            }
-        } );
-        btnCopy.setToolTipText( "Copy to clipboard" );
-        btnCopy.setText( "Copy" );
+    Button btnCopy = new Button(actionsComposite, SWT.NONE);
+    btnCopy.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        copyToClipboard();
+      }
+    });
+    btnCopy.setToolTipText("Copy to clipboard");
+    btnCopy.setText("Copy");
 
-        Button btnRefresh = new Button( actionsComposite, SWT.NONE );
-        btnRefresh.addSelectionListener( new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected( SelectionEvent e )
-            {
-                try
-                {
-                    sourceLookup.getSourceContainer( debugElement, true, monitor );
-                }
-                catch ( CoreException e1 )
-                {
-                    showError( e1 );
-                }
-            }
-        } );
-        btnRefresh.setToolTipText( "Force rediscovery of source lookup information for this code location." );
-        btnRefresh.setText( "Refresh" );
-
-        updateDisplay( monitor );
-
-        return container;
-    }
-
-    @Override
-    protected void createButtonsForButtonBar( Composite parent )
-    {
-
-        createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
-    }
-
-    @Override
-    protected Point getInitialSize()
-    {
-        return new Point( 450, 300 );
-    }
-
-    private void updateDisplay( IProgressMonitor moninor )
-    {
-        try
-        {
-            File location = JDIHelpers.getLocation( debugElement );
-
-            if ( location == null )
-            {
-                return;
-            }
-
-            final Collection<ArtifactKey> artifacts = new LinkedHashSet<ArtifactKey>();
-            final Collection<IProject> projects = new LinkedHashSet<IProject>();
-
-            new PomPropertiesScanner<Void>()
-            {
-                @Override
-                protected Void visitArtifact( ArtifactKey artifact )
-                    throws CoreException
-                {
-                    artifacts.add( artifact );
-                    return null;
-                }
-
-                @Override
-                protected Void visitMavenProject( IMavenProjectFacade mavenProject )
-                {
-                    artifacts.add( mavenProject.getArtifactKey() );
-                    projects.add( mavenProject.getProject() );
-                    return null;
-                }
-
-                @Override
-                protected Void visitProject( IProject project )
-                {
-                    projects.add( project );
-                    return null;
-                }
-            }.scan( location );
-
-            textLocation.setText( location.getAbsolutePath() );
-            textGAV.setText( artifacts.toString() );
-            textJavaProject.setText( projects.toString() );
-
-            ISourceContainer container = sourceLookup.getSourceContainer( debugElement, false, moninor /* sync */);
-
-            textSourceContainer.setText( toString( container ) );
+    Button btnRefresh = new Button(actionsComposite, SWT.NONE);
+    btnRefresh.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        try {
+          sourceLookup.getSourceContainer(debugElement, true, monitor);
+        } catch (CoreException e1) {
+          showError(e1);
         }
-        catch ( CoreException e )
-        {
-            showError( e );
-        }
-    }
+      }
+    });
+    btnRefresh.setToolTipText("Force rediscovery of source lookup information for this code location.");
+    btnRefresh.setText("Refresh");
 
-    void showError( CoreException e )
-    {
-        ErrorDialog.openError( getParentShell(), "Source lookup info", "Could not determine code maven coordinates",
-                               e.getStatus() );
-    }
+    updateDisplay(monitor);
 
-    private String toString( ISourceContainer container )
-    {
-        if ( container == null )
-        {
-            return "";
+    return container;
+  }
+
+  @Override
+  protected void createButtonsForButtonBar(Composite parent) {
+
+    createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+  }
+
+  @Override
+  protected Point getInitialSize() {
+    return new Point(450, 300);
+  }
+
+  private void updateDisplay(IProgressMonitor moninor) {
+    try {
+      File location = JDIHelpers.getLocation(debugElement);
+
+      if (location == null) {
+        return;
+      }
+
+      final Collection<ArtifactKey> artifacts = new LinkedHashSet<ArtifactKey>();
+      final Collection<IProject> projects = new LinkedHashSet<IProject>();
+
+      new PomPropertiesScanner<Void>() {
+        @Override
+        protected Void visitArtifact(ArtifactKey artifact) throws CoreException {
+          artifacts.add(artifact);
+          return null;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append( container.getClass().getSimpleName() ).append( " " ).append( container.getName() );
-
-        if ( container instanceof PackageFragmentRootSourceContainer )
-        {
-            sb.append( " " ).append( ( (PackageFragmentRootSourceContainer) container ).getPackageFragmentRoot().getJavaProject().getProject() );
+        @Override
+        protected Void visitMavenProject(IMavenProjectFacade mavenProject) {
+          artifacts.add(mavenProject.getArtifactKey());
+          projects.add(mavenProject.getProject());
+          return null;
         }
 
-        return sb.toString();
+        @Override
+        protected Void visitProject(IProject project) {
+          projects.add(project);
+          return null;
+        }
+      }.scan(location);
+
+      textLocation.setText(location.getAbsolutePath());
+      textGAV.setText(artifacts.toString());
+      textJavaProject.setText(projects.toString());
+
+      ISourceContainer container = sourceLookup.getSourceContainer(debugElement, false, moninor /* sync */);
+
+      textSourceContainer.setText(toString(container));
+    } catch (CoreException e) {
+      showError(e);
+    }
+  }
+
+  void showError(CoreException e) {
+    ErrorDialog.openError(getParentShell(), "Source lookup info", "Could not determine code maven coordinates",
+        e.getStatus());
+  }
+
+  private String toString(ISourceContainer container) {
+    if (container == null) {
+      return "";
     }
 
-    void copyToClipboard()
-    {
-        List<Transfer> dataTypes = new ArrayList<Transfer>();
-        List<Object> data = new ArrayList<Object>();
+    StringBuilder sb = new StringBuilder();
+    sb.append(container.getClass().getSimpleName()).append(" ").append(container.getName());
 
-        Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-
-        StringBuilder sb = new StringBuilder();
-        sb.append( "Location: " ).append( textLocation.getText() ).append( "\n" );
-        sb.append( "GAV: " ).append( textGAV.getText() ).append( "\n" );
-        sb.append( "Java project: " ).append( textJavaProject.getText() ).append( "\n" );
-        sb.append( "Source container: " ).append( textSourceContainer.getText() ).append( "\n" );
-
-        dataTypes.add( TextTransfer.getInstance() );
-        data.add( sb.toString() );
-
-        clipboard.setContents( data.toArray(), dataTypes.toArray( new Transfer[dataTypes.size()] ) );
-
-        clipboard.dispose();
+    if (container instanceof PackageFragmentRootSourceContainer) {
+      sb.append(" ").append(
+          ((PackageFragmentRootSourceContainer) container).getPackageFragmentRoot().getJavaProject().getProject());
     }
+
+    return sb.toString();
+  }
+
+  void copyToClipboard() {
+    List<Transfer> dataTypes = new ArrayList<Transfer>();
+    List<Object> data = new ArrayList<Object>();
+
+    Clipboard clipboard = new Clipboard(getShell().getDisplay());
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Location: ").append(textLocation.getText()).append("\n");
+    sb.append("GAV: ").append(textGAV.getText()).append("\n");
+    sb.append("Java project: ").append(textJavaProject.getText()).append("\n");
+    sb.append("Source container: ").append(textSourceContainer.getText()).append("\n");
+
+    dataTypes.add(TextTransfer.getInstance());
+    data.add(sb.toString());
+
+    clipboard.setContents(data.toArray(), dataTypes.toArray(new Transfer[dataTypes.size()]));
+
+    clipboard.dispose();
+  }
 }

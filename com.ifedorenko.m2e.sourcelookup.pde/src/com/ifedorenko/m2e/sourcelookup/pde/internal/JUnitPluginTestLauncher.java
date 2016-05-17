@@ -17,26 +17,20 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.pde.launching.JUnitLaunchConfigurationDelegate;
 
-public class JUnitPluginTestLauncher
-    extends JUnitLaunchConfigurationDelegate
-{
+public class JUnitPluginTestLauncher extends JUnitLaunchConfigurationDelegate {
 
-    @SuppressWarnings( { "rawtypes", "unchecked" } ) // needed to compile with mars
-    @Override
-    protected void collectExecutionArguments( ILaunchConfiguration configuration, List/* <String> */ vmArguments,
-                                              List/* <String> */ programArgs )
-        throws CoreException
-    {
-        super.collectExecutionArguments( configuration, vmArguments, programArgs );
-        LaunchDelegateImpl.injectFrameworkExtension( getConfigurationDirectory( configuration ) );
-        LaunchDelegateImpl.appendJavaagentString( vmArguments );
-    }
+  @SuppressWarnings({"rawtypes", "unchecked"}) // needed to compile with mars
+  @Override
+  protected void collectExecutionArguments(ILaunchConfiguration configuration, List/* <String> */ vmArguments,
+      List/* <String> */ programArgs) throws CoreException {
+    super.collectExecutionArguments(configuration, vmArguments, programArgs);
+    LaunchDelegateImpl.injectFrameworkExtension(getConfigurationDirectory(configuration));
+    LaunchDelegateImpl.appendJavaagentString(vmArguments);
+  }
 
-    @Override
-    public ILaunch getLaunch( ILaunchConfiguration configuration, String mode )
-        throws CoreException
-    {
-        return LaunchDelegateImpl.getLaunch( configuration, mode );
-    }
+  @Override
+  public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+    return LaunchDelegateImpl.getLaunch(configuration, mode);
+  }
 
 }

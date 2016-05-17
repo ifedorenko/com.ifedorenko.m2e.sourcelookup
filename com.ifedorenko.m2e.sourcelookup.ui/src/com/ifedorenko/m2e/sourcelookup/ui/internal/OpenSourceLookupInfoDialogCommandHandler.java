@@ -20,31 +20,25 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 
 
-public class OpenSourceLookupInfoDialogCommandHandler
-    extends AbstractHandler
-{
+public class OpenSourceLookupInfoDialogCommandHandler extends AbstractHandler {
 
-    @Override
-    public Object execute( ExecutionEvent event )
-        throws ExecutionException
-    {
-        ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+  @Override
+  public Object execute(ExecutionEvent event) throws ExecutionException {
+    ISelection selection = HandlerUtil.getCurrentSelectionChecked(event);
 
-        if ( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
-        {
-            return null;
-        }
-
-        Object debugElement = ( (IStructuredSelection) selection ).getFirstElement();
-
-        final SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup( debugElement );
-
-        if ( debugElement != null && sourceLookup != null )
-        {
-            new SourceLookupInfoDialog( HandlerUtil.getActiveShell( event ), debugElement, sourceLookup ).open();
-        }
-
-        return null;
+    if (!(selection instanceof IStructuredSelection) || selection.isEmpty()) {
+      return null;
     }
+
+    Object debugElement = ((IStructuredSelection) selection).getFirstElement();
+
+    final SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup(debugElement);
+
+    if (debugElement != null && sourceLookup != null) {
+      new SourceLookupInfoDialog(HandlerUtil.getActiveShell(event), debugElement, sourceLookup).open();
+    }
+
+    return null;
+  }
 
 }

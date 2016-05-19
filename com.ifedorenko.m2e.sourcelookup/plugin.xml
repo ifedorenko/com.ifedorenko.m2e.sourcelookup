@@ -40,4 +40,15 @@
              supportsArgument="false">
        </variable>
     </extension>
+    <extension
+          point="org.eclipse.debug.core.launchDelegates">
+       <launchDelegate
+             delegate="com.ifedorenko.m2e.sourcelookup.internal.jdt.launch.RemoteJavaApplicationLauncher"
+             delegateDescription="Remote Java Application launcher with more reliable source code lookup"
+             id="com.ifedorenko.m2e.sourcelookup.remoteJavaApplication"
+             modes="debug"
+             name="Advanced Remote Java Application"
+             type="org.eclipse.jdt.launching.remoteJavaApplication">
+       </launchDelegate>
+    </extension>
 </plugin>

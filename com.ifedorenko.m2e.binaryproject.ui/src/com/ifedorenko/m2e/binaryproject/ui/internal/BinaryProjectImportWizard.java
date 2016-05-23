@@ -11,12 +11,14 @@
 package com.ifedorenko.m2e.binaryproject.ui.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.model.Dependency;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -90,7 +92,7 @@ public class BinaryProjectImportWizard extends Wizard implements IImportWizard {
     Job job = new AbstractBinaryProjectsImportJob() {
 
       @Override
-      protected List<ArtifactKey> getArtifactKeys() throws CoreException {
+      protected Collection<ArtifactKey> getArtifactKeys(IProgressMonitor monitor) throws CoreException {
         return artifacts;
       }
     };

@@ -11,12 +11,11 @@
 package com.ifedorenko.m2e.sourcelookup.ui.internal;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,13 +24,12 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
-import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
 import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
-import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
+import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class ImportBinaryProjectHandler extends AbstractHandler {
   @Override
@@ -76,24 +74,10 @@ public class ImportBinaryProjectHandler extends AbstractHandler {
       }
 
       @Override
-      protected List<ArtifactKey> getArtifactKeys() throws CoreException {
-        return new PomPropertiesScanner<ArtifactKey>() {
-          @Override
-          protected ArtifactKey visitProject(IProject project) {
-            return null;
-          }
-
-          @Override
-          protected ArtifactKey visitMavenProject(IMavenProjectFacade mavenProject) {
-            return null;
-          }
-
-          @Override
-          protected ArtifactKey visitArtifact(ArtifactKey artifact) throws CoreException {
-            return artifact;
-          }
-        }.scan(location);
+      protected Collection<ArtifactKey> getArtifactKeys(IProgressMonitor monitor) throws CoreException {
+        return new MavenArtifactIdentifierer().identify(location, monitor);
       }
+
     };
     job.setUser(true);
     job.schedule();

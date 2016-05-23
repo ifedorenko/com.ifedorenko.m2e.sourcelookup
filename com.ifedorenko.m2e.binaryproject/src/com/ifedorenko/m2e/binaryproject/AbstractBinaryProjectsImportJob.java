@@ -11,6 +11,7 @@
 package com.ifedorenko.m2e.binaryproject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,9 +29,9 @@ public abstract class AbstractBinaryProjectsImportJob extends Job {
 
   @Override
   protected IStatus run(IProgressMonitor monitor) {
-    List<ArtifactKey> artifacts;
+    Collection<ArtifactKey> artifacts;
     try {
-      artifacts = getArtifactKeys();
+      artifacts = getArtifactKeys(monitor);
     } catch (CoreException e1) {
       return e1.getStatus();
     }
@@ -50,6 +51,6 @@ public abstract class AbstractBinaryProjectsImportJob extends Job {
     return Status.OK_STATUS;
   }
 
-  protected abstract List<ArtifactKey> getArtifactKeys() throws CoreException;
+  protected abstract Collection<ArtifactKey> getArtifactKeys(IProgressMonitor monitor) throws CoreException;
 
 }

@@ -13,10 +13,8 @@ package com.ifedorenko.m2e.sourcelookup.ui.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -26,7 +24,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
-import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -46,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
-import com.ifedorenko.m2e.sourcelookup.internal.launch.PomPropertiesScanner;
+import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class SourceLookupInfoDialog extends Dialog {
   private final Object debugElement;
@@ -169,35 +166,16 @@ public class SourceLookupInfoDialog extends Dialog {
         return;
       }
 
-      final Collection<ArtifactKey> artifacts = new LinkedHashSet<ArtifactKey>();
-      final Collection<IProject> projects = new LinkedHashSet<IProject>();
-
-      new PomPropertiesScanner<Void>() {
-        @Override
-        protected Void visitArtifact(ArtifactKey artifact) throws CoreException {
-          artifacts.add(artifact);
-          return null;
-        }
-
-        @Override
-        protected Void visitMavenProject(IMavenProjectFacade mavenProject) {
-          artifacts.add(mavenProject.getArtifactKey());
-          projects.add(mavenProject.getProject());
-          return null;
-        }
-
-        @Override
-        protected Void visitProject(IProject project) {
-          projects.add(project);
-          return null;
-        }
-      }.scan(location);
-
       textLocation.setText(location.getAbsolutePath());
-      textGAV.setText(artifacts.toString());
-      textJavaProject.setText(projects.toString());
 
       ISourceContainer container = sourceLookup.getSourceContainer(debugElement, false, moninor /* sync */);
+
+      // TODO consider extracting artifact keys from container
+      final Collection<ArtifactKey> artifacts = new MavenArtifactIdentifierer().identify(location, moninor);
+      textGAV.setText(artifacts.toString());
+
+      // TODO extract project(s) from the container
+      textJavaProject.setText("<not-implemented>");
 
       textSourceContainer.setText(toString(container));
     } catch (CoreException e) {

@@ -20,9 +20,11 @@ public class ProjectDescriber extends IProjectSourceDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {
-    description.addDependencies(getClasspath(project));
-    description.addLocations(getOutputDirectories(project));
-    description.addSourceContainerFactory(() -> Collections.singleton(new JavaProjectSourceContainer(project)));
+    if (isSourceProject(project)) {
+      description.addDependencies(getClasspath(project));
+      description.addLocations(getOutputDirectories(project));
+      description.addSourceContainerFactory(() -> Collections.singleton(new JavaProjectSourceContainer(project)));
+    }
   }
 
 }

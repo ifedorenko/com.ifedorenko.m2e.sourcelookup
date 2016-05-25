@@ -60,6 +60,15 @@ public abstract class IProjectSourceDescriber {
 
   protected static final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
+  protected static boolean isSourceProject(IJavaProject project) throws JavaModelException {
+    for (IPackageFragmentRoot fragment : project.getPackageFragmentRoots()) {
+      if (fragment.getKind() == IPackageFragmentRoot.K_SOURCE) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   protected static Map<File, IPackageFragmentRoot> getClasspath(IJavaProject project) throws JavaModelException {
     final Map<File, IPackageFragmentRoot> classpath = new LinkedHashMap<>();
     for (IPackageFragmentRoot fragment : project.getPackageFragmentRoots()) {

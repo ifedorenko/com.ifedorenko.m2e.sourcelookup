@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 
-public class ProjectDescriber extends IProjectSourceDescriber {
+class DefaultProjectDescriber extends AbstractProjectSourceDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {

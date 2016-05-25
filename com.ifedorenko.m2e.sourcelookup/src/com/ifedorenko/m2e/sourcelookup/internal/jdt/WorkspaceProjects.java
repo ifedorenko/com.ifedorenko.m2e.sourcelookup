@@ -47,8 +47,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber.IJavaProjectSourceDescription;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber.ISourceContainerFactory;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber.IJavaProjectSourceDescription;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber.ISourceContainerFactory;
 
 public class WorkspaceProjects {
   private final IElementChangedListener changeListener = new IElementChangedListener() {
@@ -63,7 +63,7 @@ public class WorkspaceProjects {
         for (IJavaProject project : remove) {
           removeJavaProject(project);
         }
-        List<IProjectSourceDescriber> describers = getJavaProjectDescribers();
+        List<AbstractProjectSourceDescriber> describers = getJavaProjectDescribers();
         for (IJavaProject project : add) {
           addJavaProject(project, describers);
         }
@@ -221,7 +221,7 @@ public class WorkspaceProjects {
       containers.addAll(factory.getContainers());
     }
 
-    return CompositeSourceContainer.create(containers);
+    return CompositeSourceContainer.compose(containers);
   }
 
   private JavaProjectDescription getProjectByLocation(File projectLocation) {
@@ -278,7 +278,7 @@ public class WorkspaceProjects {
 
     // TODO possible race when java model change events are delivered while initialization is in progress
 
-    List<IProjectSourceDescriber> describers = getJavaProjectDescribers();
+    List<AbstractProjectSourceDescriber> describers = getJavaProjectDescribers();
     for (IJavaProject project : javaProjects) {
       addJavaProject(project, describers);
     }
@@ -288,14 +288,14 @@ public class WorkspaceProjects {
     JavaCore.removeElementChangedListener(changeListener);
   }
 
-  private void addJavaProject(IJavaProject project, List<IProjectSourceDescriber> describers) throws CoreException {
+  private void addJavaProject(IJavaProject project, List<AbstractProjectSourceDescriber> describers) throws CoreException {
     if (project == null) {
       return;
     }
 
     JavaProjectDescription info = new JavaProjectDescription();
 
-    for (IProjectSourceDescriber describer : describers) {
+    for (AbstractProjectSourceDescriber describer : describers) {
       describer.describeProject(project, info);
     }
 
@@ -312,8 +312,8 @@ public class WorkspaceProjects {
     }
   }
 
-  protected List<IProjectSourceDescriber> getJavaProjectDescribers() {
-    List<IProjectSourceDescriber> result = new ArrayList<>();
+  protected List<AbstractProjectSourceDescriber> getJavaProjectDescribers() {
+    List<AbstractProjectSourceDescriber> result = new ArrayList<>();
 
     IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -323,12 +323,12 @@ public class WorkspaceProjects {
     for (IConfigurationElement element : elements) {
       if ("describer".equals(element.getName())) {
         try {
-          result.add((IProjectSourceDescriber) element.createExecutableExtension("class"));
+          result.add((AbstractProjectSourceDescriber) element.createExecutableExtension("class"));
         } catch (CoreException e) {}
       }
     }
 
-    result.add(new ProjectDescriber());
+    result.add(new DefaultProjectDescriber());
 
     return result;
   }

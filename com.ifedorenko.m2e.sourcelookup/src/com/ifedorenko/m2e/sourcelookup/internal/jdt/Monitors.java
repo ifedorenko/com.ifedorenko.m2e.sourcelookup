@@ -36,7 +36,7 @@ class Monitors {
     method_getProgressMonitor = method;
   }
 
-  public static IProgressMonitor getMonitor(IProgressMonitor monitor) {
+  public static IProgressMonitor getContextMonitor(IProgressMonitor monitor) {
     if (monitor == null) {
       Job job = currentJob();
       if (job != null) {

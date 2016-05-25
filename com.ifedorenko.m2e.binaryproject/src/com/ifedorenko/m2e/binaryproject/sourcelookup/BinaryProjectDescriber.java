@@ -20,9 +20,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 
 import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber;
 
-public class BinaryProjectDescriber extends IProjectSourceDescriber {
+public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
 
   private static File getBinaryLocation(IJavaProject project) throws CoreException {
     final String binaryLocation = project.getProject().getPersistentProperty(BinaryProjectPlugin.QNAME_JAR);

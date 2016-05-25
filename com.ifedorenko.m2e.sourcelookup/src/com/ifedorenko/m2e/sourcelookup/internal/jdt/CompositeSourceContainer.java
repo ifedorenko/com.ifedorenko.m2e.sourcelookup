@@ -54,7 +54,7 @@ class CompositeSourceContainer extends org.eclipse.debug.core.sourcelookup.conta
     Arrays.fill(members, null);
   }
 
-  public static ISourceContainer create(Collection<ISourceContainer> containers) {
+  public static ISourceContainer compose(Collection<ISourceContainer> containers) {
     if (containers.isEmpty()) {
       throw new IllegalArgumentException();
     }

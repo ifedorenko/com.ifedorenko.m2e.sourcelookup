@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal.jdt;
 
-import static com.ifedorenko.m2e.sourcelookup.internal.jdt.Monitors.getMonitor;
+import static com.ifedorenko.m2e.sourcelookup.internal.jdt.Monitors.getContextMonitor;
 
 import java.io.File;
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class SourceLookupParticipant implements ISourceLookupParticipant {
       }
     }
 
-    monitor = getMonitor(monitor);
+    monitor = getContextMonitor(monitor);
 
     WorkspaceProjects projectLocator = SourceLookupActivator.getWorkspaceJavaProjects(monitor);
     if (monitor == null && projectLocator == null) {
@@ -134,7 +134,7 @@ public class SourceLookupParticipant implements ISourceLookupParticipant {
     for (ISourceContainerResolver repository : getSourceContainerResolvers()) {
       Collection<ISourceContainer> members = repository.resolveSourceContainers(location, monitor);
       if (members != null && !members.isEmpty()) {
-        return cacheContainer(fElement, location, CompositeSourceContainer.create(members));
+        return cacheContainer(fElement, location, CompositeSourceContainer.compose(members));
       }
     }
 

@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
-public abstract class IProjectSourceDescriber {
+public abstract class AbstractProjectSourceDescriber {
   // need three pieces of information about a java project
   // 1. what filesystem classes directories or jar files identify the project
   // 2. factory of source container(s) for the project itself

@@ -19,9 +19,9 @@ import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContai
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.IProjectSourceDescriber;
+import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber;
 
-public class PDEProjectDescriber extends IProjectSourceDescriber {
+public class PDEProjectDescriber extends AbstractProjectSourceDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {

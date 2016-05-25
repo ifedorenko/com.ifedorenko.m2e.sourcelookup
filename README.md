@@ -10,6 +10,8 @@ with informtation about actual classes folder or jar file the classes are
 being loaded from. This information is captured in new JSR-45 SMAP stratum and
 retrived by Eclipse JDT debugger over JDWP. 
 
+## Maven support
+
 The class folders and jar files are scanned for 
 META-INF/maven/**/pom.properties to identify m2e project location and Maven 
 artifact (groupId,artifactId,version) tuple or "GAV" for short. Enabled 
@@ -21,6 +23,8 @@ The search for sources is performed in the following order
 * artifact GAV is matched to existing workspace projects
 * sources jar artifact corresponding to the GAV is resolved from Maven
   repositories.
+
+## PDE/Equinox support
 
 In addition to Maven-specific source code lookup, implementation also supports
 Equinox-based runtimes, which is particularly useful for debugging Tycho builds
@@ -44,6 +48,21 @@ JUnit and likely all other java launch configuration types.
 * Add `<stringAttribute/>` element to .launch file
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
+
+# New in 1.2.0.\<TBD\>
+
+Major rewrite, the goal is to separate general "core" source lookup functionality and support for specific project types and artifact repository layouts.
+
+* New `ISourceContainerResolver` and `AbstractProjectSourceDescriber` APIs
+  * refactored Maven and Maven Binary Project to use the new APIs
+  * reimplemented PDE/Equinox support to use the new APIs 
+* New launch configuration types support
+  * PDE `Eclipse Application` and `JUnit Plugin-in Test`
+  * JDT `Remote Java Application`
+* Fixes first source lookup can lock UI thread for extended period of time for larger workspaces
+* Fixes first breakpoint condition evaluation fails in some cases
+* Changed supported Equinox version to 3.9+ and dropped support for earlier versions
+* Changed minimal required java runtime to 8
 
 # New in 1.1.0.201506181114
 * M2E 1.6/Mars compatibility
@@ -82,6 +101,6 @@ Source Lookup workspace preference page can be used to copy&paste exact values.
 
 * Sources resolution uses repositories and pluginRepositories configured in
   Maven User settings.xml but not the actual repository or snapshot repository
-  from <distributionManagement> the artifact the class was loaded from.
+  from <distributionManagement> of the artifact the class was loaded from.
 * javaagent implementation will not instrument classes that have existing
   JSR-45 SMAP.

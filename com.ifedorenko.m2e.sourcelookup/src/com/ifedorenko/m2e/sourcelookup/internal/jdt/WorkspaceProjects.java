@@ -63,8 +63,9 @@ public class WorkspaceProjects {
         for (IJavaProject project : remove) {
           removeJavaProject(project);
         }
+        List<IProjectSourceDescriber> describers = getJavaProjectDescribers();
         for (IJavaProject project : add) {
-          addJavaProject(project);
+          addJavaProject(project, describers);
         }
       } catch (CoreException e) {
         // maybe do something about it?
@@ -277,8 +278,9 @@ public class WorkspaceProjects {
 
     // TODO possible race when java model change events are delivered while initialization is in progress
 
+    List<IProjectSourceDescriber> describers = getJavaProjectDescribers();
     for (IJavaProject project : javaProjects) {
-      addJavaProject(project);
+      addJavaProject(project, describers);
     }
   }
 
@@ -286,14 +288,14 @@ public class WorkspaceProjects {
     JavaCore.removeElementChangedListener(changeListener);
   }
 
-  private void addJavaProject(IJavaProject project) throws CoreException {
+  private void addJavaProject(IJavaProject project, List<IProjectSourceDescriber> describers) throws CoreException {
     if (project == null) {
       return;
     }
 
     JavaProjectDescription info = new JavaProjectDescription();
 
-    for (IProjectSourceDescriber describer : getJavaProjectDescribers()) {
+    for (IProjectSourceDescriber describer : describers) {
       describer.describeProject(project, info);
     }
 
@@ -310,7 +312,6 @@ public class WorkspaceProjects {
     }
   }
 
-  // TODO this is called for each workspace project, reuse returned list
   protected List<IProjectSourceDescriber> getJavaProjectDescribers() {
     List<IProjectSourceDescriber> result = new ArrayList<>();
 

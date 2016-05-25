@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal.jdt;
 
+import static com.ifedorenko.m2e.sourcelookup.internal.jdt.Monitors.getMonitor;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -74,6 +76,8 @@ public class SourceLookupParticipant implements ISourceLookupParticipant {
         return containers.get(location);
       }
     }
+
+    monitor = getMonitor(monitor);
 
     WorkspaceProjects projectLocator = SourceLookupActivator.getWorkspaceJavaProjects(monitor);
     if (monitor == null && projectLocator == null) {

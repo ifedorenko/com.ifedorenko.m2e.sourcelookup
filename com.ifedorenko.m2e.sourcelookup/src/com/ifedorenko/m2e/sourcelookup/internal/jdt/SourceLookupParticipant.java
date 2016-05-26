@@ -87,7 +87,8 @@ public class SourceLookupParticipant implements ISourceLookupParticipant {
     }
 
     if (projectLocator == null) {
-      throw new IllegalStateException();
+      // we get here when WorkspaceProjects initialization has been cancelled by the user
+      return null;
     }
 
     //

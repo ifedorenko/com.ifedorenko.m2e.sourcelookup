@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -33,7 +36,8 @@ public class SourceLookupActivator extends Plugin {
 
   private BackgroundProcessingJob backgroundJob;
 
-  private WorkspaceProjects javaProjectSources;
+  private volatile WorkspaceProjects workspaceProjects;
+  private final Lock workspaceProjectsLock = new ReentrantLock();
 
   public SourceLookupActivator() {}
 
@@ -49,8 +53,13 @@ public class SourceLookupActivator extends Plugin {
     backgroundJob.cancel();
     backgroundJob = null;
 
-    javaProjectSources.close();
-    javaProjectSources = null;
+    workspaceProjectsLock.lock();
+    try {
+      workspaceProjects.close();
+      workspaceProjects = null;
+    } finally {
+      workspaceProjectsLock.unlock();
+    }
 
     plugin = null;
 
@@ -69,12 +78,42 @@ public class SourceLookupActivator extends Plugin {
     return getDefault().getWorkspaceJavaProjects0(monitor);
   }
 
-  private synchronized WorkspaceProjects getWorkspaceJavaProjects0(IProgressMonitor monitor) throws CoreException {
-    if (javaProjectSources == null && monitor != null) {
-      javaProjectSources = new WorkspaceProjects();
-      javaProjectSources.initialize(monitor);
+  private WorkspaceProjects getWorkspaceJavaProjects0(IProgressMonitor monitor) throws CoreException {
+    // this is convoluted, but I could not think of a simpler implementation
+
+    // when monitor==null, we are most likely on UI thread and must not block, hence immediate return
+    if (monitor == null || workspaceProjects != null) {
+      return workspaceProjects;
     }
-    return javaProjectSources;
+
+    // when monitor!=null, try to get the lock but check for cancellation periodically
+    try {
+      while (!workspaceProjectsLock.tryLock(500, TimeUnit.MILLISECONDS)) {
+        if (monitor.isCanceled()) {
+          return workspaceProjects;
+        }
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt(); // restore interrupted status
+      return workspaceProjects;
+    }
+
+    // got the lock, do the initialization if another thread didn't do it already
+    // note that double-check locking is okay on java 5+ with volatile fields
+    try {
+      if (workspaceProjects == null) {
+        WorkspaceProjects _workspaceProjects = new WorkspaceProjects();
+        _workspaceProjects.initialize(monitor);
+
+        // assign only fully initialized instance, otherwise monitor==null branch above may misbehave
+        workspaceProjects = _workspaceProjects;
+      }
+    } finally {
+      // release the lock in finally{} block
+      workspaceProjectsLock.unlock();
+    }
+
+    return workspaceProjects;
   }
 
   public String getJavaagentString() throws CoreException {

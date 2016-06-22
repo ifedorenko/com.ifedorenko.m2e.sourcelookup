@@ -55,6 +55,9 @@ public class SourceLookupDirector extends JavaSourceLookupDirector {
     if (mode == null || ILaunchManager.DEBUG_MODE.equals(mode)) {
       participants.addAll(getSourceLookupParticipants());
     }
+
+    // fall-back to default JDT behaviour if we can't find matching sources
+    // in most cases this means scanning workspace for any source or binary with matching name
     participants.add(new JavaSourceLookupParticipant());
 
     addParticipants(participants.toArray(new ISourceLookupParticipant[participants.size()]));

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.internal.jdt;
 
-import java.util.Collections;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
@@ -23,7 +21,7 @@ class DefaultProjectDescriber extends AbstractProjectSourceDescriber {
     if (isSourceProject(project)) {
       description.addDependencies(getClasspath(project));
       description.addLocations(getOutputDirectories(project));
-      description.addSourceContainerFactory(() -> Collections.singleton(new JavaProjectSourceContainer(project)));
+      description.addSourceContainerFactory(() -> new JavaProjectSourceContainer(project));
     }
   }
 

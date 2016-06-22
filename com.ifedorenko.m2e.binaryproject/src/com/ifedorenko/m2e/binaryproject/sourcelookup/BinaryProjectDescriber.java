@@ -11,7 +11,6 @@
 package com.ifedorenko.m2e.binaryproject.sourcelookup;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -48,7 +47,7 @@ public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
 
     description.addDependencies(classpath);
     description.addLocation(binaryLocation);
-    description.addSourceContainerFactory(() -> Collections.singleton(new PackageFragmentRootSourceContainer(binary)));
+    description.addSourceContainerFactory(() -> new PackageFragmentRootSourceContainer(binary));
   }
 
 }

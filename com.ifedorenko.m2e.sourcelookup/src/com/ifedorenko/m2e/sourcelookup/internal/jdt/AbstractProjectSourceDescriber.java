@@ -42,7 +42,11 @@ public abstract class AbstractProjectSourceDescriber {
   // each dependency must have corresponding IPackageFragmentRoot, which provides "java project context"
 
   public static interface ISourceContainerFactory {
-    public Collection<ISourceContainer> getContainers();
+    /**
+     * Creates and returns container instance. Need new instance for each launch because containers are "owned" by
+     * director and "disposed" when director is disposed at the end of debug session.
+     */
+    public ISourceContainer createContainer();
   }
 
   public static interface IJavaProjectSourceDescription {

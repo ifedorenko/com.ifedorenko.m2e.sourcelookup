@@ -11,7 +11,6 @@
 package com.ifedorenko.m2e.sourcelookup.pde.internal;
 
 import java.io.File;
-import java.util.Collections;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -32,7 +31,7 @@ public class PDEProjectDescriber extends AbstractProjectSourceDescriber {
     }
 
     description.addLocation(new File(bundle.getInstallLocation()));
-    description.addSourceContainerFactory(() -> Collections.singleton(new JavaProjectSourceContainer(project)));
+    description.addSourceContainerFactory(() -> new JavaProjectSourceContainer(project));
 
     // TODO dependencies
   }

@@ -218,7 +218,7 @@ public class WorkspaceProjects {
 
     List<ISourceContainer> containers = new ArrayList<>();
     for (ISourceContainerFactory factory : description.factories) {
-      containers.addAll(factory.getContainers());
+      containers.add(factory.createContainer());
     }
 
     return CompositeSourceContainer.compose(containers);
@@ -288,7 +288,8 @@ public class WorkspaceProjects {
     JavaCore.removeElementChangedListener(changeListener);
   }
 
-  private void addJavaProject(IJavaProject project, List<AbstractProjectSourceDescriber> describers) throws CoreException {
+  private void addJavaProject(IJavaProject project, List<AbstractProjectSourceDescriber> describers)
+      throws CoreException {
     if (project == null) {
       return;
     }

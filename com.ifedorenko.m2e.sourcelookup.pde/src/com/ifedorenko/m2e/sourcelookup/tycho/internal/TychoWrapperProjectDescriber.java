@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.tycho.internal;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -52,8 +51,7 @@ public class TychoWrapperProjectDescriber extends AbstractProjectSourceDescriber
       String v = attributes.get(IClasspathManager.VERSION_ATTRIBUTE);
       String c = attributes.get(IClasspathManager.CLASSIFIER_ATTRIBUTE);
       if (artifacts.containsKey(new ArtifactKey(g, a, v, c))) {
-        description
-            .addSourceContainerFactory(() -> Collections.singleton(new PackageFragmentRootSourceContainer(fragment)));
+        description.addSourceContainerFactory(() -> new PackageFragmentRootSourceContainer(fragment));
       }
     }
   }

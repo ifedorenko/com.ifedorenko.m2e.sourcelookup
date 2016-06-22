@@ -33,5 +33,8 @@
       <describer
             class="com.ifedorenko.m2e.sourcelookup.pde.internal.PDEProjectDescriber">
       </describer>
+       <describer
+             class="com.ifedorenko.m2e.sourcelookup.tycho.internal.TychoWrapperProjectDescriber">
+       </describer>
    </extension>
 </plugin>

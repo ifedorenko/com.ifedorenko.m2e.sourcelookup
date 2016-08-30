@@ -25,6 +25,14 @@
     <m2e-core.url>${repoHost}/content/sites/m2e.extras/m2e/1.7.0/N/LATEST</m2e-core.url>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>m2e-tycho</id>
+      <url>${repoHost}/content/sites/m2e.extras/m2eclipse-tycho/0.9.0/N/LATEST/</url>
+      <layout>p2</layout>
+    </repository>
+  </repositories>
+
   <modules>
     <module>com.ifedorenko.m2e.sourcelookup</module>
     <module>com.ifedorenko.m2e.sourcelookup.pde</module>

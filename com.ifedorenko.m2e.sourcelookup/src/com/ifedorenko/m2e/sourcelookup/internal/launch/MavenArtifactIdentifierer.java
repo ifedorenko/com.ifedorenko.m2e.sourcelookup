@@ -146,7 +146,7 @@ public class MavenArtifactIdentifierer {
     return null;
   }
 
-  protected Collection<ArtifactKey> scanPomProperties(File classesLocation) {
+  public Collection<ArtifactKey> scanPomProperties(File classesLocation) {
     Set<ArtifactKey> artifacts = new LinkedHashSet<>();
     for (Properties pomProperties : scanner.scan(classesLocation, "pom.properties")) {
       String groupId = pomProperties.getProperty("groupId");

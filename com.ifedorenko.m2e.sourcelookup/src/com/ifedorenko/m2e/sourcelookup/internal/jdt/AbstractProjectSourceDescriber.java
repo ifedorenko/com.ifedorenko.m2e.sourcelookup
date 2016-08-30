@@ -73,7 +73,7 @@ public abstract class AbstractProjectSourceDescriber {
     return false;
   }
 
-  protected static Map<File, IPackageFragmentRoot> getClasspath(IJavaProject project) throws JavaModelException {
+  public static Map<File, IPackageFragmentRoot> getClasspath(IJavaProject project) throws JavaModelException {
     final Map<File, IPackageFragmentRoot> classpath = new LinkedHashMap<>();
     for (IPackageFragmentRoot fragment : project.getPackageFragmentRoots()) {
       if (fragment.getKind() == IPackageFragmentRoot.K_BINARY) {

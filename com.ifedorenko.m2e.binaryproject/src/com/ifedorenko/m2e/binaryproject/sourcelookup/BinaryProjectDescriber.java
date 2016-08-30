@@ -13,6 +13,7 @@ package com.ifedorenko.m2e.binaryproject.sourcelookup;
 import java.io.File;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -23,8 +24,8 @@ import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescrib
 
 public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
 
-  private static File getBinaryLocation(IJavaProject project) throws CoreException {
-    final String binaryLocation = project.getProject().getPersistentProperty(BinaryProjectPlugin.QNAME_JAR);
+  static File getBinaryLocation(IProject project) throws CoreException {
+    final String binaryLocation = project.getPersistentProperty(BinaryProjectPlugin.QNAME_JAR);
     if (binaryLocation == null) {
       return null;
     }
@@ -33,7 +34,7 @@ public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {
-    final File binaryLocation = getBinaryLocation(project);
+    final File binaryLocation = getBinaryLocation(project.getProject());
     if (binaryLocation == null) {
       return;
     }

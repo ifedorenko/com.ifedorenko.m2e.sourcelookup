@@ -53,7 +53,7 @@ public class MavenSourceContainerResolver implements ISourceContainerResolver {
     return result;
   }
 
-  private ISourceContainer resovleSourceContainer(ArtifactKey artifact, IProgressMonitor monitor) {
+  protected ISourceContainer resovleSourceContainer(ArtifactKey artifact, IProgressMonitor monitor) {
     String groupId = artifact.getGroupId();
     String artifactId = artifact.getArtifactId();
     String version = artifact.getVersion();

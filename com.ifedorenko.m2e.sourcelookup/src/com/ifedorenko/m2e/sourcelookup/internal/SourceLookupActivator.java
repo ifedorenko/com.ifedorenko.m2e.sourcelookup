@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.WorkspaceProjects;
 
 public class SourceLookupActivator extends Plugin {
 

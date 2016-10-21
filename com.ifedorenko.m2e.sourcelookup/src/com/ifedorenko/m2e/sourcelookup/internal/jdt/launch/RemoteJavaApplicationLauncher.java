@@ -17,8 +17,7 @@ import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IPersistableSourceLocator;
 import org.eclipse.debug.core.sourcelookup.IPersistableSourceLocator2;
 import org.eclipse.jdt.internal.launching.JavaRemoteApplicationLaunchConfigurationDelegate;
-
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupDirector;
+import org.eclipse.jdt.launching.sourcelookup.advanced.JavaAdvancedSourceLookupDirector;
 
 
 @SuppressWarnings("restriction")
@@ -30,7 +29,7 @@ public class RemoteJavaApplicationLauncher extends JavaRemoteApplicationLaunchCo
 
     Launch launch = new Launch(configuration, mode, null);
 
-    IPersistableSourceLocator locator = getLaunchManager().newSourceLocator(SourceLookupDirector.ID);
+    IPersistableSourceLocator locator = getLaunchManager().newSourceLocator(JavaAdvancedSourceLookupDirector.ID);
     String memento = configuration.getAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_MEMENTO, (String) null);
     if (memento == null) {
       locator.initializeDefaults(configuration);

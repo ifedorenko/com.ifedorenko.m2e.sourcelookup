@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
@@ -28,7 +29,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
 import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class ImportBinaryProjectHandler extends AbstractHandler {

@@ -17,10 +17,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AbstractProjectSourceDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 
 import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber;
 
 public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
 

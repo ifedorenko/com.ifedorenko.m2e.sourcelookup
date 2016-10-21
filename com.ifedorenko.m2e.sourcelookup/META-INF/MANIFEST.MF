@@ -25,5 +25,4 @@ Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
 Export-Package: com.ifedorenko.m2e.sourcelookup.internal;x-friends:="com.ifedorenko.m2e.sourcelookup.ui,com.ifedorenko.m2e.sourcelookup.pde,com.ifedorenko.m2e.binaryproject",
  com.ifedorenko.m2e.sourcelookup.internal.jdi;x-friends:="com.ifedorenko.m2e.sourcelookup.pde,com.ifedorenko.m2e.sourcelookup.ui,com.ifedorenko.m2e.binaryproject",
- com.ifedorenko.m2e.sourcelookup.internal.jdt;x-friends:="com.ifedorenko.m2e.sourcelookup.pde,com.ifedorenko.m2e.sourcelookup.ui,com.ifedorenko.m2e.binaryproject",
  com.ifedorenko.m2e.sourcelookup.internal.launch;x-friends:="com.ifedorenko.m2e.sourcelookup.pde,com.ifedorenko.m2e.sourcelookup.ui,com.ifedorenko.m2e.binaryproject"

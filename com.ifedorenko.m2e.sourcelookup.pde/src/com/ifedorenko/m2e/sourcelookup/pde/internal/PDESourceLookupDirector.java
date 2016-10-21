@@ -15,13 +15,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
+import org.eclipse.jdt.launching.sourcelookup.advanced.JavaAdvancedSourceLookupDirector;
+import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.ISourceContainerResolver;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupDirector;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver;
 
-public class PDESourceLookupDirector extends SourceLookupDirector {
+public class PDESourceLookupDirector extends JavaAdvancedSourceLookupDirector {
   public static final String ID = "com.ifedorenko.pde.sourcelookupDirector";
 
   @Override

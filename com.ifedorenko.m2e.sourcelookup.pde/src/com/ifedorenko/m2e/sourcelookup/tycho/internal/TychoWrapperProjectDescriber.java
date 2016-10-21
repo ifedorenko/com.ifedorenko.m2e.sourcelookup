@@ -23,13 +23,14 @@ import org.eclipse.m2e.jdt.internal.ClasspathEntryDescriptor;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.sonatype.tycho.m2e.internal.EmbeddedArtifacts;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
+
 
 // TODO consider moving to a dedicated bundle or to m2e/tycho directly
 // don't forget to remove this bundle dependency on m2e and m2e/tycho if you decide to move
 
 @SuppressWarnings("restriction")
-public class TychoWrapperProjectDescriber extends AbstractProjectSourceDescriber {
+public class TychoWrapperProjectDescriber implements IWorkspaceProjectDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {

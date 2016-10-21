@@ -17,8 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
-
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 
 public class OpenSourceLookupInfoDialogCommandHandler extends AbstractHandler {
 
@@ -32,7 +31,7 @@ public class OpenSourceLookupInfoDialogCommandHandler extends AbstractHandler {
 
     Object debugElement = ((IStructuredSelection) selection).getFirstElement();
 
-    final SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup(debugElement);
+    final AdvancedSourceLookupParticipant sourceLookup = AdvancedSourceLookupParticipant.getSourceLookup(debugElement);
 
     if (debugElement != null && sourceLookup != null) {
       new SourceLookupInfoDialog(HandlerUtil.getActiveShell(event), debugElement, sourceLookup).open();

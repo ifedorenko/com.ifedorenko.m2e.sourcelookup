@@ -41,14 +41,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class SourceLookupInfoDialog extends Dialog {
   private final Object debugElement;
 
-  private final SourceLookupParticipant sourceLookup;
+  private final AdvancedSourceLookupParticipant sourceLookup;
 
   private Text textLocation;
 
@@ -61,7 +61,7 @@ public class SourceLookupInfoDialog extends Dialog {
   // FIXME
   private IProgressMonitor monitor = new NullProgressMonitor();
 
-  public SourceLookupInfoDialog(Shell parentShell, Object debugElement, SourceLookupParticipant sourceLookup) {
+  public SourceLookupInfoDialog(Shell parentShell, Object debugElement, AdvancedSourceLookupParticipant sourceLookup) {
     super(parentShell);
     setShellStyle(SWT.RESIZE | SWT.TITLE);
     this.debugElement = debugElement;
@@ -160,7 +160,7 @@ public class SourceLookupInfoDialog extends Dialog {
 
   private void updateDisplay(IProgressMonitor moninor) {
     try {
-      File location = JDIHelpers.getLocation(debugElement);
+      File location = AdvancedSourceLookup.getClassesLocation(debugElement);
 
       if (location == null) {
         return;

@@ -16,21 +16,20 @@ import java.util.Collections;
 
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.ISourceContainerResolver;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupDirector;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupDirector;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver;
 
-public class PDESourceLookupDirector extends SourceLookupDirector {
+public class PDESourceLookupDirector extends AdvancedSourceLookupDirector {
   public static final String ID = "com.ifedorenko.pde.sourcelookupDirector";
 
   @Override
   protected Collection<ISourceLookupParticipant> getSourceLookupParticipants() {
-    return Collections.<ISourceLookupParticipant>singleton(new SourceLookupParticipant() {
+    return Collections.singleton(new AdvancedSourceLookupParticipant() {
       @Override
       protected Collection<ISourceContainerResolver> getSourceContainerResolvers() {
-        return Arrays.<ISourceContainerResolver>asList(new PDESourceContainerResolver(),
-            new MavenSourceContainerResolver());
+        return Arrays.asList(new PDESourceContainerResolver(), new MavenSourceContainerResolver());
       }
     });
   }

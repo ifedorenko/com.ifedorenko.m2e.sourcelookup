@@ -16,9 +16,10 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
 import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 
-public class MavenSourceLookupParticipant extends SourceLookupParticipant implements IMavenProjectChangedListener {
+
+public class MavenSourceLookupParticipant extends AdvancedSourceLookupParticipant implements IMavenProjectChangedListener {
 
   @Override
   public void init(ISourceLookupDirector director) {

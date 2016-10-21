@@ -17,11 +17,16 @@
   </parent>
 
   <artifactId>com.ifedorenko.m2e.sourcelookup.equinox</artifactId>
+  
+  <properties>
+    <weaver.groupId>com.ifedorenko.m2e</weaver.groupId>
+    <weaver.artifactId>com.ifedorenko.jdt.launching.javaagent</weaver.artifactId>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.ifedorenko.m2e</groupId>
-      <artifactId>com.ifedorenko.m2e.sourcelookup.javaagent</artifactId>
+      <groupId>${weaver.groupId}</groupId>
+      <artifactId>${weaver.artifactId}</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -52,19 +57,23 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <createSourcesJar>true</createSourcesJar>
+              <finalName>equinoxhooks-shaded</finalName>
               <filters>
                 <filter>
-                  <artifact>com.ifedorenko.m2e:com.ifedorenko.m2e.sourcelookup.javaagent</artifact>
+                  <artifact>${weaver.groupId}:${weaver.artifactId}</artifact>
                   <includes>
-                    <include>com/ifedorenko/m2e/sourcelookup/weaving/**</include>
+                    <include>com/ifedorenko/jdt/launching/weaving/**</include>
                   </includes>
                 </filter>
               </filters>
               <relocations>
                 <relocation>
+                  <!--
+                    | javaagent classes are added to application classpath
+                    | relocate ASM to our internal package to avoid possible conflicts 
+                    -->
                   <pattern>org.objectweb.asm</pattern>
-                  <shadedPattern>com.ifedorenko.org.objectweb.asm</shadedPattern>
+                  <shadedPattern>com.ifedorenko.pde.launching.internal.org.objectweb.asm</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

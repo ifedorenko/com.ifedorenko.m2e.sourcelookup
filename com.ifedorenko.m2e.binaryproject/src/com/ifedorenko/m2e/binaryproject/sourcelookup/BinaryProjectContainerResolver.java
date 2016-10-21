@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.binaryproject.sourcelookup;
 
+import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getClasspath;
 import static com.ifedorenko.m2e.binaryproject.sourcelookup.BinaryProjectDescriber.getBinaryLocation;
-import static com.ifedorenko.m2e.sourcelookup.internal.jdt.AbstractProjectSourceDescriber.getClasspath;
 
 import java.io.File;
 import java.util.Map;
@@ -29,7 +29,7 @@ import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.ISourceContainerResolver;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver;
 
 // useful to lookup shaded binary projects like wagon-http-2.10-shaded.jar

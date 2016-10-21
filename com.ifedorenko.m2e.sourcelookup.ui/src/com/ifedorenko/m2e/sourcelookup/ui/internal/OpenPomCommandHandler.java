@@ -30,7 +30,7 @@ import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction.MavenStorageEditor
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MetaInfMavenScanner;
 
 @SuppressWarnings("restriction")
@@ -45,7 +45,7 @@ public class OpenPomCommandHandler extends AbstractHandler {
     }
 
     try {
-      final File location = JDIHelpers.getLocation(((IStructuredSelection) selection).getFirstElement());
+      final File location = AdvancedSourceLookup.getClassesLocation(((IStructuredSelection) selection).getFirstElement());
 
       if (location == null) {
         return null;

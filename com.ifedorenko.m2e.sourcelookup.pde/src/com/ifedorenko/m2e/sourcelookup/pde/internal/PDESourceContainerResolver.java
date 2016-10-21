@@ -34,7 +34,7 @@ import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.internal.core.PDEClasspathContainer;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.ISourceContainerResolver;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 
 @SuppressWarnings("restriction")
 public class PDESourceContainerResolver implements ISourceContainerResolver {

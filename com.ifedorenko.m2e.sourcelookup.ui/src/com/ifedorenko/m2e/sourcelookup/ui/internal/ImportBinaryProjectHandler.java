@@ -26,9 +26,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import com.ifedorenko.m2e.binaryproject.AbstractBinaryProjectsImportJob;
-import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.SourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class ImportBinaryProjectHandler extends AbstractHandler {
@@ -49,7 +49,7 @@ public class ImportBinaryProjectHandler extends AbstractHandler {
 
   public static void importBinaryProjects(final Object debugElement) throws DebugException {
 
-    final File location = JDIHelpers.getLocation(debugElement);
+    final File location = AdvancedSourceLookup.getClassesLocation(debugElement);
 
     if (location == null) {
       return;
@@ -61,7 +61,7 @@ public class ImportBinaryProjectHandler extends AbstractHandler {
         IStatus status = super.run(monitor);
 
         if (status.isOK()) {
-          SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup(debugElement);
+          AdvancedSourceLookupParticipant sourceLookup = AdvancedSourceLookupParticipant.getSourceLookup(debugElement);
 
           try {
             sourceLookup.getSourceContainer(debugElement, true, monitor);

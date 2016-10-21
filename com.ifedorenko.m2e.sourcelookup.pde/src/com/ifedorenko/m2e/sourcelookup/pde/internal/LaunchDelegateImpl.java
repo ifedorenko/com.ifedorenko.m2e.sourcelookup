@@ -10,25 +10,28 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.pde.internal;
 
+import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
+import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
-import org.eclipse.debug.core.model.IPersistableSourceLocator;
-import org.eclipse.debug.core.sourcelookup.IPersistableSourceLocator2;
 
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupActivator;
 
 class LaunchDelegateImpl {
   public static void injectFrameworkExtension(File configurationDirectory) throws CoreException {
@@ -47,7 +50,7 @@ class LaunchDelegateImpl {
       extensions += ",";
     }
 
-    extensions += "reference:file:" + getBundleFile("/com.ifedorenko.m2e.sourcelookup.equinox.jar");
+    extensions += "reference:file:" + getBundleFile("/lib/equinoxhooks-shaded.jar");
 
     props.put(PROPS_FRAMEWORK_EXTENSIONS, extensions);
     try (OutputStream os = new FileOutputStream(configFile)) {
@@ -59,42 +62,28 @@ class LaunchDelegateImpl {
   }
 
   public static ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
-    Launch launch = new Launch(configuration, mode, null);
-
-    IPersistableSourceLocator locator = getLaunchManager().newSourceLocator(PDESourceLookupDirector.ID);
-    String memento = configuration.getAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_MEMENTO, (String) null);
-    if (memento == null) {
-      locator.initializeDefaults(configuration);
-    } else {
-      if (locator instanceof IPersistableSourceLocator2) {
-        ((IPersistableSourceLocator2) locator).initializeFromMemento(memento, configuration);
-      } else {
-        locator.initializeFromMemento(memento);
-      }
-    }
-    launch.setSourceLocator(locator);
-
-    return launch;
+    return new Launch(configuration, mode, createSourceLocator(PDESourceLookupDirector.ID, configuration));
   }
 
   public static List<String> appendJavaagentString(List<String> jvmargs) throws CoreException {
-    jvmargs.add(SourceLookupActivator.getDefault().getJavaagentString());
+    jvmargs.add(getJavaagentString());
     return jvmargs;
   }
 
   public static String[] appendJavaagentString(String[] jvmargs) throws CoreException {
     String[] result = new String[jvmargs.length + 1];
     System.arraycopy(jvmargs, 0, result, 0, jvmargs.length);
-    result[jvmargs.length] = SourceLookupActivator.getDefault().getJavaagentString();
+    result[jvmargs.length] = getJavaagentString();
     return result;
-  }
-
-  private static ILaunchManager getLaunchManager() {
-    return DebugPlugin.getDefault().getLaunchManager();
   }
 
   private static String getBundleFile(String path) throws CoreException {
     ClassLoader cl = LaunchDelegateImpl.class.getClassLoader();
-    return SourceLookupActivator.toLocalFile(cl.getResource(path));
+    URL resource = cl.getResource(path);
+    try {
+      return new File(FileLocator.toFileURL(resource).toURI()).getCanonicalPath();
+    } catch (IOException | URISyntaxException e) {
+      throw new CoreException(new Status(IStatus.ERROR, "com.ifedorenko.m2e.sourcelookup.pde", e.getMessage(), e));
+    }
   }
 }

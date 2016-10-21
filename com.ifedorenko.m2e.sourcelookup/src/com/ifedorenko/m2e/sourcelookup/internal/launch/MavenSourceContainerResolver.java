@@ -29,7 +29,8 @@ import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdt.ISourceContainerResolver;
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
+
 
 public class MavenSourceContainerResolver implements ISourceContainerResolver {
 

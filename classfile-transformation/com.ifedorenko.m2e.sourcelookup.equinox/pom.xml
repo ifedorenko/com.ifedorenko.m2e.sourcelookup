@@ -20,9 +20,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.ifedorenko.m2e</groupId>
-      <artifactId>com.ifedorenko.m2e.sourcelookup.javaagent</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.launching.javaagent</artifactId>
+      <version>3.9.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.tycho</groupId>
@@ -55,7 +55,7 @@
               <createSourcesJar>true</createSourcesJar>
               <filters>
                 <filter>
-                  <artifact>com.ifedorenko.m2e:com.ifedorenko.m2e.sourcelookup.javaagent</artifact>
+                  <artifact>org.eclipse.jdt:org.eclipse.jdt.launching.javaagent</artifact>
                   <includes>
                     <include>com/ifedorenko/m2e/sourcelookup/weaving/**</include>
                   </includes>

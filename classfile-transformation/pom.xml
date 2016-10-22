@@ -26,7 +26,6 @@
   </dependencyManagement>
 
   <modules>
-    <module>com.ifedorenko.m2e.sourcelookup.javaagent</module>
     <module>com.ifedorenko.m2e.sourcelookup.equinox</module>
   </modules>
 

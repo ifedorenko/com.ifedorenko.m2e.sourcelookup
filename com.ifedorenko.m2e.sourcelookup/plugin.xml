@@ -11,26 +11,6 @@
       </mavenLaunchParticipant>
    </extension>
 
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIStratumTester"
-            id="com.ifedorenko.m2e.sourcelookup.jdiStratumTest"
-            namespace="com.ifedorenko.m2e.sourcelookup"
-            properties="m2estratum"
-            type="org.eclipse.debug.core.model.DebugElement">
-      </propertyTester>
-   </extension>
-
-    <extension
-          point="org.eclipse.core.variables.dynamicVariables">
-       <variable
-             description="Returns absolute filesystem path of source lookup java agent."
-             name="sourcelookup_agent_path"
-             resolver="com.ifedorenko.m2e.sourcelookup.internal.AgentPathVariableResolver"
-             supportsArgument="false">
-       </variable>
-    </extension>
     <extension
           point="org.eclipse.debug.core.launchDelegates">
        <launchDelegate

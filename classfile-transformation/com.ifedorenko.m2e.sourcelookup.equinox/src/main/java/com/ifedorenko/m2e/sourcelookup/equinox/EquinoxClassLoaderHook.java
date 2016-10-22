@@ -12,6 +12,7 @@ package com.ifedorenko.m2e.sourcelookup.equinox;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.jdt.launching.internal.weaving.ClassfileTransformer;
 import org.eclipse.osgi.internal.hookregistry.ClassLoaderHook;
 import org.eclipse.osgi.internal.hookregistry.HookConfigurator;
 import org.eclipse.osgi.internal.hookregistry.HookRegistry;
@@ -22,8 +23,6 @@ import org.eclipse.osgi.storage.bundlefile.BundleEntry;
 import org.eclipse.osgi.storage.bundlefile.BundleFile;
 import org.eclipse.osgi.storage.bundlefile.FileBundleEntry;
 import org.eclipse.osgi.storage.bundlefile.NestedDirBundleFile;
-
-import com.ifedorenko.m2e.sourcelookup.weaving.ClassfileTransformer;
 
 public class EquinoxClassLoaderHook extends ClassLoaderHook implements HookConfigurator {
 

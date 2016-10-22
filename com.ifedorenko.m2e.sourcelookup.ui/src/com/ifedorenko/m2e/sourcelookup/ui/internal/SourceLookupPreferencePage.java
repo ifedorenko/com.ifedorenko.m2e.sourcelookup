@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.ui.internal;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.ifedorenko.m2e.sourcelookup.internal.SourceLookupActivator;
 
 public class SourceLookupPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
   private Text vmArguments;
@@ -53,31 +52,27 @@ public class SourceLookupPreferencePage extends PreferencePage implements IWorkb
     gl_composite.marginHeight = 0;
     composite.setLayout(gl_composite);
 
-    try {
-      Label lblVMArguments = new Label(composite, SWT.NONE);
-      lblVMArguments.setText("VM arguments:");
+    Label lblVMArguments = new Label(composite, SWT.NONE);
+    lblVMArguments.setText("VM arguments:");
 
-      vmArguments = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
-      vmArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-      vmArguments.setText(SourceLookupActivator.getDefault().getJavaagentString());
+    vmArguments = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
+    vmArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+    vmArguments.setText(AdvancedSourceLookupSupport.getJavaagentString());
 
-      Label lblLaunchVMArguments = new Label(composite, SWT.NONE);
-      lblLaunchVMArguments.setText(".launch file VM arguments:");
+    Label lblLaunchVMArguments = new Label(composite, SWT.NONE);
+    lblLaunchVMArguments.setText(".launch file VM arguments:");
 
-      launchFileVMArguments = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
-      launchFileVMArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-      launchFileVMArguments.setText("-javaagent:${sourcelookup_agent_path}");
+    launchFileVMArguments = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
+    launchFileVMArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+    launchFileVMArguments.setText("-javaagent:${sourcelookup_agent_path}");
 
-      Label lblLaunchFileAttribute = new Label(composite, SWT.NONE);
-      lblLaunchFileAttribute.setText(".launch file attribute:");
+    Label lblLaunchFileAttribute = new Label(composite, SWT.NONE);
+    lblLaunchFileAttribute.setText(".launch file attribute:");
 
-      launchFileAttribute = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
-      launchFileAttribute.setText(
-          "<stringAttribute key=\"org.eclipse.debug.core.source_locator_id\" value=\"com.ifedorenko.m2e.sourcelookupDirector\"/>\n");
-      launchFileAttribute.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-    } catch (CoreException e) {
-      vmArguments.setText(e.getStatus().getMessage());
-    }
+    launchFileAttribute = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
+    launchFileAttribute.setText(
+        "<stringAttribute key=\"org.eclipse.debug.core.source_locator_id\" value=\"com.ifedorenko.m2e.sourcelookupDirector\"/>\n");
+    launchFileAttribute.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
     return composite;
   }

@@ -77,7 +77,7 @@ public class EquinoxClassLoaderHook extends ClassLoaderHook implements HookConfi
 
   static String getBundleLocation(ClasspathEntry entry) {
     // use PDE-specific state maintained by Equinox
-    // this appears to be the only way to file fragments locations
+    // this appears to be the only way to find fragments locations
 
     if (dataField == null || filenameField == null) {
       return null;
@@ -87,6 +87,8 @@ public class EquinoxClassLoaderHook extends ClassLoaderHook implements HookConfi
       Object data = dataField.get(entry);
       return "file:" + filenameField.get(data);
     } catch (IllegalAccessException e) {
+      return null;
+    } catch (IllegalArgumentException e) {
       return null;
     }
   }

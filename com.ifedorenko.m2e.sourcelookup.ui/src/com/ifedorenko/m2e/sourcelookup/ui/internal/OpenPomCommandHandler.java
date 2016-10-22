@@ -23,6 +23,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.internal.launching.sourcelookup.advanced.JDIHelpers;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction;
@@ -30,7 +31,6 @@ import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction.MavenStorageEditor
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.m2e.sourcelookup.internal.jdi.JDIHelpers;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MetaInfMavenScanner;
 
 @SuppressWarnings("restriction")

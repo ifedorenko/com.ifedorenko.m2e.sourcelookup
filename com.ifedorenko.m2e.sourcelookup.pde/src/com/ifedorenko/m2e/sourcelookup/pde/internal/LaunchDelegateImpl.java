@@ -16,10 +16,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -96,6 +101,11 @@ class LaunchDelegateImpl {
 
   private static String getBundleFile(String path) throws CoreException {
     ClassLoader cl = LaunchDelegateImpl.class.getClassLoader();
-    return SourceLookupActivator.toLocalFile(cl.getResource(path));
+    URL resource = cl.getResource(path);
+    try {
+      return new File(FileLocator.toFileURL(resource).toURI()).getCanonicalPath();
+    } catch (IOException | URISyntaxException e) {
+      throw new CoreException(new Status(IStatus.ERROR, "com.ifedorenko.m2e.sourcelookup.pde", e.getMessage(), e));
+    }
   }
 }

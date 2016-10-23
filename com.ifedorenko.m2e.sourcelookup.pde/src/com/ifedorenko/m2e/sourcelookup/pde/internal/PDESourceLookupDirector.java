@@ -26,11 +26,10 @@ public class PDESourceLookupDirector extends JavaAdvancedSourceLookupDirector {
 
   @Override
   protected Collection<ISourceLookupParticipant> getSourceLookupParticipants() {
-    return Collections.<ISourceLookupParticipant>singleton(new SourceLookupParticipant() {
+    return Collections.singleton(new SourceLookupParticipant() {
       @Override
       protected Collection<ISourceContainerResolver> getSourceContainerResolvers() {
-        return Arrays.<ISourceContainerResolver>asList(new PDESourceContainerResolver(),
-            new MavenSourceContainerResolver());
+        return Arrays.asList(new PDESourceContainerResolver(), new MavenSourceContainerResolver());
       }
     });
   }

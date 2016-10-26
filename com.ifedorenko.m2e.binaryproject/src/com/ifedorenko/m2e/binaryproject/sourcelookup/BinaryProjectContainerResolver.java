@@ -11,7 +11,7 @@
 package com.ifedorenko.m2e.binaryproject.sourcelookup;
 
 import static com.ifedorenko.m2e.binaryproject.sourcelookup.BinaryProjectDescriber.getBinaryLocation;
-import static org.eclipse.jdt.launching.sourcelookup.advanced.AbstractProjectSourceDescriber.getClasspath;
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getClasspath;
 
 import java.io.File;
 import java.util.Map;

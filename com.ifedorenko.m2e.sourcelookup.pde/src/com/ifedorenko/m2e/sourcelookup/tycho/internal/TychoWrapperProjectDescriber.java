@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.launching.sourcelookup.advanced.AbstractProjectSourceDescriber;
+import org.eclipse.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.jdt.IClasspathEntryDescriptor;
@@ -29,7 +29,7 @@ import org.sonatype.tycho.m2e.internal.EmbeddedArtifacts;
 // don't forget to remove this bundle dependency on m2e and m2e/tycho if you decide to move
 
 @SuppressWarnings("restriction")
-public class TychoWrapperProjectDescriber extends AbstractProjectSourceDescriber {
+public class TychoWrapperProjectDescriber implements IWorkspaceProjectDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {

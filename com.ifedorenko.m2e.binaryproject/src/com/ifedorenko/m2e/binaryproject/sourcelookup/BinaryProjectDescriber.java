@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.binaryproject.sourcelookup;
 
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getClasspath;
+
 import java.io.File;
 import java.util.Map;
 
@@ -17,12 +19,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.launching.sourcelookup.advanced.AbstractProjectSourceDescriber;
+import org.eclipse.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 
 import com.ifedorenko.m2e.binaryproject.BinaryProjectPlugin;
 
-public class BinaryProjectDescriber extends AbstractProjectSourceDescriber {
+public class BinaryProjectDescriber implements IWorkspaceProjectDescriber {
 
   static File getBinaryLocation(IProject project) throws CoreException {
     final String binaryLocation = project.getPersistentProperty(BinaryProjectPlugin.QNAME_JAR);

@@ -32,10 +32,9 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IPersistableSourceLocator;
 import org.eclipse.debug.core.sourcelookup.IPersistableSourceLocator2;
-import org.eclipse.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 
 
-@SuppressWarnings("restriction")
 class LaunchDelegateImpl {
   public static void injectFrameworkExtension(File configurationDirectory) throws CoreException {
     File configFile = new File(configurationDirectory, "config.ini");
@@ -84,14 +83,14 @@ class LaunchDelegateImpl {
   }
 
   public static List<String> appendJavaagentString(List<String> jvmargs) throws CoreException {
-    jvmargs.add(AdvancedSourceLookupSupport.getJavaagentString());
+    jvmargs.add(AdvancedSourceLookup.getJavaagentString());
     return jvmargs;
   }
 
   public static String[] appendJavaagentString(String[] jvmargs) throws CoreException {
     String[] result = new String[jvmargs.length + 1];
     System.arraycopy(jvmargs, 0, result, 0, jvmargs.length);
-    result[jvmargs.length] = AdvancedSourceLookupSupport.getJavaagentString();
+    result[jvmargs.length] = AdvancedSourceLookup.getJavaagentString();
     return result;
   }
 

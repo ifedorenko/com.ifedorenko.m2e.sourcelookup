@@ -14,12 +14,12 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.launching.sourcelookup.advanced.AbstractProjectSourceDescriber;
+import org.eclipse.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 
-public class PDEProjectDescriber extends AbstractProjectSourceDescriber {
+public class PDEProjectDescriber implements IWorkspaceProjectDescriber {
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {

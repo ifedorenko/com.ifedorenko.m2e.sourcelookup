@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
-import org.eclipse.jdt.internal.launching.sourcelookup.advanced.JDIHelpers;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.jface.dialogs.Dialog;
@@ -160,7 +160,7 @@ public class SourceLookupInfoDialog extends Dialog {
 
   private void updateDisplay(IProgressMonitor moninor) {
     try {
-      File location = JDIHelpers.getLocation(debugElement);
+      File location = AdvancedSourceLookup.getClassesLocation(debugElement);
 
       if (location == null) {
         return;

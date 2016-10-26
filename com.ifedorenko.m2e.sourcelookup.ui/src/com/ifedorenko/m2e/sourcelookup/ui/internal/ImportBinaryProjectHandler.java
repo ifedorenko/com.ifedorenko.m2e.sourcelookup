@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.jdt.internal.launching.sourcelookup.advanced.JDIHelpers;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -49,7 +49,7 @@ public class ImportBinaryProjectHandler extends AbstractHandler {
 
   public static void importBinaryProjects(final Object debugElement) throws DebugException {
 
-    final File location = JDIHelpers.getLocation(debugElement);
+    final File location = AdvancedSourceLookup.getClassesLocation(debugElement);
 
     if (location == null) {
       return;

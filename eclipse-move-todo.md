@@ -2,19 +2,21 @@ sourcelookup
 
 
 jdt.launching
-* packages sources and shaded ASM sources (of not too difficult) in javaagent jar
+* NEVER packages sources and shaded ASM sources (of not too difficult) in javaagent jar
 * replace Guava with custom hashing and caching implementation
 * UI to show source lookup information
-* javadoc and extensions documentation
-* testing (ask for help first)
+* DONE javadoc 
+* extensions documentation
+* testing (would really appreciate help here!)
 * command line build org.eclipse.jdt.launching bundle packaging
   * tycho
   * ant?
 * java app launchDelegate
-* general code grooming
+* DONE general code grooming
 * decide if RemoteJavaAdvancedApplicationLauncher should be moved next to and/or reconciled with JavaRemoteApplicationLaunchConfigurationDelegate
-* AdvancedSourceLookup facade API to access functionality from internal classes
+* DONE AdvancedSourceLookup facade API to access functionality from internal classes
 * API to discover and download 
+* DONE WorkspaceProjectSourceContainers.addJavaProject is long running due to file hashing, add IProgressMonitor
 
 
 pde

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
-import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -48,7 +48,7 @@ import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer
 public class SourceLookupInfoDialog extends Dialog {
   private final Object debugElement;
 
-  private final SourceLookupParticipant sourceLookup;
+  private final AdvancedSourceLookupParticipant sourceLookup;
 
   private Text textLocation;
 
@@ -61,7 +61,7 @@ public class SourceLookupInfoDialog extends Dialog {
   // FIXME
   private IProgressMonitor monitor = new NullProgressMonitor();
 
-  public SourceLookupInfoDialog(Shell parentShell, Object debugElement, SourceLookupParticipant sourceLookup) {
+  public SourceLookupInfoDialog(Shell parentShell, Object debugElement, AdvancedSourceLookupParticipant sourceLookup) {
     super(parentShell);
     setShellStyle(SWT.RESIZE | SWT.TITLE);
     this.debugElement = debugElement;

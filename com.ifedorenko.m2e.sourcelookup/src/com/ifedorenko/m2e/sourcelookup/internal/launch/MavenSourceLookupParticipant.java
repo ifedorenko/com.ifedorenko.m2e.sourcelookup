@@ -12,13 +12,13 @@ package com.ifedorenko.m2e.sourcelookup.internal.launch;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupDirector;
-import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
 import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
 
 
-public class MavenSourceLookupParticipant extends SourceLookupParticipant implements IMavenProjectChangedListener {
+public class MavenSourceLookupParticipant extends AdvancedSourceLookupParticipant implements IMavenProjectChangedListener {
 
   @Override
   public void init(ISourceLookupDirector director) {

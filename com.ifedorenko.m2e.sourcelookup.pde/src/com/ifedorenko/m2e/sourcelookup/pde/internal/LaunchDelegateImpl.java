@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.pde.internal;
 
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,14 +28,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
-import org.eclipse.debug.core.model.IPersistableSourceLocator;
-import org.eclipse.debug.core.sourcelookup.IPersistableSourceLocator2;
-import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 
 
 class LaunchDelegateImpl {
@@ -64,38 +62,19 @@ class LaunchDelegateImpl {
   }
 
   public static ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
-    Launch launch = new Launch(configuration, mode, null);
-
-    IPersistableSourceLocator locator = getLaunchManager().newSourceLocator(PDESourceLookupDirector.ID);
-    String memento = configuration.getAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_MEMENTO, (String) null);
-    if (memento == null) {
-      locator.initializeDefaults(configuration);
-    } else {
-      if (locator instanceof IPersistableSourceLocator2) {
-        ((IPersistableSourceLocator2) locator).initializeFromMemento(memento, configuration);
-      } else {
-        locator.initializeFromMemento(memento);
-      }
-    }
-    launch.setSourceLocator(locator);
-
-    return launch;
+    return new Launch(configuration, mode, createSourceLocator(PDESourceLookupDirector.ID, configuration));
   }
 
   public static List<String> appendJavaagentString(List<String> jvmargs) throws CoreException {
-    jvmargs.add(AdvancedSourceLookup.getJavaagentString());
+    jvmargs.add(getJavaagentString());
     return jvmargs;
   }
 
   public static String[] appendJavaagentString(String[] jvmargs) throws CoreException {
     String[] result = new String[jvmargs.length + 1];
     System.arraycopy(jvmargs, 0, result, 0, jvmargs.length);
-    result[jvmargs.length] = AdvancedSourceLookup.getJavaagentString();
+    result[jvmargs.length] = getJavaagentString();
     return result;
-  }
-
-  private static ILaunchManager getLaunchManager() {
-    return DebugPlugin.getDefault().getLaunchManager();
   }
 
   private static String getBundleFile(String path) throws CoreException {

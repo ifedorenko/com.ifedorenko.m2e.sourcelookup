@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
-import org.eclipse.jdt.launching.sourcelookup.advanced.SourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
@@ -61,7 +61,7 @@ public class ImportBinaryProjectHandler extends AbstractHandler {
         IStatus status = super.run(monitor);
 
         if (status.isOK()) {
-          SourceLookupParticipant sourceLookup = SourceLookupParticipant.getSourceLookup(debugElement);
+          AdvancedSourceLookupParticipant sourceLookup = AdvancedSourceLookupParticipant.getSourceLookup(debugElement);
 
           try {
             sourceLookup.getSourceContainer(debugElement, true, monitor);

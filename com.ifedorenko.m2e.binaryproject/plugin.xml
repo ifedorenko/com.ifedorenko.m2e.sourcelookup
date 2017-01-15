@@ -10,7 +10,7 @@
       </lifecycleMapping>
    </extension>
    <extension
-         point="com.ifedorenko.m2e.sourcelookup.projectSourceDescribers">
+         point="org.eclipse.jdt.launching.workspaceProjectDescribers">
       <describer
             class="com.ifedorenko.m2e.binaryproject.sourcelookup.BinaryProjectDescriber">
       </describer>

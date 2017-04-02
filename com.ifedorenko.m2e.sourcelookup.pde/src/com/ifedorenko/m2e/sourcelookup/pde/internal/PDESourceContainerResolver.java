@@ -30,10 +30,11 @@ import org.eclipse.debug.core.sourcelookup.containers.ArchiveSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.FolderSourceContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.internal.core.PDEClasspathContainer;
+
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 
 @SuppressWarnings("restriction")
 public class PDESourceContainerResolver implements ISourceContainerResolver {

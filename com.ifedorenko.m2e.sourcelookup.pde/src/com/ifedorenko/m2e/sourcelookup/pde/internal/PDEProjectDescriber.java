@@ -14,10 +14,11 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
+
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 
 public class PDEProjectDescriber implements IWorkspaceProjectDescriber {
 

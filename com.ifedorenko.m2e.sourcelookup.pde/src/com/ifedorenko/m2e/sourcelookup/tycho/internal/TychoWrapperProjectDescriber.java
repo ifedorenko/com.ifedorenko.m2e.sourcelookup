@@ -15,7 +15,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.jdt.IClasspathEntryDescriptor;
@@ -23,6 +22,8 @@ import org.eclipse.m2e.jdt.IClasspathManager;
 import org.eclipse.m2e.jdt.internal.ClasspathEntryDescriptor;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.sonatype.tycho.m2e.internal.EmbeddedArtifacts;
+
+import com.ifedorenko.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescriber;
 
 
 // TODO consider moving to a dedicated bundle or to m2e/tycho directly

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.pde.internal;
 
-import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
-import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
+import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
+import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +50,7 @@ class LaunchDelegateImpl {
       extensions += ",";
     }
 
-    extensions += "reference:file:" + getBundleFile("/com.ifedorenko.m2e.sourcelookup.equinox.jar");
+    extensions += "reference:file:" + getBundleFile("/lib/equinoxhooks-shaded.jar");
 
     props.put(PROPS_FRAMEWORK_EXTENSIONS, extensions);
     try (OutputStream os = new FileOutputStream(configFile)) {

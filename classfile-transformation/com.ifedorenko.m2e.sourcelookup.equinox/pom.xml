@@ -17,12 +17,17 @@
   </parent>
 
   <artifactId>com.ifedorenko.m2e.sourcelookup.equinox</artifactId>
+  
+  <properties>
+    <weaver.groupId>com.ifedorenko.m2e</weaver.groupId>
+    <weaver.artifactId>com.ifedorenko.jdt.launching.javaagent</weaver.artifactId>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.eclipse.jdt</groupId>
-      <artifactId>org.eclipse.jdt.launching.javaagent</artifactId>
-      <version>3.9.0-SNAPSHOT</version>
+      <groupId>${weaver.groupId}</groupId>
+      <artifactId>${weaver.artifactId}</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.tycho</groupId>
@@ -52,19 +57,23 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <createSourcesJar>true</createSourcesJar>
+              <finalName>equinoxhooks-shaded</finalName>
               <filters>
                 <filter>
-                  <artifact>org.eclipse.jdt:org.eclipse.jdt.launching.javaagent</artifact>
+                  <artifact>${weaver.groupId}:${weaver.artifactId}</artifact>
                   <includes>
-                    <include>com/ifedorenko/m2e/sourcelookup/weaving/**</include>
+                    <include>com/ifedorenko/jdt/launching/weaving/**</include>
                   </includes>
                 </filter>
               </filters>
               <relocations>
                 <relocation>
+                  <!--
+                    | javaagent classes are added to application classpath
+                    | relocate ASM to our internal package to avoid possible conflicts 
+                    -->
                   <pattern>org.objectweb.asm</pattern>
-                  <shadedPattern>com.ifedorenko.org.objectweb.asm</shadedPattern>
+                  <shadedPattern>com.ifedorenko.pde.launching.internal.org.objectweb.asm</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

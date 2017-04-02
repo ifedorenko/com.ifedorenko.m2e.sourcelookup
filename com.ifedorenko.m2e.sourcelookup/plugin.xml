@@ -6,12 +6,12 @@
       <mavenLaunchParticipant
             class="com.ifedorenko.m2e.sourcelookup.internal.launch.SourceLookupMavenLaunchParticipant"
             id="com.ifedorenko.m2e.sourcelookup"
-            name="Dynamic Sources Lookup"
+            name="Advanced Sources Lookup"
             modes="debug">
       </mavenLaunchParticipant>
    </extension>
    <extension
-         point="org.eclipse.jdt.launching.sourceContainerResolvers">
+         point="com.ifedorenko.jdt.launching.sourceContainerResolvers">
       <resolver
             class="com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver">
       </resolver>

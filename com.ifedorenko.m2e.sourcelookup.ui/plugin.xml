@@ -89,7 +89,7 @@
                   ifEmpty="false"
                   operator="or">
                <test
-                     property="com.ifedorenko.m2e.sourcelookup.m2estratum">
+                     property="com.ifedorenko.jdt.launching.jdtstratum">
                </test>
             </iterate>
          </with>

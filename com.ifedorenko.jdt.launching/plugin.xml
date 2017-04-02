@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="workspaceProjectDescribers" name="%projectSourceDescribers" schema="schema/workspaceProjectDescribers.exsd"/>
+   <extension-point id="sourceContainerResolvers" name="%sourceContainerResolvers" schema="schema/sourceContainerResolvers.exsd"/>
+
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.JDIStratumPropertyTester"
+            id="com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.jdtStratumTest"
+            namespace="com.ifedorenko.jdt.launching"
+            properties="jdtstratum"
+            type="org.eclipse.debug.core.model.DebugElement"/>
+   </extension>
+
+    <extension point="org.eclipse.debug.core.sourceLocators">
+   		<sourceLocator
+   			id="com.ifedorenko.jdt.launching.sourceLocator.JavaAdvancedSourceLookupDirector"
+   			class="com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupDirector"
+   			name="%javaAdvancedSourceLookupDirector.name">
+   		</sourceLocator>
+   </extension>
+
+    <extension
+          point="org.eclipse.core.variables.dynamicVariables">
+         <variable
+               description="%sourcelookup.javaagent.description"
+               name="sourcelookup_javaagent"
+               resolver="com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.JavaagentVariableResolver"
+               supportsArgument="false">
+         </variable>
+    </extension>
+
+    <extension
+          point="org.eclipse.debug.core.launchDelegates">
+       <launchDelegate
+             delegate="com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.AdvancedRemoteJavaLaunchDelegate"
+             delegateDescription="Remote Java Application launcher with more reliable source code lookup"
+             id="com.ifedorenko.m2e.sourcelookup.remoteJavaApplication"
+             modes="debug"
+             name="Advanced Remote Java Application"
+             type="org.eclipse.jdt.launching.remoteJavaApplication">
+       </launchDelegate>
+    </extension>
+
+</plugin>

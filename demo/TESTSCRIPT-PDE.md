@@ -27,3 +27,7 @@ Expected: step into decentxml code works
     hg clone -b r1.4 https://bitbucket.org/digulla/decentxml
 
 Expected: decentxml.wrapper dependency switched to decentxml workspace project
+
+* Set breakpoint at Document.toString, debug decentxml.app
+
+Expected: debugger stops properly positioned at decentxml sources 

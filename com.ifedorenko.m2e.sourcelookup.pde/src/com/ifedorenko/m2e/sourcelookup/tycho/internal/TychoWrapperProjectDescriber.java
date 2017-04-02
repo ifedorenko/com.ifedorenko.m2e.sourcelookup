@@ -12,11 +12,17 @@ package com.ifedorenko.m2e.sourcelookup.tycho.internal;
 
 import java.util.Map;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.jdt.IClasspathEntryDescriptor;
 import org.eclipse.m2e.jdt.IClasspathManager;
 import org.eclipse.m2e.jdt.internal.ClasspathEntryDescriptor;
@@ -31,6 +37,8 @@ import com.ifedorenko.jdt.launching.sourcelookup.advanced.IWorkspaceProjectDescr
 
 @SuppressWarnings("restriction")
 public class TychoWrapperProjectDescriber implements IWorkspaceProjectDescriber {
+
+  private static final IWorkspaceRoot workspace = ResourcesPlugin.getWorkspace().getRoot();
 
   @Override
   public void describeProject(IJavaProject project, IJavaProjectSourceDescription description) throws CoreException {
@@ -53,6 +61,14 @@ public class TychoWrapperProjectDescriber implements IWorkspaceProjectDescriber 
       String c = attributes.get(IClasspathManager.CLASSIFIER_ATTRIBUTE);
       if (artifacts.containsKey(new ArtifactKey(g, a, v, c))) {
         description.addSourceContainerFactory(() -> new PackageFragmentRootSourceContainer(fragment));
+      }
+    }
+
+    for (String otherName : project.getRequiredProjectNames()) {
+      IMavenProjectFacade facade = MavenPlugin.getMavenProjectRegistry().getProject(workspace.getProject(otherName));
+      if (facade != null && artifacts.containsKey(facade.getArtifactKey())) {
+        description.addSourceContainerFactory(
+            () -> new JavaProjectSourceContainer(JavaCore.create(workspace.getProject(otherName))));
       }
     }
   }

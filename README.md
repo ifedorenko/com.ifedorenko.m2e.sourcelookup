@@ -13,7 +13,7 @@ retrived by Eclipse JDT debugger over JDWP.
 ## Maven support
 
 The class folders and jar files are scanned for 
-META-INF/maven/**/pom.properties to identify m2e project location and Maven 
+`META-INF/maven/**/pom.properties` to identify m2e project location and Maven 
 artifact (groupId,artifactId,version) tuple or "GAV" for short. Enabled 
 Maven (Nexus) indexes are also consulted to identify jar file GAV.  
 
@@ -49,20 +49,21 @@ JUnit and likely all other java launch configuration types.
 
 Source Lookup workspace preference page can be used to copy&paste exact values.
 
-# New in 1.2.0.\<TBD\>
+# New in 1.2.0.201704030045
 
 Major rewrite, the goal is to separate general "core" source lookup functionality and support for specific project types and artifact repository layouts.
 
-* New `ISourceContainerResolver` and `AbstractProjectSourceDescriber` APIs
+* Requires M2E 1.7, Eclipse 4.6 (Neon) and Java 8
+* New `ISourceContainerResolver` and `IWorkspaceProjectDescriber` APIs
   * refactored Maven and Maven Binary Project to use the new APIs
   * reimplemented PDE/Equinox support to use the new APIs 
 * New launch configuration types support
   * PDE `Eclipse Application` and `JUnit Plugin-in Test`
-  * JDT `Remote Java Application`
+  * JDT `Java Application`, `JUnit` and `Remote Java Application`
+* Added Tycho "wrapper" project support
 * Fixes first source lookup can lock UI thread for extended period of time for larger workspaces
 * Fixes first breakpoint condition evaluation fails in some cases
 * Changed supported Equinox version to 3.9+ and dropped support for earlier versions
-* Changed minimal required java runtime to 8
 
 # New in 1.1.0.201506181114
 * M2E 1.6/Mars compatibility

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="workspaceProjectDescribers" name="%projectSourceDescribers" schema="schema/workspaceProjectDescribers.exsd"/>
+   <extension-point id="workspaceProjectDescribers" name="%workspaceProjectDescribers" schema="schema/workspaceProjectDescribers.exsd"/>
    <extension-point id="sourceContainerResolvers" name="%sourceContainerResolvers" schema="schema/sourceContainerResolvers.exsd"/>
 
    <extension
@@ -37,10 +37,26 @@
        <launchDelegate
              delegate="com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.AdvancedRemoteJavaLaunchDelegate"
              delegateDescription="Remote Java Application launcher with more reliable source code lookup"
-             id="com.ifedorenko.m2e.sourcelookup.remoteJavaApplication"
+             id="com.ifedorenko.jdt.launching.remoteJavaApplication"
              modes="debug"
              name="Advanced Remote Java Application"
              type="org.eclipse.jdt.launching.remoteJavaApplication">
+       </launchDelegate>
+       <launchDelegate
+             delegate="com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedJavaLaunchDelegate"
+             delegateDescription="Java Application launcher with more reliable source code lookup"
+             id="com.ifedorenko.jdt.launching.localJavaApplication"
+             modes="debug"
+             name="Advanced Eclipse JDT"
+             type="org.eclipse.jdt.launching.localJavaApplication">
+       </launchDelegate>
+       <launchDelegate
+             delegate="com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedJUnitLaunchDelegate"
+             delegateDescription="The Eclipse JUnit Launcher with more reliable source code lookup"
+             id="com.ifedorenko.jdt.launching.localJUnitTest"
+             modes="debug"
+             name="Advanced Eclipse JUnit"
+             type="org.eclipse.jdt.junit.launchconfig">
        </launchDelegate>
     </extension>
 

@@ -22,6 +22,9 @@
   <properties>
     <repositoryPathId>sourcelookup</repositoryPathId>
     
+    <tychoVersion>1.0.0</tychoVersion>
+    
+    <eclipse-repo.url>http://download.eclipse.org/releases/neon</eclipse-repo.url>
     <m2e-core.url>${repoHost}/content/sites/m2e.extras/m2e/1.7.0/N/LATEST</m2e-core.url>
   </properties>
 

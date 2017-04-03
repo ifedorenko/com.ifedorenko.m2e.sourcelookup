@@ -41,6 +41,13 @@ Igor Fedorenko - initial API and implementation\n
          unpack="false"/>
 
    <plugin
+         id="com.ifedorenko.jdt.launching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="com.ifedorenko.m2e.sourcelookup.ui"
          download-size="0"
          install-size="0"

@@ -16,7 +16,7 @@
 
     <extension point="org.eclipse.debug.core.sourceLocators">
    		<sourceLocator
-   			id="com.ifedorenko.jdt.launching.sourceLocator.JavaAdvancedSourceLookupDirector"
+   			id="com.ifedorenko.jdt.launching.sourceLocator"
    			class="com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupDirector"
    			name="%javaAdvancedSourceLookupDirector.name">
    		</sourceLocator>

@@ -65,14 +65,14 @@ public class SourceLookupPreferencePage extends PreferencePage implements IWorkb
 
     launchFileVMArguments = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
     launchFileVMArguments.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-    launchFileVMArguments.setText("-javaagent:${sourcelookup_agent_path}");
+    launchFileVMArguments.setText("-javaagent:${sourcelookup_javaagent}");
 
     Label lblLaunchFileAttribute = new Label(composite, SWT.NONE);
     lblLaunchFileAttribute.setText(".launch file attribute:");
 
     launchFileAttribute = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
     launchFileAttribute.setText(
-        "<stringAttribute key=\"org.eclipse.debug.core.source_locator_id\" value=\"com.ifedorenko.m2e.sourcelookupDirector\"/>\n");
+        "<stringAttribute key=\"org.eclipse.debug.core.source_locator_id\" value=\"com.ifedorenko.jdt.launching.sourceLocator\"/>\n");
     launchFileAttribute.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
     return composite;

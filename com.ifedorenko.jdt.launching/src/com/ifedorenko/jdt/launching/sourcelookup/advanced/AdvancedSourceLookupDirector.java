@@ -41,7 +41,7 @@ import org.eclipse.jdt.launching.sourcelookup.containers.JavaSourceLookupPartici
  */
 @SuppressWarnings("restriction")
 public class AdvancedSourceLookupDirector extends JavaSourceLookupDirector {
-  public static final String ID = "com.ifedorenko.jdt.launching.sourceLocator.JavaAdvancedSourceLookupDirector"; //$NON-NLS-1$
+  public static final String ID = "com.ifedorenko.jdt.launching.sourceLocator"; //$NON-NLS-1$
 
   private final String mode;
 

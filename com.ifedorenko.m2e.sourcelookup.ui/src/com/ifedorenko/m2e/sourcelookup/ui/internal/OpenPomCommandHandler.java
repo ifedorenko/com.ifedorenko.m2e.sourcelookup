@@ -23,6 +23,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction;
@@ -30,7 +31,6 @@ import org.eclipse.m2e.core.ui.internal.actions.OpenPomAction.MavenStorageEditor
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MetaInfMavenScanner;
 
 @SuppressWarnings("restriction")
@@ -45,7 +45,8 @@ public class OpenPomCommandHandler extends AbstractHandler {
     }
 
     try {
-      final File location = AdvancedSourceLookup.getClassesLocation(((IStructuredSelection) selection).getFirstElement());
+      final File location =
+          AdvancedSourceLookup.getClassesLocation(((IStructuredSelection) selection).getFirstElement());
 
       if (location == null) {
         return null;

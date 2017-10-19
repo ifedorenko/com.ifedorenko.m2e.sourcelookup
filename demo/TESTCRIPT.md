@@ -62,6 +62,7 @@ Expected: Open Pom on the stack frame opens jetty-servlet 8.1.4.v20120524 pom.xm
 # Sourcelookup properties
 
 Expected: dialog shows expected values, Copy and Refresh work (refresh can be tested by closing source viewer)
+Problem: 2017-10-19 performs remote calls on ui thread
 
 
 # Binary project
@@ -69,7 +70,9 @@ Expected: dialog shows expected values, Copy and Refresh work (refresh can be te
 * Import binary project on HttpServlet.service #735 stack frame
 
 Expected: org.eclipse.jetty.orbit_javax.servlet_3.0.0.v201112011016 project is created in workspace
-Expected: debugger automatically refreshes to show HttpServlet.java from workspace binary project
+Expected: debugger automatically refreshes to show HttpServlet.java from workspace binary project  
+Problem: 2017-10-19 race between WorkspaceProjectSourceContainers#updateProjects and ImportBinaryProjectHandler#importBinaryProjects
+         ideally, should refresh frame after WorkspaceProjectSourceContainers#updateProjects
 Expected: Display view provides codeassist for 'me...' method variable, shows the variable value
 
 Expected: Variables view, show declared type of Response shows sources from binary project
@@ -89,14 +92,14 @@ Expected: Display view provides codeassist for 'se...' sevlet variable, shows th
 * Run "mvn clean install" on lib module, close lib workspace project
 
 Expected: webapp project switches workspace dependency to locally installed lib-0.0.1-SNAPSHOT.jar
+Problem: 2017-10-19 webapp didn't automatically update dependencies
 
 * Set breakpoint on Lib #17
 
 Expected: Lib.java from webapp classpath dependency jar is displayed
 
 * Import lib-0.0.1-SNAPSHOT as binary project (from stack frame right-click)
-* Retsart webapp
-Problem: two terminate pop-up dialogs. why?
+* Restart webapp
 Expected: Lib.java from binary project is displayed
 
 * Delete lib-0.0.1-SNAPSHOT workspace project

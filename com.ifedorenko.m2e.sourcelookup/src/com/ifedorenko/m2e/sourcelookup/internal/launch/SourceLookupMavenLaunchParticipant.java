@@ -17,9 +17,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
-
-import com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
 
 @SuppressWarnings("restriction")
 public class SourceLookupMavenLaunchParticipant implements IMavenLaunchParticipant {

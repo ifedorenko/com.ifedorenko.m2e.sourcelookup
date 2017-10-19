@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import org.eclipse.jdt.launching.sourcelookup.containers.PackageFragmentRootSourceContainer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -41,8 +43,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup;
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenArtifactIdentifierer;
 
 public class SourceLookupInfoDialog extends Dialog {

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.ui.internal;
 
+import org.eclipse.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -21,8 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-import com.ifedorenko.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupSupport;
 
 
 public class SourceLookupPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {

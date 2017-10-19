@@ -11,7 +11,7 @@
       </mavenLaunchParticipant>
    </extension>
    <extension
-         point="com.ifedorenko.jdt.launching.sourceContainerResolvers">
+         point="org.eclipse.jdt.launching.sourceContainerResolvers">
       <resolver
             class="com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver">
       </resolver>

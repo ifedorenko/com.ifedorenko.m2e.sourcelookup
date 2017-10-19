@@ -22,14 +22,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
-
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 
 
 public class MavenSourceContainerResolver implements ISourceContainerResolver {

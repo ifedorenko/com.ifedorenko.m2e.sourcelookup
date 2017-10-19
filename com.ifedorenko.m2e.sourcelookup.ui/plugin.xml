@@ -89,7 +89,7 @@
                   ifEmpty="false"
                   operator="or">
                <test
-                     property="com.ifedorenko.jdt.launching.jdtstratum">
+                     property="org.eclipse.jdt.launching.jdtstratum">
                </test>
             </iterate>
          </with>

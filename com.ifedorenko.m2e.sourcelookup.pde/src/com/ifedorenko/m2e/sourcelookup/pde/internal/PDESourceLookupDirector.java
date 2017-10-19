@@ -15,10 +15,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.jdt.internal.launching.sourcelookup.advanced.AdvancedSourceLookupDirector;
+import org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
+import org.eclipse.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupDirector;
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookupParticipant;
-import com.ifedorenko.jdt.launching.sourcelookup.advanced.ISourceContainerResolver;
 import com.ifedorenko.m2e.sourcelookup.internal.launch.MavenSourceContainerResolver;
 
 public class PDESourceLookupDirector extends AdvancedSourceLookupDirector {

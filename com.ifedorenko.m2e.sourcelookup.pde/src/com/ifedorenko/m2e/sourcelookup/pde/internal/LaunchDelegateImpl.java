@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ifedorenko.m2e.sourcelookup.pde.internal;
 
-import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
-import static com.ifedorenko.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.createSourceLocator;
+import static org.eclipse.jdt.launching.sourcelookup.advanced.AdvancedSourceLookup.getJavaagentString;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,3 +1,5 @@
+> As of 2017-10-19 "advanced" source code lookup support has been merged to Eclipse 4.8/Photon master branch. This branch contains m2e and pde support and the plan is to contribute both to the respective Eclipse projects.
+
 # Overview and mode of operation
 
 Allows Eclipse Java debugger lookup sources of Java classes dynamically loaded

@@ -20,17 +20,22 @@ jdt.launching
 * DONE WorkspaceProjectSourceContainers.addJavaProject is long running due to file hashing, add IProgressMonitor
 
 
+m2e
+* move SourceLookupPreferencePage to jdt.debug
+* kill launch extensions hooks
+  * still used by m2e/mavendev
+  * org.eclipse.m2e.launching.mavenLaunchParticipants
+* DONE move the code
+* DONE replace JDIHelpers and AdvancedSourceLookupSupport with AdvancedSourceLookup
+
+
 pde
 * move the code
 * decide what to do with current pde source lookup implementation
-  * keep as is, which will make it separate from advanced source lookup imple
+  * keep as is, which will make it separate from advanced source lookup implementation
   * refactor to use ISourceLookupParticipant API, which make it complimentary to the new code
 * equinox hook packaging, likely requires changes to jdt.launching javaagent packaging
 * p2 repository support
 * LaunchDelegateImpl #toLocalFile likely has existing replacement
 
 
-m2e
-* move the code
-* kill launch extensions hooks
-* DONE replace JDIHelpers and AdvancedSourceLookupSupport with AdvancedSourceLookup

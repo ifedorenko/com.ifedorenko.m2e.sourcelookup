@@ -6,7 +6,7 @@
 
 * Run sourcelookup/webapp as maven build with goal 'jetty:run'
 ** enable workspace resolution
-** disable Dynamic Sources Lookup launch extension
+** disable advanced source lookup in java debug preferences
 * Open in web browser http://localhost:8080/
 
 Expected: [a, b, Hello, world!]
@@ -20,7 +20,7 @@ Expected: "Source not found." editor
 * Debug the webapp
 
 Expected: debugger properly positioned at WebappServlet sources
-Expected: Display view provides codeassist for 'my...' mylist local variable, shows mylist value
+Expected: Debug Shell view provides codeassist for 'my...' mylist local variable, shows mylist value
 Expected: Variables view, open actual type of mylist opens sources from webapp/ project
 Expected: Variables view, open declared type of lib opens sources from lib/ project
 
@@ -42,7 +42,7 @@ Expected: Open Pom on the stack frame does not work
 
 (Kinda) Expected: breakpoint does not appear in lefthand ruler due to jdt bug/limitation, the breakpoint view is fine
 Expected: debugger stops at the breakpoint
-Expected: Display view does not provide codeassist, does not show variable values
+Expected: Debug Shell view does not provide codeassist, does not show variable values
 Expected: Variable view, open actual, declared types of resp opens wrong Response.java, wrong HttpServletResponse.java
 
 * Enable condition of the breakpoint at HttpServlet #732, resp != null
@@ -81,10 +81,11 @@ Problem: as of 2012-12-22, show actual/declared type only work when target type 
          This seems like unnecessary jdt ui limitation around OpenTypeAction, which requires IJavaElement and
          does not allow sources from external jars or source directories.
 
-* Import binary project on ServletHolder.handle stack frame
+* Import binary project on ServletHolder.handle #598 stack frame
 
 Expected: org.eclipse.jetty:jetty-servlet:8.1.4.v20120524 project is created in workspace
 Expected: debugger automatically refreshes to show ServletHolder.java from workspace project
+Problem: 2018-05-15 didn't refresh, same race as above? 
 Expected: Display view provides codeassist for 'se...' sevlet variable, shows the variable value
 
 # Thread context sources lookup
@@ -94,7 +95,7 @@ Expected: Display view provides codeassist for 'se...' sevlet variable, shows th
 Expected: webapp project switches workspace dependency to locally installed lib-0.0.1-SNAPSHOT.jar
 Problem: 2017-10-19 webapp didn't automatically update dependencies
 
-* Set breakpoint on Lib #17
+* Set breakpoint on Lib #17, then debug jetty:run, etc
 
 Expected: Lib.java from webapp classpath dependency jar is displayed
 

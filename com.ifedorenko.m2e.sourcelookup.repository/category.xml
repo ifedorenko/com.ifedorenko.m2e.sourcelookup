@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="com.ifedorenko.m2e.sourcelookup.feature_0.0.0.qualifier.jar" id="com.ifedorenko.m2e.sourcelookup.feature" version="0.0.0">
-      <category name="org.eclipse.m2e.extensions"/>
-   </feature>
-   <category-def name="org.eclipse.m2e.extensions" label="m2e extensions"/>
-</site>

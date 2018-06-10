@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-SymbolicName: com.ifedorenko.jdt.launching.javaagent
-Bundle-Version: 1.2.0.qualifier
-Bundle-Vendor: Igor Fedorenko
-Bundle-Localization: plugin
-Require-Bundle: org.objectweb.asm;bundle-version="[5.0.0,6.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.5
